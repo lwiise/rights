@@ -1,0 +1,2829 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Finna Art - Gallery</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#fff;
+    --text-main:#222;
+    --accent:#111;
+    --muted:#666;
+    --card-radius:32px;
+    --btn-radius:30px;
+    --side-nav-height:380px;
+    --side-nav-offset:34px;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  [hidden]{ display:none !important; }
+  body{
+    margin:0; height:100vh; width:100vw;
+    background:#fff; color:var(--text-main);
+    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .layout{
+    display:flex;
+    height:100vh;
+    width:100vw;
+    max-width:none;
+    gap:0;
+  }
+
+  #map{
+    flex:0 0 31%;
+    height:100%;
+    background:#000;
+    position:relative;
+    overflow:hidden;
+    border-radius:0;
+    box-shadow:0 26px 60px rgba(0,0,0,0.16);
+  }
+
+  .mapboxgl-canvas{ outline:none; filter:grayscale(100%) contrast(1.12) brightness(1); }
+
+  /* ===== 3D POPUP OVER MAP (fixed box, model rotates inside) ===== */
+  .map-3d-popup{
+    position:absolute;
+    left:50%;
+    top:50%;
+    /* ✅ up by 50% of its size + left by 20% of its size */
+    transform:translate(-70%, -100%);
+    width:50%;
+    aspect-ratio:1/1;
+    max-width:560px;
+    min-width:240px;
+    border-radius:24px;
+    overflow:hidden;
+    z-index:60;
+    background:rgba(255,255,255,0.10);
+    border:1px solid rgba(255,255,255,0.18);
+    box-shadow:0 30px 80px rgba(0,0,0,0.40);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    touch-action:none;
+    transition:opacity .25s ease;
+  }
+  .map-3d-popup.show{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+  }
+  .map-3d-inner{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:transparent;
+  }
+  .map-3d-inner model-viewer{
+    width:100%;
+    height:100%;
+    background:transparent;
+    touch-action:none;
+  }
+
+  .side-nav{
+    position:absolute; top:auto; bottom:var(--side-nav-offset); right:0; transform:none;
+    display:flex; flex-direction:column; z-index:20;
+    background:rgba(0,0,0,0.5);
+    backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px);
+    border-radius:20px 0 0 20px;
+    border-left:1px solid rgba(255,255,255,0.15);
+    border-top:1px solid rgba(255,255,255,0.15);
+    border-bottom:1px solid rgba(255,255,255,0.15);
+    box-shadow:-10px 0 30px rgba(0,0,0,0.3);
+    transition:background 0.3s, border-color 0.3s;
+    height:var(--side-nav-height);
+  }
+  .side-nav.focused{
+    background:rgba(0,0,0,0.75);
+    border-color:rgba(255,255,255,0.1);
+  }
+  .nav-item{
+    padding:22px 40px;
+    color:rgba(255,255,255,0.8);
+    font-weight:600; font-size:14px;
+    text-transform:uppercase; letter-spacing:0.05em;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+    transition:all 0.3s ease;
+    cursor:pointer; text-align:center;
+    text-shadow:0 2px 10px rgba(0,0,0,0.5);
+    user-select:none;
+  }
+  .side-nav .nav-item{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .nav-item:last-child{ border-bottom:none; }
+  .nav-item:hover,
+  .nav-item.active{
+    background:rgba(255,255,255,0.2);
+    color:#fff;
+    padding-right:50px;
+  }
+  .side-nav .nav-item:hover,
+  .side-nav .nav-item.active{
+    border-radius:20px 0 0 20px;
+  }
+
+  .mobile-nav{
+    display:none;
+    position:absolute;
+    left:12px;
+    right:12px;
+    transform:none;
+    bottom:40px;
+    z-index:30;
+    background:rgba(0,0,0,0.55);
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    border:1px solid rgba(255,255,255,0.10);
+    box-shadow:0 12px 26px rgba(0,0,0,0.35);
+    border-radius:999px;
+    padding:6px;
+    gap:4px;
+    width:auto;
+    max-width:720px;
+    margin:0 auto;
+    overflow:hidden;
+  }
+  .mobile-nav .nav-item{
+    border:none;
+    padding:10px 6px;
+    border-radius:12px;
+    font-size:10px;
+    letter-spacing:0.05em;
+    line-height:1.1;
+    white-space:normal;
+    background:transparent;
+    flex:1;
+    min-width:0;
+  }
+  .mobile-nav .nav-item:hover,
+  .mobile-nav .nav-item.active{
+    padding:10px 6px;
+    background:rgba(255,255,255,0.14);
+  }
+
+  .shop{
+    flex:0 0 69%;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    background:#fff;
+    position:relative;
+    z-index:5;
+    box-shadow:0 26px 60px rgba(0,0,0,0.10);
+    overflow:hidden; /* ✅ prevent right overflow */
+    border-radius:0;
+  }
+
+  .app-section{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    background:#fff;
+    opacity:0; visibility:hidden; pointer-events:none;
+    transform:translateY(18px);
+    transition:opacity .35s ease, transform .35s ease;
+    z-index:1;
+    overflow:hidden;
+  }
+  .app-section.active-section{
+    opacity:1; visibility:visible; pointer-events:auto;
+    transform:translateY(0); z-index:10;
+  }
+
+  .section-scroll{
+    height:100%;
+    overflow-y:auto;
+    padding:40px;
+  }
+
+  .section-scroll, .shop-body{
+    -ms-overflow-style:auto;
+    scrollbar-width:auto;
+  }
+  .section-scroll::-webkit-scrollbar, .shop-body::-webkit-scrollbar{ width:10px; height:10px; }
+  .section-scroll::-webkit-scrollbar-thumb, .shop-body::-webkit-scrollbar-thumb{
+    background:rgba(0,0,0,.22);
+    border-radius:999px;
+  }
+  .section-scroll::-webkit-scrollbar-track, .shop-body::-webkit-scrollbar-track{ background:transparent; }
+
+  h1.sec-title{ font-size:34px; font-weight:900; margin:0 0 12px; letter-spacing:-0.02em; color:#111; }
+  p.sec-sub{ font-size:16px; color:var(--muted); line-height:1.7; margin:0 0 24px; width:100%; }
+
+  /* =========================================================
+     HOME - matches screenshot layout
+     - No scroll needed
+     - Logo/top area + 2-column main (copy left, image right)
+     - Left copy + CTA
+     ========================================================= */
+  #sect-home .section-scroll{
+    padding:0;
+    overflow:hidden;    /* no scroll in Home */
+    height:100%;
+  }
+
+  .home-screen{
+    --home-pad-left:52px;
+    --home-pad-right:52px;
+    height:100%;
+    padding:38px var(--home-pad-right) var(--side-nav-offset) var(--home-pad-left);
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    overflow:hidden;
+    justify-content:flex-start;
+    position:relative;
+    background:#fff;
+  }
+  .home-screen::after{ display:none; }
+
+  .home-top{
+    flex:0 0 auto;
+    display:flex;
+    flex-direction:column;
+    --home-logo-width:min(900px, 92%);
+    align-items:center;
+    gap:6px;
+    position:relative;
+    z-index:1;
+    text-align:center;
+  }
+
+  .home-top small{
+    color:#9a9a9a;
+    font-weight:600;
+    font-size:20px;
+    letter-spacing:0.02em;
+    width:var(--home-logo-width);
+    text-align:left;
+    padding-left:5%;
+    box-sizing:border-box;
+  }
+
+  .home-logo{
+    width:var(--home-logo-width);
+    height:auto;
+    display:block;
+    object-fit:contain;
+    margin:0 auto;
+  }
+
+  .home-tagline{
+    font-size:16px;
+    letter-spacing:0.5em;
+    text-transform:uppercase;
+    font-weight:700;
+    color:#6f6f6f;
+    width:var(--home-logo-width);
+    margin:0 auto;
+    text-align:center;
+  }
+
+  .home-main{
+    flex:1;
+    min-height:0;
+    display:grid;
+    grid-template-columns:1fr;
+    grid-template-rows:1fr;
+    gap:0;
+    align-items:stretch;
+    align-content:stretch;
+    justify-items:stretch;
+    margin-top:auto;
+    margin-left:calc(-1 * var(--home-pad-left));
+    margin-right:calc(-1 * var(--home-pad-right));
+    width:calc(100% + var(--home-pad-left) + var(--home-pad-right));
+    position:relative;
+    z-index:1;
+    border-radius:0;
+    overflow:hidden;
+  }
+
+  .home-banner{
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    width:min(38%, 440px);
+    background:#f2f2f2;
+    background:linear-gradient(90deg, rgba(242,242,242,0.98) 0%, rgba(242,242,242,0.96) 55%, rgba(242,242,242,0.0) 100%);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:14px;
+    padding:28px 26px;
+    height:100%;
+    z-index:2;
+  }
+  .home-banner-title{
+    margin:0;
+    font-size:28px;
+    font-weight:800;
+    line-height:1.2;
+    color:#111;
+    text-align:center;
+  }
+  .home-banner-title span{ display:block; }
+  .home-banner-btn{
+    border:1px solid #e64a4a;
+    background:#e64a4a;
+    color:#fff;
+    font-weight:700;
+    font-size:21px;
+    padding:13px 24px;
+    border-radius:999px;
+    cursor:pointer;
+  }
+
+  /* Home copy block */
+  .home-copy{
+    align-self:end;
+    justify-self:start;
+    margin:0 0 0 calc(-1 * var(--home-pad-left));
+    width:fit-content;
+    max-width:100%;
+    display:flex;
+    align-items:flex-end;
+  }
+  .home-glass{
+    width:fit-content;
+    max-width:100%;
+    height:var(--side-nav-height);
+    min-height:var(--side-nav-height);
+    max-height:var(--side-nav-height);
+    --home-glass-pad-x:34px;
+    padding:30px var(--home-glass-pad-x);
+    border-radius:0 22px 22px 0;
+    background:rgba(240,240,240,0.78);
+    border:1px solid rgba(255,255,255,0.9);
+    box-shadow:0 18px 32px rgba(0,0,0,0.08);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    gap:18px;
+  }
+  .home-copy-title{
+    margin:0;
+    font-size:42px;
+    font-weight:700;
+    color:#5f5f5f;
+    letter-spacing:0.02em;
+    line-height:1.4;
+  }
+  .home-copy-title span{ display:block; text-align:center; }
+
+  .btn-home{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:14px 28px;
+    border-radius:999px;
+    border:1px solid rgba(228,144,144,0.7);
+    cursor:pointer;
+    font-weight:700;
+    font-size:13px;
+    letter-spacing:0.06em;
+    text-transform:none;
+    color:#7b4b4b;
+    background:rgba(228,144,144,0.28);
+    box-shadow:0 8px 14px rgba(0,0,0,0.08);
+    white-space:nowrap;
+  }
+  .btn-home:hover{ background:rgba(228,144,144,0.38); }
+
+  .home-illustration-wrap{
+    width:100%;
+    height:100%;
+    min-height:0;
+    display:flex;
+    align-items:stretch;
+    justify-content:flex-start;
+    overflow:hidden;
+    padding:0;
+    align-self:center;
+    justify-self:center;
+    position:relative;
+  }
+
+  .home-slider-controls{
+    position:absolute;
+    left:18px;
+    right:18px;
+    bottom:14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    z-index:3;
+    pointer-events:auto;
+  }
+  .home-slider-dots{
+    display:flex;
+    gap:10px;
+    pointer-events:auto;
+  }
+  .home-dot{
+    width:8px;
+    height:8px;
+    border-radius:999px;
+    border:none;
+    background:rgba(0,0,0,0.25);
+    cursor:pointer;
+    padding:0;
+  }
+  .home-dot.active{
+    width:22px;
+    background:rgba(0,0,0,0.6);
+  }
+  .home-slider-arrows{
+    display:flex;
+    gap:12px;
+    pointer-events:auto;
+  }
+  .home-arrow{
+    border:none;
+    background:transparent;
+    color:rgba(0,0,0,0.45);
+    font-size:18px;
+    line-height:1;
+    cursor:pointer;
+    padding:0;
+  }
+  .home-arrow:hover{ color:rgba(0,0,0,0.75); }
+
+  .home-illustration-track{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:stretch;
+    gap:0;
+    overflow-x:auto;
+    overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    scroll-padding-left:0;
+    padding:0;
+    -webkit-overflow-scrolling:touch;
+  }
+  .home-illustration-track::-webkit-scrollbar{ display:none; }
+  .home-illustration-track{ scrollbar-width:none; }
+
+  .home-slide{
+    flex:0 0 100%;
+    height:100%;
+    min-height:100%;
+    background:transparent;
+    border-radius:0;
+    display:flex;
+    align-items:stretch;
+    justify-content:stretch;
+    padding:0;
+    box-shadow:none;
+    overflow:hidden;
+    scroll-snap-align:start;
+  }
+  .home-slide-media{
+    width:100%;
+    height:100%;
+    min-height:100%;
+    display:flex;
+    align-items:stretch;
+    justify-content:stretch;
+    padding-left:0;
+  }
+  /* ✅ no hover on second image + fit screen */
+  .home-illustration{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center center;
+    display:block;
+    transition:none !important;
+    transform:none !important;
+    filter:none;
+    margin:0;
+    border-radius:0;
+    background:transparent;
+  }
+
+  /* ===== ABOUT (matches screenshot card layout) ===== */
+  #sect-about{ background:#fff; }
+  #sect-about .section-scroll{
+    background:#fff;
+    padding:48px 48px 64px;
+  }
+  #sect-about .sec-title{ font-size:42px; margin-bottom:12px; letter-spacing:-0.01em; }
+  .about-wrap{ max-width:1100px; margin:0 auto; }
+  .about-lead{
+    font-family:"Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    font-size:20px;
+    line-height:1.7;
+    color:#3d3d3d;
+    font-weight:600;
+    margin:0 0 14px;
+    max-width:980px;
+  }
+  .about-sublead{
+    display:block;
+    font-family:"Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    font-size:15px;
+    line-height:1.7;
+    color:#6a6a6a;
+    font-weight:400;
+    margin:0 0 26px;
+    max-width:1000px;
+  }
+
+  .about-grid{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:26px;
+    margin-top:18px;
+  }
+
+  .about-card{
+    background:#fff;
+    border:1px solid #f0f0f0;
+    border-radius:26px;
+    padding:20px;
+    box-shadow:0 18px 36px rgba(0,0,0,0.08);
+    display:flex;
+    flex-direction:column;
+    min-height:360px;
+  }
+
+  .about-card-media{
+    width:100%;
+    height:128px;
+    border-radius:20px;
+    overflow:hidden;
+    background:#ededed;
+    border:1px solid #f1f1f1;
+    position:relative;
+  }
+  .about-card-media::before{
+    content:"";
+    position:absolute;
+    top:12px;
+    left:12px;
+    width:84px;
+    height:12px;
+    border-radius:999px;
+    background:rgba(0,0,0,0.08);
+    z-index:2;
+  }
+  .about-card-media img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:none;
+  }
+
+  .about-card-meta{
+    margin:16px 0 6px;
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    color:#9b9b9b;
+  }
+  .about-card-title{
+    margin:0 0 8px;
+    font-size:18px;
+    font-weight:800;
+    letter-spacing:-0.01em;
+    color:#111;
+    line-height:1.3;
+  }
+  .about-card-desc{
+    margin:0;
+    font-size:13px;
+    line-height:1.7;
+    color:#6a6a6a;
+  }
+
+  /* ===== GALLERY ===== */
+  #sect-gallery{ padding:0; }
+  .shop-head{
+    flex-shrink:0;
+    position:sticky; top:0;
+    background:rgba(255,255,255,0.96);
+    backdrop-filter:blur(10px);
+    z-index:12;
+    padding:22px 30px;
+    border-bottom:1px solid #f0f0f0;
+  }
+
+  .nav-group{
+    display:flex; gap:10px; align-items:center;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .nav-group::-webkit-scrollbar{ display:none; }
+  .chip{
+    border:none;
+    background:transparent;
+    font-size:14px;
+    color:#999;
+    cursor:pointer;
+    padding:8px 12px;
+    transition:all .2s;
+    font-weight:600;
+    white-space:nowrap;
+    border-radius:999px;
+  }
+  .chip:hover{ color:#333; }
+  .chip.active{
+    background:var(--accent);
+    color:#fff;
+    padding:8px 22px;
+  }
+
+  .shop-body{
+    padding:22px 30px 70px;
+    flex-grow:1;
+    overflow-y:auto;
+    min-height:0;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:26px;
+    width:100%;
+  }
+  .card{
+    background:#fff;
+    border:1px solid #f3f3f3;
+    border-radius:28px;
+    padding:26px 18px;
+    cursor:pointer;
+    transition:transform .25s ease, box-shadow .25s ease;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .card:hover{ transform:translateY(-6px); box-shadow:0 18px 42px rgba(0,0,0,0.07); }
+  .card-media{
+    width:100%;
+    height:180px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    margin-bottom:16px;
+  }
+  .card-media img{ max-width:100%; max-height:100%; object-fit:contain; filter:none; }
+  .card-name{ font-size:12px; font-weight:900; letter-spacing:0.10em; color:#b0b0b0; text-transform:uppercase; margin-bottom:6px; }
+  .card-sub{ font-size:10px; color:#d0d0d0; text-transform:uppercase; letter-spacing:0.06em; }
+
+  .solo-wrap{ display:none; }
+  #sect-gallery.solo .grid{ display:none; }
+  #sect-gallery.solo .shop-body{ background:#fff; }
+  #sect-gallery.solo .solo-wrap{
+    display:block;
+    padding:0;
+  }
+  #sect-gallery.solo .solo-frame{
+    position:relative;
+    overflow:hidden;
+    background:#f3f3f3;
+    border-radius:28px;
+    padding:0;
+    border:1px solid #ececec;
+    box-shadow:0 18px 40px rgba(0,0,0,0.06);
+    display:flex;
+    flex-direction:column;
+  }
+  #sect-gallery.solo .solo-frame-head{
+    position:absolute;
+    top:18px;
+    left:22px;
+    right:22px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    pointer-events:none;
+  }
+
+  .back-nav{ margin:4px 0 12px; }
+  .btn-back{
+    background:none; border:none; padding:0;
+    color:#9a9a9a; font-size:13px; font-weight:700;
+    cursor:pointer; display:inline-flex; align-items:center; gap:8px;
+  }
+
+  .solo-name{
+    margin:0;
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:-0.02em;
+    color:#111;
+  }
+
+  .solo-tabs-bar{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    margin:0;
+    padding:12px 22px 18px;
+    pointer-events:auto;
+  }
+
+  .solo-media-container{
+    width:100%;
+    aspect-ratio:16 / 9;
+    background:transparent;
+    border-radius:0;
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:none;
+    border:none;
+  }
+  .solo-media-container img,
+  .solo-media-container video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+  }
+  .solo-media-container img{ filter:none; }
+  model-viewer{ width:100%; height:100%; }
+
+  .media-tabs{
+    display:flex;
+    gap:8px;
+    padding:8px;
+    border-radius:999px;
+    background:#bdbdbd;
+    backdrop-filter:none; -webkit-backdrop-filter:none;
+  }
+  .media-tab{
+    border:none;
+    cursor:pointer;
+    padding:10px 18px;
+    border-radius:999px;
+    font-weight:900;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:rgba(255,255,255,0.85);
+    background:rgba(255,255,255,0.18);
+    transition:all .2s ease;
+    white-space:nowrap;
+  }
+  .media-tab.active{
+    background:#fff;
+    color:#111;
+  }
+
+  .solo-bottom-tabs{ pointer-events:auto; }
+  .solo-bottom-tabs-inner{
+    display:flex;
+    gap:8px;
+    padding:8px;
+    border-radius:999px;
+    background:#bdbdbd;
+  }
+  .solo-bottom-tab{
+    border:none;
+    cursor:pointer;
+    padding:10px 18px;
+    border-radius:999px;
+    font-weight:900;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:rgba(255,255,255,0.90);
+    background:rgba(255,255,255,0.18);
+    transition:all .2s ease;
+    white-space:nowrap;
+  }
+  .solo-bottom-tab.active{
+    background:#fff;
+    color:#111;
+  }
+
+  .solo-frame-foot{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:16px 22px;
+    background:#fff;
+    border-top:1px solid #e9e9e9;
+  }
+  .solo-foot-left{ min-width:0; }
+  .solo-foot-title{
+    font-size:11px;
+    font-weight:950;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:#111;
+    margin-bottom:6px;
+  }
+  .solo-foot-desc{
+    font-size:12px;
+    line-height:1.6;
+    color:#9a9a9a;
+    max-width:360px;
+  }
+  .solo-foot-right{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:10px;
+  }
+  .solo-tab-wrap{
+    position:relative;
+    display:flex;
+  }
+  .solo-tab-wrap .solo-bottom-tab{ width:100%; }
+  .solo-popover{
+    position:absolute;
+    left:50%;
+    bottom:calc(100% + 10px);
+    transform:translateX(-50%);
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+    padding:10px;
+    border-radius:22px;
+    background:rgba(0,0,0,0.06);
+    box-shadow:0 18px 42px rgba(0,0,0,0.14);
+    z-index:18;
+    pointer-events:auto;
+    max-width:min(420px, calc(100vw - 44px));
+  }
+  .solo-suboption{
+    border:none;
+    cursor:pointer;
+    padding:14px 18px;
+    border-radius:999px;
+    font-weight:950;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-size:12px;
+    color:#111;
+    background:rgba(255,255,255,0.92);
+    transition:all .18s ease;
+  }
+  .solo-suboption.active{
+    background:#111;
+    color:#fff;
+  }
+
+  .solo-config{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%) translateY(12px);
+    width:340px;
+    max-width:calc(100% - 44px);
+    padding:16px 16px 14px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.78);
+    border:1px solid rgba(255,255,255,0.72);
+    box-shadow:0 22px 46px rgba(0,0,0,0.14);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .18s ease, transform .22s ease;
+    z-index:19;
+  }
+  #sect-gallery.solo .solo-frame.customize-open .solo-config{
+    opacity:1;
+    pointer-events:auto;
+    transform:translate(-50%,-50%) translateY(0);
+  }
+  .solo-config-close{
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:32px;
+    height:32px;
+    border:none;
+    border-radius:12px;
+    background:rgba(0,0,0,0.06);
+    color:#111;
+    cursor:pointer;
+    font-weight:950;
+    font-size:18px;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .solo-config-title{
+    margin:2px 34px 12px 0;
+    font-size:13px;
+    font-weight:950;
+    letter-spacing:0.10em;
+    text-transform:uppercase;
+    color:#111;
+  }
+  .solo-config-group{ margin-bottom:12px; }
+  .solo-config-label{
+    font-size:10px;
+    font-weight:950;
+    letter-spacing:0.10em;
+    text-transform:uppercase;
+    color:rgba(0,0,0,0.45);
+    margin-bottom:8px;
+  }
+  .solo-config-options{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .solo-config-option{
+    border:none;
+    cursor:pointer;
+    padding:10px 12px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:12px;
+    color:#111;
+    background:rgba(255,255,255,0.82);
+    border:1px solid rgba(0,0,0,0.08);
+    transition:all .18s ease;
+  }
+  .solo-config-option.active{
+    background:#111;
+    border-color:#111;
+    color:#fff;
+  }
+  .solo-config-summary{
+    font-size:12px;
+    color:rgba(0,0,0,0.70);
+    margin-top:6px;
+  }
+
+  .solo-info-card{
+    position:absolute;
+    left:22px;
+    top:50%;
+    transform:translateY(-50%) translateX(-12px);
+    width:260px;
+    max-width:calc(100% - 44px);
+    padding:16px 16px 14px;
+    border-radius:18px;
+    background:rgba(255,255,255,0.70);
+    border:1px solid rgba(255,255,255,0.72);
+    box-shadow:0 22px 46px rgba(0,0,0,0.12);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .18s ease, transform .22s ease;
+    z-index:20;
+  }
+  #sect-gallery.solo .solo-frame.info-open .solo-info-card{
+    opacity:1;
+    pointer-events:auto;
+    transform:translateY(-50%) translateX(0);
+  }
+  .solo-info-close{
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:32px;
+    height:32px;
+    border:none;
+    border-radius:12px;
+    background:rgba(0,0,0,0.06);
+    color:#111;
+    cursor:pointer;
+    font-weight:950;
+    font-size:18px;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .solo-info-title{
+    margin:2px 34px 10px 0;
+    font-size:14px;
+    font-weight:950;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:#111;
+  }
+  .solo-info-text{
+    font-size:12px;
+    line-height:1.7;
+    color:rgba(0,0,0,0.70);
+    margin-bottom:12px;
+  }
+  .solo-info-meta{
+    display:grid;
+    gap:10px;
+  }
+  .solo-meta-item span{
+    display:block;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:rgba(0,0,0,0.45);
+    margin-bottom:4px;
+  }
+  .solo-meta-item strong{
+    display:block;
+    font-size:13px;
+    font-weight:950;
+    color:#111;
+  }
+
+  .img-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:44px;
+    height:44px;
+    border:none; border-radius:999px;
+    background:#cfcfcf;
+    color:#666;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    backdrop-filter:none;
+    z-index:9;
+  }
+  .img-arrow.left{ left:16px; }
+  .img-arrow.right{ right:16px; }
+
+  .v360-ui{
+    position:absolute;
+    left:50%; transform:translateX(-50%);
+    bottom:12px;
+    width:min(370px, 78%);
+    background:rgba(0,0,0,0.35);
+    backdrop-filter:blur(12px);
+    border-radius:999px;
+    padding:5px 7px;
+    display:flex; gap:6px; align-items:center;
+  }
+  .v360-btn{
+    width:22px; height:18px;
+    border:none; border-radius:8px;
+    background:rgba(255,255,255,0.18);
+    color:#fff;
+    cursor:pointer;
+    font-weight:900;
+    font-size:11px;
+  }
+  .v360-range{
+    flex:1;
+    -webkit-appearance:none;
+    appearance:none;
+    height:5px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.22);
+    outline:none;
+  }
+  .v360-range::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:27px; height:11px;
+    border-radius:999px;
+    background:#fff;
+    cursor:pointer;
+    box-shadow:0 5px 9px rgba(0,0,0,0.18);
+  }
+
+  .solo-info-block{
+    padding:18px 0 0;
+    border-top:1px solid #e9e9e9;
+  }
+  .solo-desc{
+    text-align:left;
+    color:#666;
+    font-size:13px;
+    line-height:1.7;
+    border-top:none;
+    padding-top:0;
+    margin-bottom:18px;
+  }
+  .solo-desc strong{
+    display:block;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:#666;
+    margin:0 0 6px;
+  }
+  .data-row{ display:flex; flex-wrap:wrap; gap:38px; margin-top:14px; }
+  .data-item span:first-child{
+    display:block; font-size:10px; color:#999; text-transform:uppercase;
+    font-weight:900; margin-bottom:4px; letter-spacing:0.08em;
+  }
+  .data-item span:last-child{ font-size:14px; font-weight:900; color:#222; }
+
+  .artist-profile{
+    display:flex; align-items:center; gap:14px;
+    margin-top:18px;
+    padding:16px;
+    background:#fafafa;
+    border-radius:20px;
+    cursor:pointer;
+    transition:all .2s ease;
+    border:1px solid transparent;
+  }
+  .artist-profile:hover{
+    background:#fff;
+    border-color:#eee;
+    box-shadow:0 10px 24px rgba(0,0,0,0.06);
+    transform:translateY(-2px);
+  }
+  .avatar{ width:44px; height:44px; border-radius:50%; background:#eee; overflow:hidden; }
+  .avatar img{ width:100%; height:100%; object-fit:cover; }
+  .artist-info{ flex:1; }
+  .artist-info h4{ margin:0; font-size:13px; color:#222; font-weight:900; }
+  .artist-info p{ margin:2px 0 0; font-size:11px; color:#888; }
+  .artist-cta{ font-size:11px; font-weight:900; color:#333; text-transform:uppercase; letter-spacing:0.06em; }
+
+  .actions{ display:flex; gap:12px; margin-top:18px; }
+  .btn{
+    padding:14px 20px; border-radius:16px;
+    border:none; font-size:13px; font-weight:800;
+    cursor:pointer;
+  }
+  .btn-primary{ background:#111; color:#fff; flex:1; }
+  .btn-ghost{ background:#f0f0f0; color:#666; }
+
+  /* SERVICES (same as your file) */
+  .services-wrap{ margin-top:10px; }
+  .services-grid{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0, 1fr));
+    gap:16px;
+    margin-top:18px;
+  }
+  .svc-card{
+    background:#fff;
+    border:1px solid #f0f0f0;
+    border-radius:22px;
+    padding:18px 18px 16px;
+    box-shadow:0 10px 24px rgba(0,0,0,0.06);
+    transition:transform .22s ease, box-shadow .22s ease;
+    min-height:160px;
+  }
+  .svc-card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 18px 44px rgba(0,0,0,0.10);
+  }
+  .svc-ico{
+    width:36px; height:36px; border-radius:14px;
+    background:#f4f4f4;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900;
+    margin-bottom:12px;
+  }
+  .svc-title{ font-size:18px; font-weight:950; margin:0 0 8px; color:#3f3f3f; }
+  .svc-desc{ margin:0; color:#666; line-height:1.6; font-size:13px; }
+
+  .process{
+    margin-top:26px;
+    border-radius:28px;
+    border:1px solid #efefef;
+    background:#fff;
+    padding:26px 22px;
+    box-shadow:0 18px 40px rgba(0,0,0,0.06);
+  }
+  .process-head h2{
+    margin:0 0 6px;
+    font-size:28px;
+    font-weight:950;
+    color:#111;
+    letter-spacing:-0.02em;
+  }
+  .process-head p{ margin:0 0 18px; color:#666; line-height:1.6; }
+
+  .process-grid{
+    position:relative;
+    display:grid;
+    grid-template-columns:70px 1fr;
+    gap:16px;
+    padding:6px 0 2px;
+  }
+  .proc-rail{ position:relative; }
+  .proc-line{
+    position:absolute;
+    left:34px;
+    width:2px;
+    background:#ddd;
+    border-radius:999px;
+  }
+  .proc-dot{
+    position:absolute;
+    left:34px;
+    top:0;
+    width:18px; height:18px;
+    border-radius:50%;
+    background:#111;
+    transform:translate(-50%, -50%);
+    transition:top .14s linear;
+    box-shadow:0 10px 18px rgba(0,0,0,0.12);
+  }
+
+  .proc-items{ display:flex; flex-direction:column; gap:18px; }
+  .proc-step{
+    border-radius:26px;
+    border:1px solid #efefef;
+    background:#fff;
+    padding:22px;
+    box-shadow:0 14px 30px rgba(0,0,0,0.06);
+    display:grid;
+    grid-template-columns:1fr 220px;
+    gap:18px;
+    min-height:160px;
+    align-items:center;
+  }
+  .proc-kicker{
+    font-size:12px;
+    font-weight:950;
+    letter-spacing:0.10em;
+    text-transform:uppercase;
+    color:#999;
+    margin:0 0 8px;
+  }
+  .proc-title{ margin:0 0 8px; font-size:20px; font-weight:950; color:#111; }
+  .proc-desc{ margin:0; color:#666; line-height:1.65; }
+  .proc-illus{
+    height:120px;
+    border-radius:20px;
+    border:1px solid #f0f0f0;
+    background:linear-gradient(180deg,#f8f8f8,#f2f2f2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:900; color:#bbb; letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-size:12px;
+  }
+
+  .form-title{ font-size:18px; font-weight:950; margin:0 0 18px; text-align:left; }
+  .form-group{ margin-bottom:12px; }
+  .form-input{
+    display:block; width:100%;
+    padding:14px;
+    border:1px solid #eee;
+    border-radius:14px;
+    background:#fafafa;
+    font-size:14px;
+    color:#111;
+  }
+  .form-input:focus{ outline:none; border-color:#111; background:#fff; }
+  .btn-submit{
+    width:100%;
+    background:#2a2a2a; color:#fff;
+    padding:14px;
+    border-radius:14px;
+    border:none;
+    font-weight:950;
+    cursor:pointer;
+  }
+  #formSuccess{ display:none; border-radius:14px; margin-top:14px; background:#f0f0f0; color:#333; padding:18px; }
+
+  .modal-overlay{
+    position:fixed; inset:0;
+    background:rgba(0,0,0,0.45);
+    backdrop-filter:blur(5px);
+    z-index:9999;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    opacity:0; transition:opacity .25s ease;
+  }
+  .modal-overlay.open{ display:flex; opacity:1; }
+  .modal-box{
+    background:#fff;
+    width:90%;
+    max-width:420px;
+    padding:28px;
+    border-radius:26px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.22);
+    transform:translateY(18px);
+    transition:transform .25s cubic-bezier(.2,.8,.2,1);
+    max-height:90vh;
+    overflow-y:auto;
+  }
+  .modal-overlay.open .modal-box{ transform:translateY(0); }
+  .close-modal{ position:absolute; top:16px; right:16px; background:none; border:none; font-size:22px; color:#999; cursor:pointer; }
+
+  .site-footer{
+    margin-top:28px;
+    background:#262626;
+    color:#fff;
+    border-radius:22px;
+    overflow:hidden;
+    box-shadow:0 18px 44px rgba(0,0,0,0.18);
+  }
+  .site-footer .ft-top{ padding:26px 24px 16px; }
+  .site-footer .ft-brand{
+    font-weight:950;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    font-size:13px;
+    opacity:.92;
+  }
+  .site-footer .ft-note{
+    margin-top:10px;
+    color:rgba(255,255,255,0.80);
+    line-height:1.7;
+    font-size:13px;
+    max-width:780px;
+  }
+  .site-footer .ft-grid{
+    display:grid;
+    grid-template-columns:1.2fr 1fr 1fr;
+    gap:18px;
+    padding:18px 24px 22px;
+    border-top:1px solid rgba(255,255,255,0.10);
+  }
+  .ft-title{
+    font-weight:950;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    font-size:12px;
+    opacity:.85;
+    margin-bottom:12px;
+  }
+  .ft-text{ color:rgba(255,255,255,0.82); font-size:13px; line-height:1.7; }
+  .ft-links a{
+    display:block;
+    padding:10px 0;
+    color:rgba(255,255,255,0.85);
+    text-decoration:none;
+    border-bottom:1px solid rgba(255,255,255,0.10);
+    font-weight:750;
+  }
+  .ft-links a:last-child{ border-bottom:none; }
+  .ft-links a:hover{ color:#fff; }
+
+  .ft-social a{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 0;
+    color:rgba(255,255,255,0.88);
+    text-decoration:none;
+    border-bottom:1px solid rgba(255,255,255,0.10);
+    font-weight:800;
+  }
+  .ft-social a:last-child{ border-bottom:none; }
+  .ft-ic{
+    width:34px;height:34px;border-radius:999px;
+    background:rgba(255,255,255,0.12);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:950;
+  }
+  .ft-copy{
+    padding:0 24px 22px;
+    color:rgba(255,255,255,0.70);
+    font-size:12px;
+    font-weight:800;
+  }
+
+  @media (max-width:900px){
+    body{
+      height:auto;
+      min-height:100vh;
+      overflow-y:auto;
+      align-items:stretch;
+      justify-content:flex-start;
+    }
+    .layout{ height:auto; min-height:100vh; }
+    .layout{ flex-direction:column; }
+    #map{ width:100%; height:45vh; flex:none; }
+    .shop{
+      width:100%;
+      height:auto;
+      flex:none;
+      border-radius:0;
+      margin-top:-30px;
+      z-index:40;
+      overflow:visible;
+    }
+    .app-section{
+      position:relative;
+      inset:auto;
+      height:auto;
+      min-height:0;
+      transform:none;
+    }
+    .app-section:not(.active-section){
+      display:none;
+      opacity:0;
+      visibility:hidden;
+      pointer-events:none;
+    }
+    .app-section.active-section{ display:flex; }
+    .side-nav{ display:none; }
+    .mobile-nav{ display:flex; }
+    .section-scroll{ padding:22px; height:auto; overflow:visible; }
+
+    /* HOME mobile */
+    .home-screen{
+      --home-pad-left:20px;
+      --home-pad-right:20px;
+      height:auto;
+      overflow:visible;
+      padding:22px var(--home-pad-right) 64px var(--home-pad-left);
+      gap:12px;
+    }
+    #sect-home .section-scroll{
+      height:auto;
+      overflow:visible;
+    }
+    .home-top{ --home-logo-width:min(520px, 92%); }
+    .home-top small{ font-size:18px; padding-left:5%; }
+    .home-tagline{ font-size:15px; letter-spacing:0.4em; }
+    .home-main{ grid-template-columns:1fr; gap:12px; align-items:stretch; margin-top:0; border-radius:0; }
+    .home-banner{
+      position:static;
+      width:100%;
+      padding:20px 18px;
+    }
+    .home-banner-title{ font-size:22px; }
+    .home-banner-btn{ font-size:18px; padding:12px 21px; }
+    .home-copy{ margin:0 0 10px 0; width:100%; }
+    .home-copy-title{ font-size:30px; line-height:1.4; }
+    .home-glass{ padding:20px 20px; height:auto; min-height:0; max-height:none; }
+    .btn-home{ font-size:12px; padding:12px 22px; }
+    .home-illustration-wrap{ height:auto; justify-content:flex-start; padding:0; }
+    .home-illustration-track{ gap:0; padding:0; scroll-padding-left:0; }
+    .home-slide{ padding:0; flex-direction:column; align-items:stretch; }
+    .home-slide-media{ width:100%; height:220px; padding-left:0; }
+    .home-illustration{ border-radius:0; }
+    .home-slider-controls{ left:14px; right:14px; bottom:12px; }
+    .home-slider-dots{ gap:8px; }
+    .home-dot{ width:7px; height:7px; }
+    .home-dot.active{ width:18px; }
+    .home-slider-arrows{ gap:10px; }
+    .home-arrow{ font-size:16px; }
+
+    /* 3D popup mobile */
+    .map-3d-popup{
+      left:50%;
+      top:50%;
+      width:30%;
+      max-width:260px;
+      min-width:140px;
+      transform:translate(-50%, -50%);
+    }
+
+    .shop-head{ padding:18px 18px; }
+    .shop-body{ padding:18px 18px 70px; }
+    .grid{ grid-template-columns:repeat(2, 1fr); gap:14px; }
+    .card{ padding:16px 12px; border-radius:24px; }
+    .card-media{ height:118px; }
+
+    /* SOLO frame mobile */
+    #sect-gallery.solo .solo-frame-head{ top:14px; left:16px; right:16px; }
+    #sect-gallery.solo .solo-frame-foot{
+      padding:14px 16px;
+      flex-direction:column;
+      align-items:stretch;
+      gap:12px;
+    }
+    .solo-tabs-bar{ padding:8px 16px 12px; }
+    .media-tabs{ padding:4px; gap:4px; }
+    .media-tab{ padding:6px 10px; font-size:8px; letter-spacing:0.05em; }
+    .solo-foot-right{ width:100%; align-items:stretch; }
+    .solo-bottom-tabs-inner{ width:100%; justify-content:space-between; }
+    .solo-bottom-tab{ flex:1; padding:10px 8px; font-size:10px; }
+    .solo-tab-wrap{ flex:1; }
+    .solo-popover{ gap:8px; padding:10px; }
+    .solo-suboption{ flex:1; text-align:center; padding:12px 10px; font-size:11px; }
+    .solo-info-card{
+      left:16px; right:16px;
+      top:auto; bottom:128px;
+      width:auto; max-width:none;
+      transform:translateY(12px);
+    }
+    #sect-gallery.solo .solo-frame.info-open .solo-info-card{ transform:translateY(0); }
+
+    .services-grid{ grid-template-columns:repeat(2, minmax(0, 1fr)); }
+    .proc-step{ grid-template-columns:1fr; }
+    .proc-illus{ height:100px; }
+    .process-grid{ grid-template-columns:54px 1fr; }
+    .proc-line, .proc-dot{ left:26px; }
+    .about-grid{ grid-template-columns:1fr; }
+    #sect-about .section-scroll{ padding:22px; }
+    #sect-about .sec-title{ font-size:34px; margin-bottom:10px; }
+    .about-lead{ font-size:20px; line-height:1.7; margin-bottom:12px; }
+    .about-sublead{ font-size:15px; line-height:1.7; margin-bottom:18px; }
+    .about-card{ min-height:auto; border-radius:22px; padding:16px; }
+    .about-card-media{ height:112px; border-radius:18px; }
+    .about-card-media::before{ width:64px; height:10px; top:10px; left:10px; }
+    .about-card-title{ font-size:17px; }
+    .about-card-desc{ font-size:12px; }
+    .site-footer .ft-grid{ grid-template-columns:1fr; }
+  }
+
+  @media (max-width:420px){
+    .mobile-nav{ left:8px; right:8px; bottom:30px; padding:5px; gap:3px; }
+    .mobile-nav .nav-item{ font-size:9px; padding:9px 4px; letter-spacing:0.04em; }
+  }
+</style>
+</head>
+
+<body>
+<div class="layout">
+  <div id="map">
+    <!-- ✅ 3D popup container -->
+    <div class="map-3d-popup" id="map3dPopup">
+      <div class="map-3d-inner" id="map3dInner"></div>
+    </div>
+
+    <nav class="side-nav" id="sideNav">
+      <div class="nav-item" id="navHome">Home</div>
+      <div class="nav-item" id="navAbout">About Us</div>
+      <div class="nav-item" id="navServices">Services</div>
+      <div class="nav-item active" id="navGallery">Gallery</div>
+      <div class="nav-item" id="navContact">Contact Us</div>
+    </nav>
+
+    <nav class="mobile-nav" id="mobileNav">
+      <div class="nav-item" id="mNavHome">Home</div>
+      <div class="nav-item" id="mNavAbout">About</div>
+      <div class="nav-item" id="mNavServices">Services</div>
+      <div class="nav-item active" id="mNavGallery">Gallery</div>
+      <div class="nav-item" id="mNavContact">Contact</div>
+    </nav>
+  </div>
+
+  <aside class="shop" id="shop">
+
+    <!-- HOME -->
+    <section id="sect-home" class="app-section active-section">
+      <div class="section-scroll">
+        <div class="home-screen">
+          <div class="home-top">
+            <small>Welcome to</small>
+            <img
+              class="home-logo"
+              src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/69442b591074614cc12c66e3_IMAGE.png"
+              alt="FNN ART"
+            />
+            <div class="home-tagline">The New Marketplace for Exceptional Art</div>
+          </div>
+
+          <div class="home-main">
+            <div class="home-banner">
+              <h3 class="home-banner-title">
+                <span>Original Art For Sale</span>
+              </h3>
+              <button class="home-banner-btn" type="button" onclick="switchSection('sect-gallery')">Browse Collection</button>
+            </div>
+
+            <div class="home-illustration-wrap">
+              <div class="home-illustration-track" aria-label="Home artwork slider">
+                <article class="home-slide">
+                  <div class="home-slide-media">
+                    <img
+                      class="home-illustration"
+                      src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/694d22cb1f8ea86c4b6f1402_Gemini_Generated_Image_jt70lgjt70lgjt70.png"
+                      alt="Gallery artwork 1"
+                    />
+                  </div>
+                </article>
+                <article class="home-slide">
+                  <div class="home-slide-media">
+                    <img
+                      class="home-illustration"
+                      src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/694d22cb19f13d59d8e873bb_Gemini_Generated_Image_jpmt2ljpmt2ljpmt.png"
+                      alt="Gallery artwork 2"
+                    />
+                  </div>
+                </article>
+                <article class="home-slide">
+                  <div class="home-slide-media">
+                    <img
+                      class="home-illustration"
+                      src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/694d22ca91a13a0bfec82bb6_Gemini_Generated_Image_94ixz894ixz894ix.png"
+                      alt="Gallery artwork 3"
+                    />
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+          <div class="home-slider-controls" aria-label="Home slider controls">
+            <div class="home-slider-dots" id="homeSliderDots" aria-label="Home slider dots">
+              <button class="home-dot active" type="button" data-index="0" aria-label="Slide 1"></button>
+              <button class="home-dot" type="button" data-index="1" aria-label="Slide 2"></button>
+              <button class="home-dot" type="button" data-index="2" aria-label="Slide 3"></button>
+            </div>
+            <div class="home-slider-arrows" aria-label="Home slider arrows">
+              <button class="home-arrow" type="button" data-dir="-1" aria-label="Previous slide">&larr;</button>
+              <button class="home-arrow" type="button" data-dir="1" aria-label="Next slide">&rarr;</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="sect-about" class="app-section">
+      <div class="section-scroll">
+        <div class="about-wrap">
+          <h1 class="sec-title">About FNN</h1>
+
+          <p class="about-lead">
+            FNN is a modern marketplace art platform specializing in the presentation of original artworks by selected artists&mdash;connecting creative expression with audiences and institutions.
+          </p>
+
+          <p class="about-sublead">
+            Its mission is to elevate art as a cultural value and creative identity by providing a professional environment that honors both the artist and the artwork, while connecting creative expression with audiences and art institutions. FNN aspires to become the Art Content Center (NDCC) for the art scene in the GCC.
+          </p>
+
+          <div class="about-grid">
+            <article class="about-card">
+              <div class="about-card-media">
+                <img src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/69512ec8aee7d6fa05969c14_Gemini_Generated_Image_qy4vwpqy4vwpqy4v.png" alt="Arts &amp; Culture">
+              </div>
+              <div class="about-card-meta">ARTS &amp; CULTURE</div>
+              <h3 class="about-card-title">Curated Platforms<br>&amp; Exhibitions</h3>
+              <p class="about-card-desc">
+                Presenting original works by local and international artists, alongside commissioned installations and gallery-style programs exploring identity, place, and modern culture.
+              </p>
+            </article>
+
+            <article class="about-card">
+              <div class="about-card-media">
+                <img src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/69512ec791fd7e92338b007c_Gemini_Generated_Image_vtikswvtikswvtik.png" alt="Creative Infrastructure">
+              </div>
+              <div class="about-card-meta">CREATIVE INFRASTRUCTURE</div>
+              <h3 class="about-card-title">Art Content Center<br>&amp; Partnerships</h3>
+              <p class="about-card-desc">
+                Operating as the NDCC for art creation and archiving. Collaborating with cultural entities to integrate art into public spaces, extending the physical experience through digital platforms.
+              </p>
+            </article>
+
+            <article class="about-card">
+              <div class="about-card-media">
+                <img src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/69512ec6c106b34fd4b6d7a4_Gemini_Generated_Image_h6blrlh6blrlh6bl.png" alt="Media &amp; Cultural Impact">
+              </div>
+              <div class="about-card-meta">MEDIA &amp; CULTURAL IMPACT</div>
+              <h3 class="about-card-title">Cultural Narrative<br>&amp; Engagement</h3>
+              <p class="about-card-desc">
+                Shaping Saudi Arabia&#39;s contemporary art narrative and creating accessible, elevated art experiences to connect diverse audiences with creative expression.
+              </p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section id="sect-services" class="app-section">
+      <div class="section-scroll">
+        <h1 class="sec-title">Services</h1>
+        <p class="sec-sub">A complete pipeline—from creative direction to installation—built for quality, clarity, and impact.</p>
+
+        <div class="services-wrap">
+          <div class="services-grid" id="servicesGrid">
+            <div class="svc-card"><div class="svc-ico">◎</div><h3 class="svc-title">Creative Planning</h3><p class="svc-desc">Sculptural and contemporary art planning—translating culture into form.</p></div>
+            <div class="svc-card"><div class="svc-ico">✎</div><h3 class="svc-title">Original design</h3><p class="svc-desc">Original concepts inspired by renowned artists and professional teams.</p></div>
+            <div class="svc-card"><div class="svc-ico">▤</div><h3 class="svc-title">Excellent structure</h3><p class="svc-desc">Qualification-led analysis—ensuring stability, safety, and longevity.</p></div>
+            <div class="svc-card"><div class="svc-ico">✶</div><h3 class="svc-title">Crafted with ingenuity</h3><p class="svc-desc">Refined execution where detail, patience, and intent define the final work.</p></div>
+
+            <div class="svc-card"><div class="svc-ico">⌂</div><h3 class="svc-title">Professional installation</h3><p class="svc-desc">Integrated workflows for safe, precise, and reliable delivery on site.</p></div>
+            <div class="svc-card"><div class="svc-ico">⌁</div><h3 class="svc-title">Refurbishment & Restoration</h3><p class="svc-desc">Renovation and care—bringing works back to life with expert teams.</p></div>
+            <div class="svc-card"><div class="svc-ico">▢</div><h3 class="svc-title">Art rental</h3><p class="svc-desc">Rental services for sculptures and artworks—supporting programs & projects.</p></div>
+            <div class="svc-card"><div class="svc-ico">⌖</div><h3 class="svc-title">Site survey</h3><p class="svc-desc">On-site inspection and coordination—aligning implementation to vision.</p></div>
+
+            <div class="svc-card"><div class="svc-ico">◇</div><h3 class="svc-title">Curatorial services</h3><p class="svc-desc">Research, selection, and presentation strategy for exhibitions and collections.</p></div>
+            <div class="svc-card"><div class="svc-ico">🎧</div><h3 class="svc-title">Art Consultant</h3><p class="svc-desc">Concept proposals, guidance, and recommendations tailored to your space.</p></div>
+            <div class="svc-card"><div class="svc-ico">◔</div><h3 class="svc-title">Art broker</h3><p class="svc-desc">Market services connecting institutions, collectors, and artists—locally and globally.</p></div>
+            <div class="svc-card"><div class="svc-ico">⧉</div><h3 class="svc-title">Artistic Supervisor</h3><p class="svc-desc">Quality monitoring, materials review, and execution supervision end-to-end.</p></div>
+          </div>
+
+          <div class="process" id="processBlock">
+            <div class="process-head">
+              <h2>Our process</h2>
+              <p>8 clear steps—from discovery to delivery—designed to keep quality high and execution smooth.</p>
+            </div>
+
+            <div class="process-grid" id="processGrid">
+              <div class="proc-rail">
+                <div class="proc-line"></div>
+                <div class="proc-dot" id="procDot"></div>
+              </div>
+
+              <div class="proc-items" id="procItems">
+                <div class="proc-step"><div><div class="proc-kicker">Step 1</div><h3 class="proc-title">Discovery & Direction</h3><p class="proc-desc">Define goals, context, constraints, and the cultural story you want the work to carry.</p></div><div class="proc-illus">Illustration</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">Step 2</div><h3 class="proc-title">Concept & References</h3><p class="proc-desc">Moodboards, precedents, and initial concepts aligned with the site and audience.</p></div><div class="proc-illus">Illustration</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">Step 3</div><h3 class="proc-title">Design Development</h3><p class="proc-desc">Refine form, materials, scale, and presentation details with clear approvals.</p></div><div class="proc-illus">Illustration</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">Step 4</div><h3 class="proc-title">Engineering Review</h3><p class="proc-desc">Structural checks, safety planning, and feasibility for production & installation.</p></div><div class="proc-illus">Illustration</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">Step 5</div><h3 class="proc-title">Production Planning</h3><p class="proc-desc">Scheduling, sourcing, and documentation to keep quality consistent.</p></div><div class="proc-illus">Illustration</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">Step 6</div><h3 class="proc-title">Fabrication & Build</h3><p class="proc-desc">Craft, finishing, and quality checks—executed with high attention to detail.</p></div><div class="proc-illus">Illustration</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">Step 7</div><h3 class="proc-title">Installation & On-site</h3><p class="proc-desc">Professional installation, safety protocol, and site coordination.</p></div><div class="proc-illus">Illustration</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">Step 8</div><h3 class="proc-title">Handover & Care</h3><p class="proc-desc">Final delivery, documentation, and care recommendations for longevity.</p></div><div class="proc-illus">Illustration</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="sect-gallery" class="app-section">
+      <header class="shop-head">
+        <nav class="nav-group" id="filters">
+          <button class="chip active" data-filter="all" id="btnAll">ALL</button>
+          <button class="chip" data-filter="cabinet">Cabinets</button>
+          <button class="chip" data-filter="sideboard">Sideboards</button>
+          <button class="chip" data-filter="decor">Decor</button>
+        </nav>
+      </header>
+
+      <div class="shop-body">
+        <div class="grid" id="grid"></div>
+
+        <div class="solo-wrap" id="soloWrap">
+          <div class="back-nav"><button class="btn-back" id="btnBack">&larr; Back to Collection</button></div>
+
+          <div class="solo-frame">
+            <div class="solo-frame-head">
+              <div class="solo-name" id="soloName">PRODUCT</div>
+            </div>
+            <div class="solo-media-container" id="soloMedia"></div>
+            <div class="solo-tabs-bar"><div id="soloTabs"></div></div>
+
+            <aside class="solo-info-card" id="soloInfoCard" aria-hidden="true">
+              <button class="solo-info-close" type="button" id="soloInfoClose" aria-label="Close info">&times;</button>
+              <div class="solo-info-title" id="soloInfoName">PRODUCT</div>
+              <div class="solo-info-text">Contemporary design meeting functionality.</div>
+              <div class="solo-info-meta">
+                <div class="solo-meta-item"><span>Material</span><strong id="soloInfoMat">--</strong></div>
+                <div class="solo-meta-item"><span>Dimensions</span><strong id="soloInfoDim">--</strong></div>
+                <div class="solo-meta-item"><span>Location</span><strong id="soloInfoLoc">--</strong></div>
+              </div>
+            </aside>
+
+            <div class="solo-config" id="soloConfig" aria-hidden="true">
+              <button class="solo-config-close" type="button" id="soloConfigClose" aria-label="Close customizer">&times;</button>
+              <div class="solo-config-title">Customizer</div>
+              <div class="solo-config-group">
+                <div class="solo-config-label">Color</div>
+                <div class="solo-config-options" id="soloConfigColors" role="group" aria-label="Choose color">
+                  <button class="solo-config-option" type="button" data-color="Red">Red</button>
+                  <button class="solo-config-option" type="button" data-color="Blue">Blue</button>
+                  <button class="solo-config-option" type="button" data-color="Sand">Sand</button>
+                </div>
+              </div>
+              <div class="solo-config-group">
+                <div class="solo-config-label">Size</div>
+                <div class="solo-config-options" id="soloConfigSizes" role="group" aria-label="Choose size">
+                  <button class="solo-config-option" type="button" data-size="Small">Small</button>
+                  <button class="solo-config-option" type="button" data-size="Medium">Medium</button>
+                  <button class="solo-config-option" type="button" data-size="Large">Large</button>
+                </div>
+              </div>
+              <div class="solo-config-summary" id="soloConfigSummary">Selected: -- / --</div>
+            </div>
+
+            <div class="solo-frame-foot">
+              <div class="solo-foot-left">
+                <div class="solo-foot-title" id="soloFootTitle">PRODUCT</div>
+                <div class="solo-foot-desc" id="soloFootDesc">Contemporary design meeting functionality.</div>
+              </div>
+
+              <div class="solo-foot-right">
+                <div class="solo-bottom-tabs" aria-label="Product options">
+                  <div class="solo-bottom-tabs-inner">
+                    <button class="solo-bottom-tab" type="button" id="soloInfoBtn" aria-controls="soloInfoCard" aria-expanded="false">INFO</button>
+
+                    <div class="solo-tab-wrap">
+                      <button class="solo-bottom-tab" type="button" id="soloColorBtn" aria-expanded="false">COLOR</button>
+                      <div class="solo-popover" id="soloColorPopover" hidden>
+                        <button class="solo-suboption" type="button" data-color="Red">RED</button>
+                        <button class="solo-suboption" type="button" data-color="Blue">BLUE</button>
+                        <button class="solo-suboption" type="button" data-color="Sand">SAND</button>
+                      </div>
+                    </div>
+
+                    <div class="solo-tab-wrap">
+                      <button class="solo-bottom-tab" type="button" id="soloSizeBtn" aria-expanded="false">SIZE</button>
+                      <div class="solo-popover" id="soloSizePopover" hidden>
+                        <button class="solo-suboption" type="button" data-size="Small">SMALL</button>
+                        <button class="solo-suboption" type="button" data-size="Medium">MEDIUM</button>
+                        <button class="solo-suboption" type="button" data-size="Large">LARGE</button>
+                      </div>
+                    </div>
+
+                    <button class="solo-bottom-tab" type="button" id="soloCustomsBtn" aria-controls="soloConfig" aria-expanded="false">CUSTOMS</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="solo-info-block">
+            <div class="solo-desc">
+              <strong id="soloTitle">PRODUCT</strong><br>
+              Contemporary design meeting functionality.
+              <div class="data-row">
+                <div class="data-item"><span>Material</span><span id="spMat">--</span></div>
+                <div class="data-item"><span>Dimensions</span><span id="spDim">--</span></div>
+                <div class="data-item"><span>Location</span><span id="soloStore">--</span></div>
+              </div>
+            </div>
+
+            <div class="artist-profile" id="artistBtn">
+              <div class="avatar"><img id="artistImg" src="" alt="Designer"></div>
+              <div class="artist-info"><h4 id="artistName">--</h4><p id="artistRole">--</p></div>
+              <div class="artist-cta">View Bio →</div>
+            </div>
+
+            <div class="actions">
+              <button class="btn btn-primary" id="btnContactProduct">Contact Us</button>
+              <button class="btn btn-ghost" id="btnClose">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="sect-contact" class="app-section">
+      <div class="section-scroll">
+        <h1 class="sec-title">Get in Touch</h1>
+        <p class="sec-sub">Interested in a piece? Let us know.</p>
+
+        <form id="ajaxForm" action="https://formsubmit.co/anaskaroti@gmail.com" method="POST">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_template" value="table">
+
+          <div class="form-group"><input type="text" class="form-input" name="name" placeholder="Your Name" required></div>
+          <div class="form-group"><input type="email" class="form-input" name="email" placeholder="Your Email" required></div>
+          <div class="form-group"><input type="text" class="form-input" name="subject" placeholder="Subject" id="formSubject"></div>
+          <div class="form-group"><textarea class="form-input" name="message" placeholder="Message..." rows="4"></textarea></div>
+
+          <button type="submit" class="btn-submit" id="formSubmitBtn">Send Inquiry</button>
+        </form>
+
+        <div id="formSuccess">Thank you! Your inquiry has been received.</div>
+
+        <footer class="site-footer">
+          <div class="ft-top">
+            <div class="ft-brand">FNN ART</div>
+            <div class="ft-note">
+              A modern art platform specializing in the presentation of original artworks by selected artists—connecting creative expression with audiences and institutions.
+            </div>
+          </div>
+
+          <div class="ft-grid">
+            <div>
+              <div class="ft-title">Contact us</div>
+              <div class="ft-text">
+                anaskaroti@gmail.com<br>
+              </div>
+            </div>
+
+            <div class="ft-links">
+              <div class="ft-title">Navigation</div>
+              <a href="#" onclick="switchSection('sect-home'); return false;">Home</a>
+              <a href="#" onclick="switchSection('sect-about'); return false;">About</a>
+              <a href="#" onclick="switchSection('sect-services'); return false;">Services</a>
+              <a href="#" onclick="switchSection('sect-gallery'); return false;">Gallery</a>
+              <a href="#" onclick="switchSection('sect-contact'); return false;">Contact</a>
+            </div>
+
+            <div class="ft-social">
+              <div class="ft-title">Follow us</div>
+              <a href="#" onclick="return false;"><span class="ft-ic">◎</span>@fnn</a>
+              <a href="#" onclick="return false;"><span class="ft-ic">f</span>@fnn</a>
+              <a href="#" onclick="return false;"><span class="ft-ic">in</span>@fnn</a>
+              <a href="#" onclick="return false;"><span class="ft-ic">▶</span>@fnn</a>
+            </div>
+          </div>
+
+          <div class="ft-copy">© 2025 FNN ART. All rights reserved.</div>
+        </footer>
+      </div>
+    </section>
+
+  </aside>
+</div>
+
+<div class="modal-overlay" id="modalArtistOverlay">
+  <div class="modal-box" style="position:relative">
+    <button class="close-modal" id="closeArtistModal">×</button>
+    <div style="text-align:center; margin-bottom:18px;">
+      <div style="width:82px;height:82px;border-radius:50%;overflow:hidden;margin:0 auto 14px;">
+        <img id="modalArtistImg" src="" alt="" style="width:100%;height:100%;object-fit:cover;">
+      </div>
+      <h3 id="modalArtistName" style="margin:0 0 6px; font-weight:950;"></h3>
+      <span id="modalArtistRole" style="font-size:12px; color:#999; text-transform:uppercase; letter-spacing:0.08em;"></span>
+    </div>
+    <p id="modalArtistBio" style="font-size:13px; line-height:1.7; color:#555; text-align:center; margin:0;"></p>
+  </div>
+</div>
+
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
+
+<script>
+  const MAPBOX_TOKEN = "pk.eyJ1IjoiYW5hc2thcm90aSIsImEiOiJjbWhqcHgwcmMwbWM0MmxwZ2V5Z2x5OTN0In0.bpOf-4BsljExZdYZUak_pw";
+  const USER_STYLE = "mapbox://styles/anaskaroti/cmhuiic1f00ft01qucn91gk6e";
+
+  mapboxgl.accessToken = MAPBOX_TOKEN;
+  const isMobile = window.innerWidth < 900;
+  const startZoom = isMobile ? 0 : 0.8;
+
+  const map = new mapboxgl.Map({
+    container: "map",
+    style: USER_STYLE,
+    center: [0, 20],
+    zoom: startZoom,
+    pitch: 0,
+    projection: 'globe'
+  });
+
+  map.on('style.load', () => {
+    try {
+      map.setFog({
+        'color': 'rgb(255, 255, 255)',
+        'high-color': 'rgb(200, 200, 200)',
+        'space-color': 'rgb(0, 0, 0)',
+        'star-intensity': 0.6
+      });
+    } catch(e){}
+
+    const layers = map.getStyle().layers || [];
+    let labelLayerId;
+    for (const layer of layers) {
+      if (layer.type === 'symbol' && layer.layout && layer.layout['text-field']) {
+        labelLayerId = layer.id;
+        break;
+      }
+    }
+
+    if (!map.getLayer('3d-buildings-custom')) {
+      try{
+        map.addLayer({
+          'id': '3d-buildings-custom',
+          'source': 'composite',
+          'source-layer': 'building',
+          'filter': ['==', 'extrude', 'true'],
+          'type': 'fill-extrusion',
+          'minzoom': 15,
+          'paint': {
+            'fill-extrusion-color': '#aaa',
+            'fill-extrusion-height': ['get', 'height'],
+            'fill-extrusion-base': ['get', 'min_height'],
+            'fill-extrusion-opacity': 0.6
+          }
+        }, labelLayerId);
+      } catch(e){}
+    }
+  });
+
+  window.switchSection = function(id){
+    document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active-section'));
+    const target = document.getElementById(id);
+    if(target) target.classList.add('active-section');
+
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const navIdMap = {
+      'sect-home':'navHome',
+      'sect-about':'navAbout',
+      'sect-services':'navServices',
+      'sect-gallery':'navGallery',
+      'sect-contact':'navContact'
+    };
+    const mNavIdMap = {
+      'sect-home':'mNavHome',
+      'sect-about':'mNavAbout',
+      'sect-services':'mNavServices',
+      'sect-gallery':'mNavGallery',
+      'sect-contact':'mNavContact'
+    };
+
+    const navEl = document.getElementById(navIdMap[id]);
+    if(navEl) navEl.classList.add('active');
+    const mNavEl = document.getElementById(mNavIdMap[id]);
+    if(mNavEl) mNavEl.classList.add('active');
+
+    if(id === 'sect-home'){
+      map.flyTo({ center:[0,20], zoom:startZoom, pitch:0, bearing:0, duration:1800 });
+    }
+
+    if(id === 'sect-services'){
+      requestAnimationFrame(() => { setupProcessAnimation(); });
+    }
+  };
+
+  const safeAdd = (id, ev, handler) => {
+    const el = document.getElementById(id);
+    if(el) el.addEventListener(ev, handler);
+  };
+
+  safeAdd('navHome','click',() => switchSection('sect-home'));
+  safeAdd('navAbout','click',() => switchSection('sect-about'));
+  safeAdd('navServices','click',() => switchSection('sect-services'));
+  safeAdd('navGallery','click',() => switchSection('sect-gallery'));
+  safeAdd('navContact','click',() => switchSection('sect-contact'));
+
+  safeAdd('mNavHome','click',() => switchSection('sect-home'));
+  safeAdd('mNavAbout','click',() => switchSection('sect-about'));
+  safeAdd('mNavServices','click',() => switchSection('sect-services'));
+  safeAdd('mNavGallery','click',() => switchSection('sect-gallery'));
+  safeAdd('mNavContact','click',() => switchSection('sect-contact'));
+
+  const homeSliderTrack = document.querySelector('.home-illustration-track');
+  const homeSliderDots = document.getElementById('homeSliderDots');
+  const homeSliderArrows = document.querySelector('.home-slider-arrows');
+  const getHomeSlideStep = () => {
+    if(!homeSliderTrack) return 0;
+    const slide = homeSliderTrack.querySelector('.home-slide');
+    const base = slide ? slide.getBoundingClientRect().width : homeSliderTrack.clientWidth;
+    const style = getComputedStyle(homeSliderTrack);
+    const gap = parseFloat(style.columnGap || style.gap || "0") || 0;
+    return base + gap;
+  };
+  const scrollHomeSlider = (dir) => {
+    if(!homeSliderTrack) return;
+    const step = getHomeSlideStep();
+    if(!step) return;
+    homeSliderTrack.scrollBy({ left: dir * step, behavior:'smooth' });
+  };
+  const setHomeActiveDot = () => {
+    if(!homeSliderDots || !homeSliderTrack) return;
+    const dots = Array.from(homeSliderDots.querySelectorAll('.home-dot'));
+    if(!dots.length) return;
+    const step = getHomeSlideStep();
+    if(!step) return;
+    const idx = Math.max(0, Math.min(dots.length - 1, Math.round(homeSliderTrack.scrollLeft / step)));
+    dots.forEach((dot, i) => dot.classList.toggle('active', i === idx));
+  };
+
+  if(homeSliderTrack && homeSliderDots){
+    homeSliderDots.addEventListener('click', (e) => {
+      const btn = e.target.closest('.home-dot');
+      if(!btn) return;
+      const idx = Number(btn.dataset.index || 0);
+      const step = getHomeSlideStep();
+      if(!step) return;
+      homeSliderTrack.scrollTo({ left: idx * step, behavior:'smooth' });
+    });
+
+    let dotRaf = null;
+    homeSliderTrack.addEventListener('scroll', () => {
+      if(dotRaf) return;
+      dotRaf = requestAnimationFrame(() => {
+        dotRaf = null;
+        setHomeActiveDot();
+      });
+    }, { passive:true });
+  }
+  if(homeSliderTrack && homeSliderArrows){
+    homeSliderArrows.addEventListener('click', (e) => {
+      const btn = e.target.closest('.home-arrow');
+      if(!btn) return;
+      const dir = Number(btn.dataset.dir || 0);
+      if(!dir) return;
+      scrollHomeSlider(dir);
+    });
+  }
+  if(homeSliderTrack){
+    setInterval(() => {
+      const homeSection = document.getElementById('sect-home');
+      if(!homeSection || !homeSection.classList.contains('active-section')) return;
+      const atEnd = homeSliderTrack.scrollLeft + homeSliderTrack.clientWidth >= homeSliderTrack.scrollWidth - 4;
+      if(atEnd){
+        homeSliderTrack.scrollTo({ left:0, behavior:'smooth' });
+      } else {
+        scrollHomeSlider(1);
+      }
+    }, 4000);
+  }
+
+  const form = document.getElementById('ajaxForm');
+  const submitBtn = document.getElementById('formSubmitBtn');
+  const successMsg = document.getElementById('formSuccess');
+
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      if(submitBtn){ submitBtn.textContent="Sending..."; submitBtn.style.opacity="0.7"; }
+      fetch(form.action, { method:"POST", body:new FormData(form), headers:{ 'Accept':'application/json' } })
+      .then(res => {
+        if(res.ok){
+          form.style.display="none";
+          if(successMsg) successMsg.style.display="block";
+        } else {
+          alert("Oops! Problem submitting.");
+          if(submitBtn) submitBtn.textContent="Try Again";
+        }
+      })
+      .catch(() => {
+        alert("Oops! Problem submitting.");
+        if(submitBtn) submitBtn.textContent="Try Again";
+      });
+    });
+  }
+
+  let currentMarker = null;
+  let rotationFrame = null;
+  let modelSyncFrame = null;
+  let activePopupProduct = null;
+
+  const map3dPopup = document.getElementById('map3dPopup');
+  const map3dInner = document.getElementById('map3dInner');
+
+  function hideMap3D(){
+    if(modelSyncFrame){ cancelAnimationFrame(modelSyncFrame); modelSyncFrame=null; }
+    if(map3dInner) map3dInner.innerHTML = "";
+    if(map3dPopup) map3dPopup.classList.remove('show');
+    activePopupProduct = null;
+  }
+
+  function showMap3D(product){
+    if(!product || !product.model) return;
+    activePopupProduct = product;
+
+    const safeUrl = (product.model || "")
+      .replace(/\(/g,'%28').replace(/\)/g,'%29').replace(/ /g,'%20');
+
+    if(map3dInner){
+      map3dInner.innerHTML = `
+        <model-viewer
+          id="popupViewer"
+          src="${safeUrl}"
+          camera-controls
+          interaction-prompt="none"
+          shadow-intensity="1"
+          environment-image="neutral"
+          style="background:transparent;"
+          alt="${product.name || '3D'}">
+        </model-viewer>
+      `;
+    }
+    if(map3dPopup) map3dPopup.classList.add('show');
+
+    const viewer = document.getElementById('popupViewer');
+    if(!viewer) return;
+
+    let userIsInteracting = false;
+    let userThetaOffsetDeg = 0;
+    let userPhiDeg = 75;
+    let userRadius = '4.5m';
+    const baseHeadingDeg = 45;
+
+    const parseOrbit = (orbit) => {
+      if(!orbit || typeof orbit !== 'string') return null;
+      const m = orbit.trim().match(/^(-?\d*\.?\d+)(deg|rad)\s+(-?\d*\.?\d+)(deg|rad)\s+([^\s]+)$/);
+      if(!m) return null;
+      const toDeg = (v, unit) => unit === 'rad' ? (parseFloat(v) * (180 / Math.PI)) : parseFloat(v);
+      return { thetaDeg: toDeg(m[1], m[2]), phiDeg: toDeg(m[3], m[4]), radius: m[5] };
+    };
+
+    const captureUserOrbit = () => {
+      const o = parseOrbit(viewer.cameraOrbit);
+      if(!o) return;
+      userPhiDeg = o.phiDeg;
+      userRadius = o.radius;
+      userThetaOffsetDeg = o.thetaDeg - (map.getBearing() + baseHeadingDeg);
+    };
+
+    viewer.addEventListener('pointerdown', () => { userIsInteracting = true; }, { passive:true });
+    const endInteraction = () => { userIsInteracting = false; captureUserOrbit(); };
+    viewer.addEventListener('pointerup', endInteraction, { passive:true });
+    viewer.addEventListener('pointercancel', endInteraction, { passive:true });
+    viewer.addEventListener('lostpointercapture', endInteraction, { passive:true });
+
+    // ✅ Keep BOX fixed, rotate MODEL inside based on map bearing (and fix “contrary direction” by inverting)
+    const sync = () => {
+      if(!activePopupProduct) return;
+      if(!userIsInteracting){
+        const b = map.getBearing(); // Mapbox bearing increases clockwise
+        const az = (b + baseHeadingDeg + userThetaOffsetDeg);
+        viewer.cameraOrbit = `${az}deg ${userPhiDeg}deg ${userRadius}`;
+      }
+      modelSyncFrame = requestAnimationFrame(sync);
+    };
+    if(modelSyncFrame){ cancelAnimationFrame(modelSyncFrame); modelSyncFrame=null; }
+    sync();
+  }
+
+  function gotoStore(store, productFor3D){
+    if(!store) return;
+
+    // stop loops
+    if(rotationFrame){ cancelAnimationFrame(rotationFrame); rotationFrame=null; }
+    if(modelSyncFrame){ cancelAnimationFrame(modelSyncFrame); modelSyncFrame=null; }
+
+    // hide popup until zoom finished
+    hideMap3D();
+
+    if(currentMarker) currentMarker.remove();
+
+    const el = document.createElement('div');
+    el.style.backgroundColor='#111';
+    el.style.width='20px';
+    el.style.height='20px';
+    el.style.borderRadius='50%';
+    el.style.border='2px solid white';
+
+    currentMarker = new mapboxgl.Marker(el).setLngLat(store.coords).addTo(map);
+
+    map.flyTo({
+      center: store.coords,
+      zoom: 16.5,
+      pitch: 65,
+      bearing: Math.random()*90,
+      speed: 0.3,
+      curve: 1.2,
+      essential: true,
+      duration: 9000
+    });
+
+    // ✅ show popup AFTER zoom finishes, then start map rotation + model sync
+    map.once('moveend', () => {
+      showMap3D(productFor3D);
+
+      function rotate(){
+        map.rotateTo((map.getBearing()+0.05)%360, { duration:0 });
+        rotationFrame = requestAnimationFrame(rotate);
+      }
+      rotate();
+    });
+  }
+
+  const DEFAULT_IMAGES = [
+    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/693c1ca9c47857d958372698_Gemini_Generated_Image_yiit8eyiit8eyiit.png",
+    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/693c1ca9fd2fa99da51c575a_Gemini_Generated_Image_qrrx4iqrrx4iqrrx.png",
+    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/693c1ca9978004d5fa2a3d3a_Gemini_Generated_Image_6hnali6hnali6hna.png",
+    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/693c1ca9ff7c4713583ae7b5_Gemini_Generated_Image_im37uhim37uhim37.png",
+    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/693c1ca8c4a4dc0af86da352_Gemini_Generated_Image_rn5h5urn5h5urn5h.png",
+    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/693c1ca8c641d77b3de17010_Gemini_Generated_Image_mhci8mmhci8mmhci.png"
+  ];
+
+  const VIDEO_360 = "https://raw.githubusercontent.com/lwiise/3d-models/main/Product_Video_Generation_With_Rotation.mp4";
+  const VIDEO_NORMAL = "https://raw.githubusercontent.com/lwiise/3d-models/main/Artistic_Video_Generation_Request.mp4";
+
+  function buildMediaTabs(active){
+    const tabs = [
+      { key:'images', label:'Images' },
+      { key:'v360', label:'360' },
+      { key:'video', label:'Video' },
+      { key:'d3', label:'3D' }
+    ];
+    return `
+      <div class="media-tabs" id="mediaTabs">
+        ${tabs.map(t => `
+          <button class="media-tab ${t.key===active?'active':''}" data-tab="${t.key}">${t.label}</button>
+        `).join('')}
+      </div>
+    `;
+  }
+
+  function renderImages(images){
+    let idx = 0;
+    const html = `
+      <img id="imgSlide" src="${images[0]}" alt="Image" />
+      <button class="img-arrow left" id="imgPrev">&lsaquo;</button>
+      <button class="img-arrow right" id="imgNext">&rsaquo;</button>
+    `;
+    return { html, mount: (container) => {
+      const img = container.querySelector('#imgSlide');
+      const prev = container.querySelector('#imgPrev');
+      const next = container.querySelector('#imgNext');
+      const show = () => { if(img) img.src = images[idx]; };
+      if(prev) prev.onclick = () => { idx = (idx - 1 + images.length) % images.length; show(); };
+      if(next) next.onclick = () => { idx = (idx + 1) % images.length; show(); };
+    }};
+  }
+
+  function render360(){
+    const html = `
+      <video id="v360" src="${VIDEO_360}" playsinline preload="metadata"></video>
+      <div class="v360-ui">
+        <button class="v360-btn" id="v360Toggle">II</button>
+        <input class="v360-range" id="v360Range" type="range" min="0" max="1000" value="0" />
+      </div>
+    `;
+    return { html, mount: (container) => {
+      const v = container.querySelector('#v360');
+      const btn = container.querySelector('#v360Toggle');
+      const range = container.querySelector('#v360Range');
+      if(!v || !btn || !range) return;
+      v.controls = false;
+      v.loop = true;
+      v.muted = true;
+      v.play().catch(()=>{});
+      const syncRange = () => {
+        if(!v.duration || !isFinite(v.duration)) return;
+        range.value = Math.floor((v.currentTime / v.duration) * 1000);
+      };
+      v.addEventListener('timeupdate', syncRange);
+      range.addEventListener('input', () => {
+        if(!v.duration || !isFinite(v.duration)) return;
+        const t = (parseInt(range.value,10)/1000) * v.duration;
+        v.currentTime = t;
+      });
+      btn.addEventListener('click', () => {
+        if(v.paused){
+          v.play().catch(()=>{});
+          btn.textContent = "II";
+        }else{
+          v.pause();
+          btn.textContent = "▶";
+        }
+      });
+    }};
+  }
+
+  function renderVideo(){
+    const html = `<video src="${VIDEO_NORMAL}" controls playsinline preload="metadata"></video>`;
+    return { html, mount: ()=>{} };
+  }
+
+  function render3D(modelUrl, fallbackImg, productName){
+    const safeUrl = (modelUrl || "").replace(/\(/g,'%28').replace(/\)/g,'%29').replace(/ /g,'%20');
+    const html = `
+      <model-viewer
+        id="viewer3d"
+        src="${safeUrl}"
+        camera-controls
+        auto-rotate
+        shadow-intensity="1"
+        style="background:transparent; width:100%; height:100%;"
+        camera-orbit="45deg 75deg 4.5m"
+        environment-image="neutral"
+        alt="${productName || '3D'}">
+      </model-viewer>
+    `;
+    return { html, mount: (container) => {
+      const viewer = container.querySelector('#viewer3d');
+      if(viewer){
+        viewer.addEventListener('error', () => {
+          container.innerHTML = `<img src="${fallbackImg}" alt="Fallback" />`;
+        });
+      }
+    }};
+  }
+
+  function renderActiveMedia(p, tabKey){
+    const soloMedia = document.getElementById("soloMedia");
+    const soloTabs = document.getElementById("soloTabs");
+    if(!soloMedia || !soloTabs) return;
+
+    soloTabs.innerHTML = buildMediaTabs(tabKey);
+
+    let pack;
+    if(tabKey === 'images') pack = renderImages(p.images || DEFAULT_IMAGES);
+    if(tabKey === 'v360') pack = render360();
+    if(tabKey === 'video') pack = renderVideo();
+    if(tabKey === 'd3') pack = render3D(p.model, (p.images && p.images[0]) ? p.images[0] : p.img, p.name);
+
+    soloMedia.innerHTML = pack.html;
+    pack.mount(soloMedia);
+
+    attachTabHandlers(p);
+  }
+
+  function attachTabHandlers(p){
+    const soloTabs = document.getElementById("soloTabs");
+    if(!soloTabs) return;
+
+    const tabs = soloTabs.querySelector('#mediaTabs');
+    if(!tabs) return;
+
+    if(tabs.dataset.bound === "1") return;
+    tabs.dataset.bound = "1";
+
+    tabs.addEventListener('click', (e) => {
+      const btn = e.target.closest('.media-tab');
+      if(!btn) return;
+      const tab = btn.dataset.tab;
+      renderActiveMedia(p, tab);
+    });
+  }
+
+  // ✅ 12 products (kept)
+  const PRODUCTS = [
+    { id:"item-1", name:"Arch Cabinet", category:"cabinet", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/6923267a23d0fd8b7e2bc457_Screenshot_2025-11-23_141726-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/base%20(5).glb", specs:{ mat:"Velvet & Wood", dim:"120x60x90" }, store:{ name:"Milan Design District", coords:[9.1900,45.4642] }, artist:{ name:"Alessandro Rossi", role:"Art Director, Milano", img:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=100&q=80", bio:"Alessandro combines classical Italian joinery with bold, modern geometric forms." } },
+    { id:"item-2", name:"Geometric Side", category:"sideboard", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/6923267a7e9f217180e18c6d_Screenshot_2025-11-23_142545-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/base%20%289%29.glb", specs:{ mat:"Lacquered Wood", dim:"180x50x200" }, store:{ name:"Paris Le Marais", coords:[2.3522,48.8566] }, artist:{ name:"Claire Dubois", role:"Sculptor, Paris", img:"https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80", bio:"Claire challenges the perception of stability with her organic, tree-like structures." } },
+    { id:"item-3", name:"Art Deco Tall", category:"cabinet", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/6923267a3f4cd0cdf6848da0_Screenshot_2025-11-23_142423-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/base%20(7).glb", specs:{ mat:"Marble & Brass", dim:"220x80x95" }, store:{ name:"New York SoHo", coords:[-74.006,40.7128] }, artist:{ name:"Marcus Thorne", role:"Industrial Designer, NY", img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80", bio:"Marcus revives 1920s Art Deco aesthetics for the modern Manhattan loft." } },
+    { id:"item-4", name:"Striped Console", category:"decor", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/6923267a8659147dcb3f38ed_Screenshot_2025-11-23_142604-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/compressed_1763910785694_base%20(4).glb", specs:{ mat:"Resin & Paint", dim:"100x60x140" }, store:{ name:"Tokyo Harajuku", coords:[139.7034,35.6719] }, artist:{ name:"Kenji Sato", role:"Pop Artist, Tokyo", img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80", bio:"Kenji blurs the lines between collectible toys and functional high-end furniture." } },
+    { id:"item-5", name:"Radiance Credenza", category:"sideboard", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/6923267a361104af2bd0614b_Screenshot_2025-11-23_142501-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/base%20(8).compressed.glb", specs:{ mat:"Ebony & Gold", dim:"200x55x85" }, store:{ name:"Dubai Design Dist", coords:[55.2962,25.2769] }, artist:{ name:"Zara Al-Fayed", role:"Luxury Artisan, Dubai", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80", bio:"Zara's work is a fusion of traditional Middle Eastern patterns and ultra-modern luxury." } },
+    { id:"item-6", name:"Modular Unit", category:"decor", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/6923267a36286c4236e924d2_Screenshot_2025-11-23_142346-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/base%20%286%29.glb", specs:{ mat:"Ceramic Composite", dim:"120x120x120" }, store:{ name:"Copenhagen", coords:[12.5683,55.6761] }, artist:{ name:"Erik Jensen", role:"Minimalist, Copenhagen", img:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80", bio:"Erik believes in infinite adaptability. His modular systems grow with the user." } },
+    { id:"item-7", name:"Lunar Chest", category:"cabinet", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/69248620c47e4acac61094bf_Screenshot_2025-11-24_171517-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/compressed_1764071266806_base%20(15).glb", specs:{ mat:"Oak & Silver", dim:"110x55x130" }, store:{ name:"London Tate Modern", coords:[-0.099,51.507] }, artist:{ name:"Oliver Sterling", role:"Modernist, London", img:"https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=100&q=80", bio:"Oliver explores celestial themes using industrial materials." } },
+    { id:"item-8", name:"Obsidian Block", category:"sideboard", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/69248620636bab60cf866e4e_Screenshot_2025-11-24_171459-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/compressed_1764071270533_base%20(14).glb", specs:{ mat:"Blackened Steel", dim:"200x60x80" }, store:{ name:"Berlin Mitte", coords:[13.405,52.520] }, artist:{ name:"Klaus Weber", role:"Architect, Berlin", img:"https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=100&q=80", bio:"Klaus brings brutalist architecture principles into interior design." } },
+    { id:"item-9", name:"Azure Tower", category:"cabinet", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/69248620466eab1b5ac247c4_Screenshot_2025-11-24_171450-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/compressed_1764071273205_base%20(13).glb", specs:{ mat:"Blue Lacquer", dim:"80x80x180" }, store:{ name:"Barcelona Eixample", coords:[2.168,41.387] }, artist:{ name:"Sofia Miró", role:"Colorist, Barcelona", img:"https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=100&q=80", bio:"Sofia's work is a vibrant homage to the Mediterranean spirit." } },
+    { id:"item-10", name:"Solar Credenza", category:"sideboard", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/692486204f857514d1d4b590_Screenshot_2025-11-24_171432-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/compressed_1764071348834_base%20(12).glb", specs:{ mat:"Teak & Brass", dim:"220x50x75" }, store:{ name:"Mexico City Polanco", coords:[-99.19,19.43] }, artist:{ name:"Diego Rivera", role:"Carpenter, CDMX", img:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80", bio:"Diego fuses Aztec geometry with mid-century modern lines." } },
+    { id:"item-11", name:"Nordic Wave", category:"decor", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/69248620b770e284e36cee5d_Screenshot_2025-11-24_171419-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/compressed_1764071190268_base%20(11).glb", specs:{ mat:"Ash Wood", dim:"140x40x90" }, store:{ name:"Stockholm Södermalm", coords:[18.068,59.329] }, artist:{ name:"Elina Vinter", role:"Designer, Stockholm", img:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80", bio:"Elina captures the fluidity of water in solid wood forms." } },
+    { id:"item-12", name:"Crimson Vanity", category:"cabinet", img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/69248620cbc59348dc423f83_Screenshot_2025-11-24_171401-removebg-preview.png", model:"https://raw.githubusercontent.com/lwiise/3d-models/main/compressed_1764071194478_base%20(10).glb", specs:{ mat:"Red Velvet & Gold", dim:"100x50x150" }, store:{ name:"Seoul Gangnam", coords:[127.027,37.497] }, artist:{ name:"Min-Jun Kim", role:"Fashion Designer, Seoul", img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80", bio:"Min-Jun treats furniture like haute couture, focusing on texture and drama." } }
+  ];
+
+  const grid = document.getElementById("grid");
+
+  function render(list){
+    if(!grid) return;
+    grid.innerHTML = "";
+    list.forEach(p => {
+      const el = document.createElement("article");
+      el.className = "card";
+      el.innerHTML = `
+        <div class="card-media"><img src="${p.img}" alt="${p.name}"/></div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-sub">Edition 2024</div>
+      `;
+      el.addEventListener("click", () => openSolo(p));
+      grid.appendChild(el);
+    });
+  }
+
+  const filtersEl = document.getElementById("filters");
+  if(filtersEl){
+    filtersEl.addEventListener("click", e => {
+      const btn = e.target.closest(".chip");
+      if(!btn) return;
+      document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      const f = btn.dataset.filter;
+      render(f === "all" ? PRODUCTS : PRODUCTS.filter(p => p.category === f));
+    });
+  }
+
+  let soloSelectedColor = "Red";
+  let soloSelectedSize = "Medium";
+
+  function syncSoloSelections(){
+    const setActive = (selector, attr, value) => {
+      document.querySelectorAll(selector).forEach(el => {
+        const v = el.getAttribute(attr);
+        el.classList.toggle('active', !!value && v === value);
+      });
+    };
+    setActive('#soloColorPopover .solo-suboption', 'data-color', soloSelectedColor);
+    setActive('#soloConfigColors .solo-config-option', 'data-color', soloSelectedColor);
+    setActive('#soloSizePopover .solo-suboption', 'data-size', soloSelectedSize);
+    setActive('#soloConfigSizes .solo-config-option', 'data-size', soloSelectedSize);
+
+    const summary = document.getElementById('soloConfigSummary');
+    if(summary) summary.textContent = `Selected: ${soloSelectedColor || '--'} / ${soloSelectedSize || '--'}`;
+  }
+
+  function setSoloOptionPopover(panel){
+    const colorPop = document.getElementById('soloColorPopover');
+    const sizePop = document.getElementById('soloSizePopover');
+    const colorBtn = document.getElementById('soloColorBtn');
+    const sizeBtn = document.getElementById('soloSizeBtn');
+
+    const showColor = panel === 'color';
+    const showSize = panel === 'size';
+
+    if(colorPop) colorPop.hidden = !showColor;
+    if(sizePop) sizePop.hidden = !showSize;
+
+    if(colorBtn){
+      colorBtn.classList.toggle('active', showColor);
+      colorBtn.setAttribute('aria-expanded', showColor ? 'true' : 'false');
+    }
+    if(sizeBtn){
+      sizeBtn.classList.toggle('active', showSize);
+      sizeBtn.setAttribute('aria-expanded', showSize ? 'true' : 'false');
+    }
+  }
+
+  function setSoloCustomizerOpen(isOpen){
+    const frame = document.querySelector('#sect-gallery.solo .solo-frame');
+    if(frame) frame.classList.toggle('customize-open', isOpen);
+
+    const btn = document.getElementById('soloCustomsBtn');
+    if(btn){
+      btn.classList.toggle('active', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    const cfg = document.getElementById('soloConfig');
+    if(cfg) cfg.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+  }
+
+  function setSoloInfoOpen(isOpen){
+    const frame = document.querySelector('#sect-gallery.solo .solo-frame');
+    if(frame) frame.classList.toggle('info-open', isOpen);
+
+    const btn = document.getElementById('soloInfoBtn');
+    if(btn){
+      btn.classList.toggle('active', isOpen);
+      btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    const card = document.getElementById('soloInfoCard');
+    if(card) card.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+  }
+
+  function openSolo(p){
+    document.getElementById("shop").classList.add("solo");
+    document.getElementById("sect-gallery").classList.add("solo");
+
+    setSoloInfoOpen(false);
+    setSoloOptionPopover(null);
+    setSoloCustomizerOpen(false);
+    soloSelectedColor = "Red";
+    soloSelectedSize = "Medium";
+    syncSoloSelections();
+
+    const soloName = document.getElementById("soloName");
+    if(soloName) soloName.textContent = p.name;
+
+    const soloFootTitle = document.getElementById("soloFootTitle");
+    if(soloFootTitle) soloFootTitle.textContent = p.name.toUpperCase();
+
+    document.getElementById("soloTitle").textContent = p.name.toUpperCase();
+    document.getElementById("soloStore").textContent = p.store.name;
+    document.getElementById("spMat").textContent = p.specs.mat;
+    document.getElementById("spDim").textContent = p.specs.dim;
+
+    const soloInfoName = document.getElementById("soloInfoName");
+    if(soloInfoName) soloInfoName.textContent = p.name.toUpperCase();
+    const soloInfoLoc = document.getElementById("soloInfoLoc");
+    if(soloInfoLoc) soloInfoLoc.textContent = p.store.name;
+    const soloInfoMat = document.getElementById("soloInfoMat");
+    if(soloInfoMat) soloInfoMat.textContent = p.specs.mat;
+    const soloInfoDim = document.getElementById("soloInfoDim");
+    if(soloInfoDim) soloInfoDim.textContent = p.specs.dim;
+
+    document.getElementById("artistName").textContent = p.artist.name;
+    document.getElementById("artistRole").textContent = p.artist.role;
+    document.getElementById("artistImg").src = p.artist.img;
+
+    document.getElementById("modalArtistName").textContent = p.artist.name;
+    document.getElementById("modalArtistRole").textContent = p.artist.role;
+    document.getElementById("modalArtistImg").src = p.artist.img;
+    document.getElementById("modalArtistBio").textContent = p.artist.bio;
+
+    const fs = document.getElementById("formSubject");
+    if(fs) fs.value = "Inquiry: " + p.name;
+
+    const sideNav = document.querySelector('.side-nav');
+    if(sideNav) sideNav.classList.add('focused');
+
+    renderActiveMedia(p, 'images');
+
+    // ✅ zoom + then show 3D popup after moveend
+    gotoStore(p.store, p);
+  }
+
+  function closeSolo(){
+    setSoloInfoOpen(false);
+    setSoloOptionPopover(null);
+    setSoloCustomizerOpen(false);
+
+    const shopEl = document.getElementById("shop");
+    const galleryEl = document.getElementById("sect-gallery");
+    if(shopEl) shopEl.classList.remove("solo");
+    if(galleryEl) galleryEl.classList.remove("solo");
+
+    const sideNav = document.querySelector('.side-nav');
+    if(sideNav) sideNav.classList.remove('focused');
+
+    hideMap3D();
+
+    if(rotationFrame){ cancelAnimationFrame(rotationFrame); rotationFrame=null; }
+
+    const isMobileReset = window.innerWidth < 900;
+    map.flyTo({ center:[0,20], zoom:isMobileReset ? 0 : 0.8, pitch:0, bearing:0, duration:2200 });
+  }
+
+  safeAdd("btnBack","click",closeSolo);
+  safeAdd("btnClose","click",closeSolo);
+  safeAdd("btnContactProduct","click",() => switchSection('sect-contact'));
+
+  safeAdd("soloInfoBtn","click", () => {
+    const frame = document.querySelector('#sect-gallery.solo .solo-frame');
+    if(!frame) return;
+    setSoloOptionPopover(null);
+    setSoloCustomizerOpen(false);
+    setSoloInfoOpen(!frame.classList.contains('info-open'));
+  });
+  safeAdd("soloInfoClose","click", () => setSoloInfoOpen(false));
+
+  safeAdd("soloColorBtn","click", () => {
+    setSoloInfoOpen(false);
+    setSoloCustomizerOpen(false);
+    const colorBtn = document.getElementById('soloColorBtn');
+    if(!colorBtn) return;
+    setSoloOptionPopover(colorBtn.classList.contains('active') ? null : 'color');
+  });
+
+  safeAdd("soloSizeBtn","click", () => {
+    setSoloInfoOpen(false);
+    setSoloCustomizerOpen(false);
+    const sizeBtn = document.getElementById('soloSizeBtn');
+    if(!sizeBtn) return;
+    setSoloOptionPopover(sizeBtn.classList.contains('active') ? null : 'size');
+  });
+
+  safeAdd("soloCustomsBtn","click", () => {
+    const frame = document.querySelector('#sect-gallery.solo .solo-frame');
+    if(!frame) return;
+    setSoloInfoOpen(false);
+    setSoloOptionPopover(null);
+    setSoloCustomizerOpen(!frame.classList.contains('customize-open'));
+  });
+  safeAdd("soloConfigClose","click", () => setSoloCustomizerOpen(false));
+
+  const soloColorPopover = document.getElementById('soloColorPopover');
+  if(soloColorPopover && soloColorPopover.dataset.bound !== "1"){
+    soloColorPopover.dataset.bound = "1";
+    soloColorPopover.addEventListener('click', (e) => {
+      const btn = e.target.closest('.solo-suboption');
+      if(!btn) return;
+      const color = btn.getAttribute('data-color');
+      if(color) soloSelectedColor = color;
+      syncSoloSelections();
+      setSoloOptionPopover(null);
+    });
+  }
+
+  const soloSizePopover = document.getElementById('soloSizePopover');
+  if(soloSizePopover && soloSizePopover.dataset.bound !== "1"){
+    soloSizePopover.dataset.bound = "1";
+    soloSizePopover.addEventListener('click', (e) => {
+      const btn = e.target.closest('.solo-suboption');
+      if(!btn) return;
+      const size = btn.getAttribute('data-size');
+      if(size) soloSelectedSize = size;
+      syncSoloSelections();
+      setSoloOptionPopover(null);
+    });
+  }
+
+  const soloConfig = document.getElementById('soloConfig');
+  if(soloConfig && soloConfig.dataset.bound !== "1"){
+    soloConfig.dataset.bound = "1";
+    soloConfig.addEventListener('click', (e) => {
+      const btn = e.target.closest('.solo-config-option');
+      if(!btn) return;
+      const color = btn.getAttribute('data-color');
+      const size = btn.getAttribute('data-size');
+      if(color) soloSelectedColor = color;
+      if(size) soloSelectedSize = size;
+      syncSoloSelections();
+    });
+  }
+
+  const modalArtist = document.getElementById("modalArtistOverlay");
+  const artistBtnEl = document.getElementById("artistBtn");
+  if(artistBtnEl) artistBtnEl.addEventListener("click", () => modalArtist && modalArtist.classList.add("open"));
+  safeAdd("closeArtistModal","click", () => modalArtist && modalArtist.classList.remove("open"));
+  window.addEventListener("click", (e) => { if(e.target === modalArtist) modalArtist.classList.remove("open"); });
+
+  function setupProcessAnimation(){
+    const dot = document.getElementById("procDot");
+    const itemsWrap = document.getElementById("procItems");
+    const grid = document.getElementById("processGrid");
+    if(!dot || !itemsWrap || !grid) return;
+
+    const section = document.getElementById("sect-services");
+
+    const steps = Array.from(itemsWrap.querySelectorAll(".proc-step"));
+    const rail = grid.querySelector(".proc-rail");
+    const line = rail ? rail.querySelector(".proc-line") : null;
+    if(!steps.length || !rail || !line) return;
+
+    const scroller = document.querySelector("#sect-services .section-scroll");
+    if(!scroller) return;
+
+    let minY = 0;
+    let maxY = 0;
+
+    const isWindowScroll = () => {
+      const style = getComputedStyle(scroller);
+      const overflowY = style.overflowY;
+      const scrollable = scroller.scrollHeight > scroller.clientHeight + 1;
+      return !scrollable || overflowY === "visible";
+    };
+
+    const clamp01 = (v) => Math.max(0, Math.min(1, v));
+
+    const computeGeometry = () => {
+      rail.style.height = itemsWrap.offsetHeight + "px";
+
+      const railRect = rail.getBoundingClientRect();
+      const centers = steps.map(step => {
+        const rect = step.getBoundingClientRect();
+        return (rect.top + (rect.height / 2)) - railRect.top;
+      });
+      if(centers.length < 2) return;
+
+      minY = Math.min(...centers);
+      maxY = Math.max(...centers);
+
+      line.style.top = `${minY}px`;
+      line.style.height = `${Math.max(0, (maxY - minY))}px`;
+      line.style.bottom = "auto";
+    };
+
+    const getViewportCenter = () => {
+      if(isWindowScroll()) return window.innerHeight / 2;
+      const rect = scroller.getBoundingClientRect();
+      return rect.top + (scroller.clientHeight / 2);
+    };
+
+    const moveDot = () => {
+      const viewportCenter = getViewportCenter();
+      const wrapRect = itemsWrap.getBoundingClientRect();
+      const progress = clamp01((viewportCenter - wrapRect.top) / Math.max(1, wrapRect.height));
+      const y = minY + (maxY - minY) * progress;
+      dot.style.top = `${y}px`;
+    };
+
+    let raf = null;
+    const onScroll = () => {
+      if(raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = null;
+        computeGeometry();
+        moveDot();
+      });
+    };
+
+    requestAnimationFrame(() => {
+      computeGeometry();
+      moveDot();
+    });
+
+    scroller.addEventListener("scroll", onScroll, { passive:true });
+    window.addEventListener("scroll", onScroll, { passive:true });
+    document.addEventListener("scroll", onScroll, { passive:true });
+    window.addEventListener("touchmove", onScroll, { passive:true });
+    window.addEventListener("resize", () => {
+      computeGeometry();
+      moveDot();
+    });
+
+    if(grid.dataset.procLoop === "1") return;
+    grid.dataset.procLoop = "1";
+
+    const tick = () => {
+      const isVisible = section && section.offsetParent !== null;
+      if(isVisible){
+        computeGeometry();
+        moveDot();
+      }
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }
+
+  (function init(){
+    // ✅ Always render all 12 at start
+    render(PRODUCTS);
+
+    // Default active nav = Home
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const navHome = document.getElementById('navHome');
+    if(navHome) navHome.classList.add('active');
+    const mNavHome = document.getElementById('mNavHome');
+    if(mNavHome) mNavHome.classList.add('active');
+
+    setupProcessAnimation();
+  })();
+</script>
+</body>
+</html>
+
+
+
