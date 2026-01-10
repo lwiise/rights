@@ -48,7 +48,7 @@
     box-shadow:0 26px 60px rgba(0,0,0,0.16);
   }
 
-  .mapboxgl-canvas{ outline:none; filter:grayscale(100%) contrast(1.12) brightness(1); }
+  .mapboxgl-canvas{ outline:none; filter:none; }
 
   /* ===== 3D POPUP OVER MAP (fixed box, model rotates inside) ===== */
   .map-3d-popup{
@@ -1961,18 +1961,24 @@
 
 <script>
   const MAPBOX_TOKEN = "pk.eyJ1IjoiYW5hc2thcm90aSIsImEiOiJjbWhqcHgwcmMwbWM0MmxwZ2V5Z2x5OTN0In0.bpOf-4BsljExZdYZUak_pw";
-  const USER_STYLE = "mapbox://styles/anaskaroti/cmhuiic1f00ft01qucn91gk6e";
+  const USER_STYLE = "mapbox://styles/mapbox/streets-v12";
 
   mapboxgl.accessToken = MAPBOX_TOKEN;
+  const KAABA_CENTER = [39.8262, 21.4225];
+  const KAABA_ZOOM_DESKTOP = 16.8;
+  const KAABA_ZOOM_MOBILE = 15.6;
+  const KAABA_PITCH = 60;
+  const KAABA_BEARING = -25;
   const isMobile = window.innerWidth < 900;
-  const startZoom = isMobile ? 0 : 0.8;
+  const startZoom = isMobile ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
 
   const map = new mapboxgl.Map({
     container: "map",
     style: USER_STYLE,
-    center: [0, 20],
+    center: KAABA_CENTER,
     zoom: startZoom,
-    pitch: 0,
+    pitch: KAABA_PITCH,
+    bearing: KAABA_BEARING,
     projection: 'globe'
   });
 
@@ -2042,7 +2048,8 @@
     if(mNavEl) mNavEl.classList.add('active');
 
     if(id === 'sect-home'){
-      map.flyTo({ center:[0,20], zoom:startZoom, pitch:0, bearing:0, duration:1800 });
+      const resetZoom = window.innerWidth < 900 ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
+      map.flyTo({ center:KAABA_CENTER, zoom:resetZoom, pitch:KAABA_PITCH, bearing:KAABA_BEARING, duration:1800 });
     }
 
     if(id === 'sect-services'){
@@ -2623,7 +2630,8 @@
     if(rotationFrame){ cancelAnimationFrame(rotationFrame); rotationFrame=null; }
 
     const isMobileReset = window.innerWidth < 900;
-    map.flyTo({ center:[0,20], zoom:isMobileReset ? 0 : 0.8, pitch:0, bearing:0, duration:2200 });
+    const resetZoom = isMobileReset ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
+    map.flyTo({ center:KAABA_CENTER, zoom:resetZoom, pitch:KAABA_PITCH, bearing:KAABA_BEARING, duration:2200 });
   }
 
   safeAdd("btnBack","click",closeSolo);
