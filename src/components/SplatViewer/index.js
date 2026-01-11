@@ -134,6 +134,7 @@ const initViewer = async () => {
   camera.setAttribute("fov", "55");
   camera.setAttribute("near-clip", "0.02");
   camera.setAttribute("far-clip", "250");
+  camera.setAttribute("clear-color", "#0b0b0b");
   cameraEntity.appendChild(camera);
   appEl.appendChild(cameraEntity);
 

@@ -1,7 +1,6 @@
 .home-split{
-  display:grid;
-  grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);
-  gap:0;
+  position:relative;
+  display:block;
   height:100%;
   align-items:stretch;
 }
@@ -12,13 +11,24 @@
 }
 
 .home-split-right{
+  position:absolute;
+  inset:0;
   display:flex;
+  z-index:1;
+}
+
+.home-split-left{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:640px;
+  margin-right:auto;
 }
 
 .splat-panel{
-  position:sticky;
-  top:0;
-  height:100vh;
+  position:absolute;
+  inset:0;
+  height:100%;
   width:100%;
   border-radius:0;
   border-left:1px solid #e5e5e5;
@@ -84,6 +94,11 @@
   display:block;
 }
 
+.splat-viewport pc-app{
+  position:absolute;
+  inset:0;
+}
+
 .splat-placeholder{
   position:absolute;
   inset:0;
@@ -92,6 +107,8 @@
   align-items:center;
   justify-content:center;
   gap:8px;
+  z-index:2;
+  pointer-events:none;
   background:radial-gradient(circle at 20% 20%, rgba(255,255,255,0.15), rgba(0,0,0,0.9) 60%);
   color:#d6d6d6;
   text-align:center;
@@ -216,16 +233,25 @@
 
 @media (max-width:1200px){
   .home-split{
+    display:grid;
     grid-template-columns:1fr;
     height:auto;
   }
 
   .home-split-right{
+    position:relative;
+    inset:auto;
     order:2;
+    z-index:auto;
+  }
+
+  .home-split-left{
+    max-width:none;
   }
 
   .splat-panel{
     position:relative;
+    inset:auto;
     height:70vh;
     min-height:380px;
     border-radius:22px;
