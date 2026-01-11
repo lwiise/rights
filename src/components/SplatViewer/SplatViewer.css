@@ -39,6 +39,10 @@
   flex-direction:column;
 }
 
+.splat-panel-body{
+  background:#0b0b0b;
+}
+
 .splat-panel-header{
   display:flex;
   align-items:center;
@@ -269,5 +273,16 @@
     height:60vh;
     min-height:320px;
     border-radius:20px;
+  }
+}
+
+@media (min-width:1201px){
+  .home-split-left{
+    display:none;
+  }
+
+  .home-split-right{
+    position:relative;
+    inset:auto;
   }
 }

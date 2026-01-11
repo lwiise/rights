@@ -31,6 +31,7 @@ let controls = null;
 let updateHandler = null;
 let markers = [];
 let activeAnnotation = null;
+let splatReady = false;
 let initialized = false;
 let observer = null;
 
@@ -78,6 +79,11 @@ const setAnnotationsVisible = (visible) => {
     marker.setAttribute("enabled", visible ? "true" : "false");
     marker.enabled = visible;
   });
+};
+
+const updateAnnotationVisibility = () => {
+  const enabled = annoToggle ? annoToggle.checked : true;
+  setAnnotationsVisible(Boolean(splatReady && enabled));
 };
 
 const createMarker = (annotation) => {
@@ -171,25 +177,35 @@ const initViewer = async () => {
 
   const asset = splatAsset.asset;
   if (!asset) {
+    splatReady = false;
     showPlaceholder("Missing splat file", SPLAT_URL);
     setStatus(`Missing splat file: ${SPLAT_URL}`);
+    updateAnnotationVisibility();
   } else if (asset.loaded) {
+    splatReady = true;
     hidePlaceholder();
     setStatus("");
+    updateAnnotationVisibility();
   } else {
     const failTimer = window.setTimeout(() => {
+      splatReady = false;
       showPlaceholder("Missing splat file", SPLAT_URL);
       setStatus(`Missing splat file: ${SPLAT_URL}`);
+      updateAnnotationVisibility();
     }, 2500);
     asset.once("load", () => {
       window.clearTimeout(failTimer);
+      splatReady = true;
       hidePlaceholder();
       setStatus("");
+      updateAnnotationVisibility();
     });
     asset.once("error", () => {
       window.clearTimeout(failTimer);
+      splatReady = false;
       showPlaceholder("Missing splat file", SPLAT_URL);
       setStatus(`Missing splat file: ${SPLAT_URL}`);
+      updateAnnotationVisibility();
     });
   }
 
@@ -202,7 +218,7 @@ const initViewer = async () => {
   controls.update();
 
   markers = ANNOTATIONS.map(createMarker).filter(Boolean);
-  setAnnotationsVisible(annoToggle ? annoToggle.checked : true);
+  updateAnnotationVisibility();
 };
 
 const startObserver = () => {
@@ -281,7 +297,7 @@ if (annoToggle) {
   annoToggle.addEventListener("change", (event) => {
     const input = event.target;
     if (input instanceof HTMLInputElement) {
-      setAnnotationsVisible(input.checked);
+      updateAnnotationVisibility();
     }
   });
 }
