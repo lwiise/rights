@@ -18,6 +18,12 @@ const infoContent = document.getElementById("splatInfoContent");
 const annoToggle = document.getElementById("splatAnnoToggle");
 const statusEl = document.getElementById("splatStatus");
 const placeholderEl = document.getElementById("splatPlaceholder");
+const placeholderTitle = placeholderEl
+  ? placeholderEl.querySelector(".splat-placeholder-title")
+  : null;
+const placeholderSub = placeholderEl
+  ? placeholderEl.querySelector(".splat-placeholder-sub")
+  : null;
 
 let appEl = null;
 let app = null;
@@ -32,6 +38,22 @@ const setStatus = (message) => {
   if (!statusEl) return;
   statusEl.textContent = message || "";
   statusEl.hidden = !message;
+};
+
+const showPlaceholder = (title, sub) => {
+  if (!placeholderEl) return;
+  placeholderEl.hidden = false;
+  if (placeholderTitle && title) {
+    placeholderTitle.textContent = title;
+  }
+  if (placeholderSub && sub) {
+    placeholderSub.textContent = sub;
+  }
+};
+
+const hidePlaceholder = () => {
+  if (!placeholderEl) return;
+  placeholderEl.hidden = true;
 };
 
 const openInfo = (annotation) => {
@@ -146,25 +168,26 @@ const initViewer = async () => {
   await cameraEntity.ready();
   app = appEl.app;
 
-  if (placeholderEl) {
-    placeholderEl.hidden = true;
-  }
-
   const asset = splatAsset.asset;
   if (!asset) {
+    showPlaceholder("Missing splat file", SPLAT_URL);
     setStatus(`Missing splat file: ${SPLAT_URL}`);
   } else if (asset.loaded) {
+    hidePlaceholder();
     setStatus("");
   } else {
     const failTimer = window.setTimeout(() => {
+      showPlaceholder("Missing splat file", SPLAT_URL);
       setStatus(`Missing splat file: ${SPLAT_URL}`);
     }, 2500);
     asset.once("load", () => {
       window.clearTimeout(failTimer);
+      hidePlaceholder();
       setStatus("");
     });
     asset.once("error", () => {
       window.clearTimeout(failTimer);
+      showPlaceholder("Missing splat file", SPLAT_URL);
       setStatus(`Missing splat file: ${SPLAT_URL}`);
     });
   }
