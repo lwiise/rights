@@ -6,7 +6,6 @@
 <title>Finna Art - Gallery</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet" />
-<link href="src/components/SplatViewer/SplatViewer.css" rel="stylesheet" />
 <style>
   :root{
     --bg:#fff;
@@ -1613,13 +1612,6 @@
     .mobile-nav .nav-item{ font-size:9px; padding:9px 4px; letter-spacing:0.04em; }
   }
 </style>
-<script type="importmap">
-  {
-    "imports": {
-      "playcanvas": "https://cdn.jsdelivr.net/npm/playcanvas@2.3.3/build/playcanvas.min.mjs"
-    }
-  }
-</script>
 </head>
 
 <body>
@@ -1721,41 +1713,6 @@
             </div>
           </div>
 
-          <div class="home-split-right">
-            <div class="splat-panel" id="splatPanel" aria-label="3D Viewer Panel">
-              <div class="splat-panel-header">
-                <div class="splat-panel-title">3D Viewer</div>
-                <button class="splat-info-toggle" id="splatInfoToggle" type="button" aria-expanded="false" aria-controls="splatInfoCard">
-                  Info
-                </button>
-              </div>
-              <div class="splat-panel-body">
-                <div class="splat-viewport" id="splatViewport" aria-label="Gaussian splat viewer">
-                  <div class="splat-placeholder" id="splatPlaceholder">
-                    <div class="splat-placeholder-title">Interactive 3D</div>
-                    <div class="splat-placeholder-sub">Loading viewer...</div>
-                  </div>
-                </div>
-                <div class="splat-info-overlay" id="splatInfoOverlay" aria-hidden="true">
-                  <button class="splat-overlay-backdrop" type="button" data-action="close" aria-label="Close info panel"></button>
-                  <div class="splat-info-card" id="splatInfoCard" role="dialog" aria-modal="false" aria-labelledby="splatInfoTitle">
-                    <div class="splat-info-head">
-                      <h3 id="splatInfoTitle">Annotation</h3>
-                      <button class="splat-info-close" id="splatInfoClose" type="button" aria-label="Close info panel">
-                        Close
-                      </button>
-                    </div>
-                    <div class="splat-info-content" id="splatInfoContent"></div>
-                    <label class="splat-toggle">
-                      <input type="checkbox" id="splatAnnoToggle" checked />
-                      Show annotations
-                    </label>
-                  </div>
-                </div>
-                <div class="splat-status" id="splatStatus" role="status" aria-live="polite" hidden></div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -2074,9 +2031,7 @@
 </div>
 
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/@playcanvas/web-components@0.1.11/dist/pwc.min.mjs"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
-<script type="module" src="src/components/SplatViewer/index.js"></script>
 
 <script>
   const MAPBOX_TOKEN = "pk.eyJ1IjoiYW5hc2thcm90aSIsImEiOiJjbWhqcHgwcmMwbWM0MmxwZ2V5Z2x5OTN0In0.bpOf-4BsljExZdYZUak_pw";
