@@ -38,30 +38,27 @@
     gap:0;
   }
 
-  .homeSplit{
+  .home-split{
     display:flex;
-    width:100vw;
-    height:100vh;
-    overflow:hidden;
-  }
-  .homeLeft{
-    flex:0 0 31%;
-    max-width:31%;
-    min-width:320px;
-    height:100%;
-    overflow:auto;
-  }
-  .homeLeft .layout{
     width:100%;
-    max-width:100%;
-  }
-  .homeRight{
-    flex:0 0 69%;
-    max-width:69%;
     height:100%;
+    align-items:stretch;
     overflow:hidden;
-    position:relative;
-    background:#0000;
+  }
+  .home-split-left,
+  .home-split-right{
+    min-width:0;
+    height:100%;
+  }
+  .home-split-left{
+    flex:1 1 50%;
+  }
+  .home-split-right{
+    flex:1 1 50%;
+    display:flex;
+    align-items:stretch;
+    justify-content:stretch;
+    background:#000;
   }
   .sutroFrame{
     width:100%;
@@ -1586,24 +1583,19 @@
     .site-footer .ft-grid{ grid-template-columns:1fr; }
   }
 
-  @media (max-width:768px){
-    .homeSplit{
+  @media (max-width:900px){
+    .home-split{
       flex-direction:column;
       height:auto;
-      overflow:visible;
     }
-    .homeLeft{
-      flex:none;
+    .home-split-left,
+    .home-split-right{
       width:100%;
-      max-width:100%;
-      min-width:0;
       height:auto;
     }
-    .homeRight{
-      flex:none;
-      width:100%;
-      max-width:100%;
-      height:90vh;
+    .home-split-right{
+      height:80vh;
+      min-height:320px;
     }
   }
 
@@ -1615,9 +1607,7 @@
 </head>
 
 <body>
-<div class="homeSplit">
-  <div class="homeLeft">
-    <div class="layout">
+<div class="layout">
   <div id="map">
     <!-- ✅ 3D popup container -->
     <div class="map-3d-popup" id="map3dPopup">
@@ -1713,6 +1703,17 @@
             </div>
           </div>
 
+          <div class="home-split-right">
+            <iframe
+              class="sutroFrame"
+              src="https://vincentwoo.com/3d/sutro_tower/"
+              title="Sutro Tower in 3D"
+              allow="xr-spatial-tracking; fullscreen; autoplay"
+              allowfullscreen
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
+          </div>
         </div>
       </div>
     </section>
@@ -2013,20 +2014,6 @@
       <span id="modalArtistRole" style="font-size:12px; color:#999; text-transform:uppercase; letter-spacing:0.08em;"></span>
     </div>
     <p id="modalArtistBio" style="font-size:13px; line-height:1.7; color:#555; text-align:center; margin:0;"></p>
-  </div>
-</div>
-  </div>
-
-  <div class="homeRight">
-    <iframe
-      class="sutroFrame"
-      src="https://vincentwoo.com/3d/sutro_tower/"
-      title="Sutro Tower in 3D"
-      allow="xr-spatial-tracking; fullscreen; autoplay"
-      allowfullscreen
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-    ></iframe>
   </div>
 </div>
 
