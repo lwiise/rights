@@ -39,6 +39,38 @@
     gap:0;
   }
 
+  .homeSplit{
+    display:flex;
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+  }
+  .homeLeft{
+    flex:0 0 31%;
+    max-width:31%;
+    min-width:320px;
+    height:100%;
+    overflow:auto;
+  }
+  .homeLeft .layout{
+    width:100%;
+    max-width:100%;
+  }
+  .homeRight{
+    flex:0 0 69%;
+    max-width:69%;
+    height:100%;
+    overflow:hidden;
+    position:relative;
+    background:#0000;
+  }
+  .sutroFrame{
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+  }
+
   #map{
     flex:0 0 31%;
     height:100%;
@@ -1555,6 +1587,27 @@
     .site-footer .ft-grid{ grid-template-columns:1fr; }
   }
 
+  @media (max-width:768px){
+    .homeSplit{
+      flex-direction:column;
+      height:auto;
+      overflow:visible;
+    }
+    .homeLeft{
+      flex:none;
+      width:100%;
+      max-width:100%;
+      min-width:0;
+      height:auto;
+    }
+    .homeRight{
+      flex:none;
+      width:100%;
+      max-width:100%;
+      height:90vh;
+    }
+  }
+
   @media (max-width:420px){
     .mobile-nav{ left:8px; right:8px; bottom:30px; padding:5px; gap:3px; }
     .mobile-nav .nav-item{ font-size:9px; padding:9px 4px; letter-spacing:0.04em; }
@@ -1570,7 +1623,9 @@
 </head>
 
 <body>
-<div class="layout">
+<div class="homeSplit">
+  <div class="homeLeft">
+    <div class="layout">
   <div id="map">
     <!-- ✅ 3D popup container -->
     <div class="map-3d-popup" id="map3dPopup">
@@ -2001,6 +2056,20 @@
       <span id="modalArtistRole" style="font-size:12px; color:#999; text-transform:uppercase; letter-spacing:0.08em;"></span>
     </div>
     <p id="modalArtistBio" style="font-size:13px; line-height:1.7; color:#555; text-align:center; margin:0;"></p>
+  </div>
+</div>
+  </div>
+
+  <div class="homeRight">
+    <iframe
+      class="sutroFrame"
+      src="https://vincentwoo.com/3d/sutro_tower/"
+      title="Sutro Tower in 3D"
+      allow="xr-spatial-tracking; fullscreen; autoplay"
+      allowfullscreen
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
   </div>
 </div>
 
