@@ -358,10 +358,26 @@
     z-index:1;
     display:none;
   }
+  .kaaba-panel{
+    position:absolute;
+    inset:0;
+    background:#00050a;
+    z-index:2;
+    display:none;
+  }
   .frame-right.show-map .map-panel{
     display:block;
   }
   .frame-right.show-map .shop{
+    display:none;
+  }
+  .frame-right.show-kaaba .kaaba-panel{
+    display:block;
+  }
+  .frame-right.show-kaaba .shop{
+    display:none;
+  }
+  .frame-right.show-kaaba .map-panel{
     display:none;
   }
   .display-table-wrap{
@@ -1792,6 +1808,16 @@
         <div class="map-panel" id="mapPanel">
           <div id="map"></div>
         </div>
+        <div class="kaaba-panel" id="kaabaPanel">
+          <iframe
+            class="fnn3dFrame"
+            src="/fnn-3d/"
+            title="FNN 3D"
+            allow="fullscreen; autoplay"
+            allowfullscreen
+            loading="eager"
+          ></iframe>
+        </div>
         <aside class="shop" id="shop">
 
     <!-- HOME -->
@@ -2326,7 +2352,11 @@
     const topicEl = document.getElementById('tableTopic');
     if(topicEl) topicEl.textContent = data.table.topic;
     const showMap = key === 'sect-gallery';
-    if(frameRight) frameRight.classList.toggle('show-map', showMap);
+    const showKaaba = key === 'sect-extra-1';
+    if(frameRight){
+      frameRight.classList.toggle('show-map', showMap);
+      frameRight.classList.toggle('show-kaaba', showKaaba);
+    }
     if(map && showMap){
       map.resize();
     }
