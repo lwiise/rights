@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>FNN ART - المعرض</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet" />
 <style>
   :root{
     --bg:#fff;
@@ -74,12 +75,8 @@
     inset:0;
     width:100%;
     height:100%;
-    background:transparent;
-    pointer-events:none;
-    overflow:visible;
-    border-radius:0;
-    box-shadow:none;
-    z-index:20;
+    background:#e9e9e9;
+    z-index:0;
   }
 
   .fnn3dFrame{
@@ -137,18 +134,24 @@
   }
 
   .side-nav{
-    position:absolute; top:auto; bottom:var(--side-nav-offset); right:0; transform:none;
-    display:flex; flex-direction:column; z-index:20;
+    position:absolute;
+    top:14px;
+    left:14px;
+    right:auto;
+    bottom:auto;
+    transform:none;
+    display:flex;
+    flex-direction:column;
+    z-index:20;
     background:rgba(0,0,0,0.5);
-    backdrop-filter:blur(15px); -webkit-backdrop-filter:blur(15px);
-    border-radius:20px 0 0 20px;
-    border-left:1px solid rgba(255,255,255,0.15);
-    border-top:1px solid rgba(255,255,255,0.15);
-    border-bottom:1px solid rgba(255,255,255,0.15);
-    box-shadow:-10px 0 30px rgba(0,0,0,0.3);
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.15);
+    box-shadow:0 10px 26px rgba(0,0,0,0.3);
     transition:background 0.3s, border-color 0.3s;
     height:auto;
-    max-height:80vh;
+    max-height:calc(100% - 28px);
     overflow:auto;
     pointer-events:auto;
   }
@@ -168,10 +171,12 @@
     user-select:none;
   }
   .side-nav .nav-item{
-    flex:1;
+    flex:none;
     display:flex;
     align-items:center;
     justify-content:center;
+    padding:10px 16px;
+    font-size:12px;
   }
   .nav-item:last-child{ border-bottom:none; }
   .nav-item:hover,
@@ -182,7 +187,9 @@
   }
   .side-nav .nav-item:hover,
   .side-nav .nav-item.active{
-    border-radius:20px 0 0 20px;
+    border-radius:10px;
+    padding-right:16px;
+    padding-left:16px;
   }
 
   .mobile-nav{
@@ -280,7 +287,7 @@
      - Left copy + CTA
      ========================================================= */
   #sect-home .section-scroll{
-    padding:32px 48px;
+    padding:24px 0;
     overflow:hidden;
     height:100%;
   }
@@ -294,6 +301,7 @@
   }
   .display-head{
     text-align:center;
+    padding:0 32px;
   }
   .display-head h1{
     margin:0;
@@ -303,6 +311,7 @@
   }
   .display-frame{
     flex:1 1 auto;
+    width:100%;
     min-height:0;
     border:1px solid rgba(0,0,0,0.15);
     border-radius:4px;
@@ -311,9 +320,38 @@
     display:flex;
     align-items:stretch;
     justify-content:stretch;
+    position:relative;
+  }
+  .frame-split{
+    display:flex;
+    width:100%;
+    height:100%;
+    min-height:0;
+  }
+  .frame-left,
+  .frame-right{
+    flex:0 0 50%;
+    width:50%;
+    height:100%;
+    min-width:0;
+  }
+  .frame-right{
+    position:relative;
+    overflow:hidden;
+    background:#f4f4f4;
+  }
+  .frame-placeholder{
+    position:absolute;
+    inset:0;
+    background:#f4f4f4;
+    z-index:1;
+  }
+  .frame-right.show-map .frame-placeholder{
+    display:none;
   }
   .display-table-wrap{
     flex:0 0 auto;
+    padding:0 32px;
   }
   .display-table{
     width:100%;
@@ -1559,15 +1597,23 @@
       gap:12px;
     }
     #sect-home .section-scroll{
-      padding:20px;
+      padding:16px 0;
       height:auto;
       overflow:visible;
     }
+    .display-head{ padding:0 16px; }
     .display-head h1{ font-size:26px; }
     .display-frame{
-      height:55vh;
+      height:auto;
       flex:none;
     }
+    .frame-split{ flex-direction:column; }
+    .frame-left,
+    .frame-right{
+      width:100%;
+      height:45vh;
+    }
+    .display-table-wrap{ padding:0 16px; }
     .display-table th,
     .display-table td{
       font-size:12px;
@@ -1684,35 +1730,6 @@
 
 <body>
 <div class="layout">
-  <div id="map">
-    <!-- ✅ 3D popup container -->
-    <nav class="side-nav" id="sideNav">
-      <div class="nav-item active" id="navHome">الرئيسية</div>
-      <div class="nav-item" id="navAbout">امامة</div>
-      <div class="nav-item" id="navServices">المؤذنون</div>
-      <div class="nav-item" id="navGallery">المعرض</div>
-      <div class="nav-item" id="navContact">تواصل معنا</div>
-      <div class="nav-item" id="navExtra1">قسم 6</div>
-      <div class="nav-item" id="navExtra2">قسم 7</div>
-      <div class="nav-item" id="navExtra3">قسم 8</div>
-      <div class="nav-item" id="navExtra4">قسم 9</div>
-      <div class="nav-item" id="navExtra5">قسم 10</div>
-    </nav>
-
-    <nav class="mobile-nav" id="mobileNav">
-      <div class="nav-item active" id="mNavHome">الرئيسية</div>
-      <div class="nav-item" id="mNavAbout">امامة</div>
-      <div class="nav-item" id="mNavServices">المؤذنون</div>
-      <div class="nav-item" id="mNavGallery">المعرض</div>
-      <div class="nav-item" id="mNavContact">تواصل معنا</div>
-      <div class="nav-item" id="mNavExtra1">قسم 6</div>
-      <div class="nav-item" id="mNavExtra2">قسم 7</div>
-      <div class="nav-item" id="mNavExtra3">قسم 8</div>
-      <div class="nav-item" id="mNavExtra4">قسم 9</div>
-      <div class="nav-item" id="mNavExtra5">قسم 10</div>
-    </nav>
-  </div>
-
   <aside class="shop" id="shop">
 
     <!-- HOME -->
@@ -1720,17 +1737,50 @@
       <div class="section-scroll">
         <div class="display-layout">
           <header class="display-head">
-            <h1 id="displayHeadline">الرئيسية</h1>
+            <h1 id="displayHeadline">المعرض</h1>
           </header>
           <div class="display-frame">
-            <iframe
-              class="fnn3dFrame"
-              src="/fnn-3d/"
-              title="FNN 3D"
-              allow="fullscreen; autoplay"
-              allowfullscreen
-              loading="eager"
-            ></iframe>
+            <div class="frame-split">
+              <div class="frame-left">
+                <iframe
+                  class="fnn3dFrame"
+                  src="/fnn-3d/"
+                  title="FNN 3D"
+                  allow="fullscreen; autoplay"
+                  allowfullscreen
+                  loading="eager"
+                ></iframe>
+              </div>
+              <div class="frame-right show-map" id="frameRight">
+                <div id="map"></div>
+                <div class="frame-placeholder" id="framePlaceholder"></div>
+              </div>
+            </div>
+            <nav class="side-nav" id="sideNav">
+              <div class="nav-item active" id="navGallery">المعرض</div>
+              <div class="nav-item" id="navHome">الرئيسية</div>
+              <div class="nav-item" id="navAbout">امامة</div>
+              <div class="nav-item" id="navServices">المؤذنون</div>
+              <div class="nav-item" id="navContact">تواصل معنا</div>
+              <div class="nav-item" id="navExtra1">قسم 6</div>
+              <div class="nav-item" id="navExtra2">قسم 7</div>
+              <div class="nav-item" id="navExtra3">قسم 8</div>
+              <div class="nav-item" id="navExtra4">قسم 9</div>
+              <div class="nav-item" id="navExtra5">قسم 10</div>
+            </nav>
+
+            <nav class="mobile-nav" id="mobileNav">
+              <div class="nav-item active" id="mNavGallery">المعرض</div>
+              <div class="nav-item" id="mNavHome">الرئيسية</div>
+              <div class="nav-item" id="mNavAbout">امامة</div>
+              <div class="nav-item" id="mNavServices">المؤذنون</div>
+              <div class="nav-item" id="mNavContact">تواصل معنا</div>
+              <div class="nav-item" id="mNavExtra1">قسم 6</div>
+              <div class="nav-item" id="mNavExtra2">قسم 7</div>
+              <div class="nav-item" id="mNavExtra3">قسم 8</div>
+              <div class="nav-item" id="mNavExtra4">قسم 9</div>
+              <div class="nav-item" id="mNavExtra5">قسم 10</div>
+            </nav>
           </div>
           <div class="display-table-wrap">
             <table class="display-table">
@@ -1744,10 +1794,10 @@
               </thead>
               <tbody>
                 <tr>
-                  <td id="tableRight">عرض بانورامي</td>
-                  <td id="tableLeft">مشهد تعريفي</td>
-                  <td id="tableTech">واجهة تفاعلية</td>
-                  <td id="tableTopic">مقدمة</td>
+                  <td id="tableRight">درون 360</td>
+                  <td id="tableLeft">الحرم يعرض في تجريدي</td>
+                  <td id="tableTech">خريطة متحركة تفاعلية</td>
+                  <td id="tableTopic">عام</td>
                 </tr>
               </tbody>
             </table>
@@ -2080,6 +2130,7 @@
 </div>
 
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
 
 <script>
   const MAPBOX_TOKEN = "pk.eyJ1IjoiYW5hc2thcm90aSIsImEiOiJjbWhqcHgwcmMwbWM0MmxwZ2V5Z2x5OTN0In0.bpOf-4BsljExZdYZUak_pw";
@@ -2095,7 +2146,8 @@
 
   let map = null;
   const mapEl = document.getElementById('map');
-  const enableMapbox = !!(mapEl && !mapEl.querySelector('.fnn3dFrame') && window.mapboxgl);
+  const frameRight = document.getElementById('frameRight');
+  const enableMapbox = !!(mapEl && window.mapboxgl);
 
   if(enableMapbox){
     mapboxgl.accessToken = MAPBOX_TOKEN;
@@ -2243,7 +2295,7 @@
   };
 
   function setDisplayContent(key){
-    const data = DISPLAY_CONTENT[key] || DISPLAY_CONTENT['sect-home'];
+    const data = DISPLAY_CONTENT[key] || DISPLAY_CONTENT['sect-gallery'];
     const headline = document.getElementById('displayHeadline');
     if(headline) headline.textContent = data.title;
     const rightEl = document.getElementById('tableRight');
@@ -2254,6 +2306,11 @@
     if(techEl) techEl.textContent = data.table.tech;
     const topicEl = document.getElementById('tableTopic');
     if(topicEl) topicEl.textContent = data.table.topic;
+    const showMap = key === 'sect-gallery';
+    if(frameRight) frameRight.classList.toggle('show-map', showMap);
+    if(map && showMap){
+      map.resize();
+    }
   }
 
   window.switchSection = function(id){
@@ -2294,7 +2351,7 @@
 
     setDisplayContent(id);
 
-    if(id === 'sect-home' && map){
+    if(id === 'sect-gallery' && map){
       const resetZoom = window.innerWidth < 900 ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
       map.flyTo({ center:KAABA_CENTER, zoom:resetZoom, pitch:KAABA_PITCH, bearing:KAABA_BEARING, duration:1800 });
     }
@@ -3120,14 +3177,19 @@
     // عرض كل العناصر عند البداية
     render(PRODUCTS);
 
-    // Default active nav = Home
-    switchSection('sect-home');
+    // Default active nav = Gallery
+    switchSection('sect-gallery');
 
     setupProcessAnimation();
   })();
 </script>
 </body>
 </html>
+
+
+
+
+
 
 
 
