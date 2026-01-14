@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>FNN ART - المعرض</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet" />
 <style>
   :root{
     --bg:#fff;
@@ -69,13 +68,23 @@
   }
 
   #map{
-    flex:0 0 31%;
+    flex:0 0 50%;
+    width:50%;
     height:100%;
     background:#000;
     position:relative;
     overflow:hidden;
     border-radius:0;
     box-shadow:0 26px 60px rgba(0,0,0,0.16);
+  }
+
+  .fnn3dFrame{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
   }
 
   .mapboxgl-canvas{ outline:none; filter:none; }
@@ -210,7 +219,8 @@
   }
 
   .shop{
-    flex:0 0 69%;
+    flex:0 0 50%;
+    width:50%;
     display:flex;
     flex-direction:column;
     height:100%;
@@ -1457,7 +1467,7 @@
     }
     .layout{ height:auto; min-height:100vh; }
     .layout{ flex-direction:column; }
-    #map{ width:100%; height:45vh; flex:none; }
+    #map{ width:100%; height:80vh; flex:none; }
     .shop{
       width:100%;
       height:auto;
@@ -1610,11 +1620,15 @@
 <body>
 <div class="layout">
   <div id="map">
+    <iframe
+      class="fnn3dFrame"
+      src="/fnn-3d/"
+      title="FNN 3D"
+      allow="fullscreen; autoplay"
+      allowfullscreen
+      loading="eager"
+    ></iframe>
     <!-- ✅ 3D popup container -->
-    <div class="map-3d-popup" id="map3dPopup">
-      <div class="map-3d-inner" id="map3dInner"></div>
-    </div>
-
     <nav class="side-nav" id="sideNav">
       <div class="nav-item" id="navHome">الرئيسية</div>
       <div class="nav-item" id="navAbout">امامة</div>
@@ -1977,13 +1991,11 @@
 </div>
 
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
 
 <script>
   const MAPBOX_TOKEN = "pk.eyJ1IjoiYW5hc2thcm90aSIsImEiOiJjbWhqcHgwcmMwbWM0MmxwZ2V5Z2x5OTN0In0.bpOf-4BsljExZdYZUak_pw";
   const USER_STYLE = "mapbox://styles/mapbox/streets-v12";
 
-  mapboxgl.accessToken = MAPBOX_TOKEN;
   const KAABA_CENTER = [39.8262, 21.4225];
   const KAABA_ZOOM_DESKTOP = 16.8;
   const KAABA_ZOOM_MOBILE = 15.6;
@@ -1992,54 +2004,61 @@
   const isMobile = window.innerWidth < 900;
   const startZoom = isMobile ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
 
-  const map = new mapboxgl.Map({
-    container: "map",
-    style: USER_STYLE,
-    center: KAABA_CENTER,
-    zoom: startZoom,
-    pitch: KAABA_PITCH,
-    bearing: KAABA_BEARING,
-    projection: 'globe'
-  });
+  let map = null;
+  const mapEl = document.getElementById('map');
+  const enableMapbox = !!(mapEl && !mapEl.querySelector('.fnn3dFrame') && window.mapboxgl);
 
-  map.on('style.load', () => {
-    try {
-      map.setFog({
-        'color': 'rgb(255, 255, 255)',
-        'high-color': 'rgb(200, 200, 200)',
-        'space-color': 'rgb(0, 0, 0)',
-        'star-intensity': 0.6
-      });
-    } catch(e){}
+  if(enableMapbox){
+    mapboxgl.accessToken = MAPBOX_TOKEN;
+    map = new mapboxgl.Map({
+      container: "map",
+      style: USER_STYLE,
+      center: KAABA_CENTER,
+      zoom: startZoom,
+      pitch: KAABA_PITCH,
+      bearing: KAABA_BEARING,
+      projection: 'globe'
+    });
 
-    const layers = map.getStyle().layers || [];
-    let labelLayerId;
-    for (const layer of layers) {
-      if (layer.type === 'symbol' && layer.layout && layer.layout['text-field']) {
-        labelLayerId = layer.id;
-        break;
-      }
-    }
-
-    if (!map.getLayer('3d-buildings-custom')) {
-      try{
-        map.addLayer({
-          'id': '3d-buildings-custom',
-          'source': 'composite',
-          'source-layer': 'building',
-          'filter': ['==', 'extrude', 'true'],
-          'type': 'fill-extrusion',
-          'minzoom': 15,
-          'paint': {
-            'fill-extrusion-color': '#aaa',
-            'fill-extrusion-height': ['get', 'height'],
-            'fill-extrusion-base': ['get', 'min_height'],
-            'fill-extrusion-opacity': 0.6
-          }
-        }, labelLayerId);
+    map.on('style.load', () => {
+      try {
+        map.setFog({
+          'color': 'rgb(255, 255, 255)',
+          'high-color': 'rgb(200, 200, 200)',
+          'space-color': 'rgb(0, 0, 0)',
+          'star-intensity': 0.6
+        });
       } catch(e){}
-    }
-  });
+
+      const layers = map.getStyle().layers || [];
+      let labelLayerId;
+      for (const layer of layers) {
+        if (layer.type === 'symbol' && layer.layout && layer.layout['text-field']) {
+          labelLayerId = layer.id;
+          break;
+        }
+      }
+
+      if (!map.getLayer('3d-buildings-custom')) {
+        try{
+          map.addLayer({
+            'id': '3d-buildings-custom',
+            'source': 'composite',
+            'source-layer': 'building',
+            'filter': ['==', 'extrude', 'true'],
+            'type': 'fill-extrusion',
+            'minzoom': 15,
+            'paint': {
+              'fill-extrusion-color': '#aaa',
+              'fill-extrusion-height': ['get', 'height'],
+              'fill-extrusion-base': ['get', 'min_height'],
+              'fill-extrusion-opacity': 0.6
+            }
+          }, labelLayerId);
+        } catch(e){}
+      }
+    });
+  }
 
   window.switchSection = function(id){
     document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active-section'));
@@ -2067,7 +2086,7 @@
     const mNavEl = document.getElementById(mNavIdMap[id]);
     if(mNavEl) mNavEl.classList.add('active');
 
-    if(id === 'sect-home'){
+    if(id === 'sect-home' && map){
       const resetZoom = window.innerWidth < 900 ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
       map.flyTo({ center:KAABA_CENTER, zoom:resetZoom, pitch:KAABA_PITCH, bearing:KAABA_BEARING, duration:1800 });
     }
@@ -2203,7 +2222,7 @@
   }
 
   function showMap3D(product){
-    if(!product || !product.model) return;
+    if(!map || !product || !product.model) return;
     activePopupProduct = product;
 
     const safeUrl = (product.model || "")
@@ -2271,7 +2290,7 @@
   }
 
   function gotoStore(store, productFor3D){
-    if(!store) return;
+    if(!store || !map || !window.mapboxgl) return;
 
     // stop loops
     if(rotationFrame){ cancelAnimationFrame(rotationFrame); rotationFrame=null; }
@@ -2687,9 +2706,11 @@
 
     if(rotationFrame){ cancelAnimationFrame(rotationFrame); rotationFrame=null; }
 
-    const isMobileReset = window.innerWidth < 900;
-    const resetZoom = isMobileReset ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
-    map.flyTo({ center:KAABA_CENTER, zoom:resetZoom, pitch:KAABA_PITCH, bearing:KAABA_BEARING, duration:2200 });
+    if(map){
+      const isMobileReset = window.innerWidth < 900;
+      const resetZoom = isMobileReset ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
+      map.flyTo({ center:KAABA_CENTER, zoom:resetZoom, pitch:KAABA_PITCH, bearing:KAABA_BEARING, duration:2200 });
+    }
   }
 
   safeAdd("btnBack","click",closeSolo);
