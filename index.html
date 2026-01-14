@@ -38,6 +38,7 @@
     gap:0;
     position:relative;
     overflow:hidden;
+    align-items:stretch;
   }
 
   .home-split{
@@ -71,12 +72,8 @@
   }
 
   #map{
-    position:absolute;
-    inset:0;
     width:100%;
     height:100%;
-    background:#e9e9e9;
-    z-index:0;
   }
 
   .fnn3dFrame{
@@ -135,10 +132,10 @@
 
   .side-nav{
     position:absolute;
-    top:14px;
-    left:14px;
+    top:0;
+    left:0;
     right:auto;
-    bottom:auto;
+    bottom:0;
     transform:none;
     display:flex;
     flex-direction:column;
@@ -146,12 +143,12 @@
     background:rgba(0,0,0,0.5);
     backdrop-filter:blur(15px);
     -webkit-backdrop-filter:blur(15px);
-    border-radius:12px;
+    border-radius:0;
     border:1px solid rgba(255,255,255,0.15);
     box-shadow:0 10px 26px rgba(0,0,0,0.3);
     transition:background 0.3s, border-color 0.3s;
-    height:auto;
-    max-height:calc(100% - 28px);
+    height:100%;
+    max-height:100%;
     overflow:auto;
     pointer-events:auto;
   }
@@ -232,11 +229,12 @@
   }
 
   .shop{
-    flex:1 1 100%;
+    flex:1 1 auto;
     width:100%;
     display:flex;
     flex-direction:column;
     height:100%;
+    min-height:0;
     background:#fff;
     position:relative;
     z-index:5;
@@ -312,18 +310,18 @@
   .display-frame{
     flex:1 1 auto;
     width:100%;
-    min-height:0;
-    border:1px solid rgba(0,0,0,0.15);
-    border-radius:4px;
-    overflow:hidden;
-    background:#000;
+    height:100%;
+    min-height:100vh;
+    background:#fff;
     display:flex;
-    align-items:stretch;
-    justify-content:stretch;
+    flex-direction:column;
     position:relative;
+    overflow:hidden;
   }
   .frame-split{
     display:flex;
+    flex-direction:row;
+    direction:ltr;
     width:100%;
     height:100%;
     min-height:0;
@@ -335,18 +333,29 @@
     height:100%;
     min-width:0;
   }
+  .frame-left{
+    order:1;
+    overflow:hidden;
+  }
   .frame-right{
+    order:2;
     position:relative;
     overflow:hidden;
-    background:#f4f4f4;
+    background:#fff;
+    display:flex;
+    flex-direction:column;
   }
-  .frame-placeholder{
+  .map-panel{
     position:absolute;
     inset:0;
     background:#f4f4f4;
     z-index:1;
+    display:none;
   }
-  .frame-right.show-map .frame-placeholder{
+  .frame-right.show-map .map-panel{
+    display:block;
+  }
+  .frame-right.show-map .shop{
     display:none;
   }
   .display-table-wrap{
@@ -1605,14 +1614,16 @@
     .display-head h1{ font-size:26px; }
     .display-frame{
       height:auto;
+      min-height:100vh;
       flex:none;
     }
     .frame-split{ flex-direction:column; }
     .frame-left,
     .frame-right{
       width:100%;
-      height:45vh;
     }
+    .frame-left{ height:45vh; }
+    .frame-right{ height:auto; min-height:55vh; }
     .display-table-wrap{ padding:0 16px; }
     .display-table th,
     .display-table td{
@@ -1730,58 +1741,57 @@
 
 <body>
 <div class="layout">
-  <aside class="shop" id="shop">
+  <div class="display-frame">
+    <nav class="side-nav" id="sideNav">
+      <div class="nav-item active" id="navGallery">المعرض</div>
+      <div class="nav-item" id="navHome">الرئيسية</div>
+      <div class="nav-item" id="navAbout">امامة</div>
+      <div class="nav-item" id="navServices">المؤذنون</div>
+      <div class="nav-item" id="navContact">تواصل معنا</div>
+      <div class="nav-item" id="navExtra1">قسم 6</div>
+      <div class="nav-item" id="navExtra2">قسم 7</div>
+      <div class="nav-item" id="navExtra3">قسم 8</div>
+      <div class="nav-item" id="navExtra4">قسم 9</div>
+      <div class="nav-item" id="navExtra5">قسم 10</div>
+    </nav>
+
+    <nav class="mobile-nav" id="mobileNav">
+      <div class="nav-item active" id="mNavGallery">المعرض</div>
+      <div class="nav-item" id="mNavHome">الرئيسية</div>
+      <div class="nav-item" id="mNavAbout">امامة</div>
+      <div class="nav-item" id="mNavServices">المؤذنون</div>
+      <div class="nav-item" id="mNavContact">تواصل معنا</div>
+      <div class="nav-item" id="mNavExtra1">قسم 6</div>
+      <div class="nav-item" id="mNavExtra2">قسم 7</div>
+      <div class="nav-item" id="mNavExtra3">قسم 8</div>
+      <div class="nav-item" id="mNavExtra4">قسم 9</div>
+      <div class="nav-item" id="mNavExtra5">قسم 10</div>
+    </nav>
+
+    <div class="frame-split">
+      <div class="frame-left">
+        <iframe
+          class="fnn3dFrame"
+          src="/fnn-3d/"
+          title="FNN 3D"
+          allow="fullscreen; autoplay"
+          allowfullscreen
+          loading="eager"
+        ></iframe>
+      </div>
+      <div class="frame-right show-map" id="frameRight">
+        <div class="map-panel" id="mapPanel">
+          <div id="map"></div>
+        </div>
+        <aside class="shop" id="shop">
 
     <!-- HOME -->
-    <section id="sect-home" class="app-section active-section" dir="rtl">
+    <section id="sect-home" class="app-section" dir="rtl">
       <div class="section-scroll">
         <div class="display-layout">
           <header class="display-head">
             <h1 id="displayHeadline">المعرض</h1>
           </header>
-          <div class="display-frame">
-            <div class="frame-split">
-              <div class="frame-left">
-                <iframe
-                  class="fnn3dFrame"
-                  src="/fnn-3d/"
-                  title="FNN 3D"
-                  allow="fullscreen; autoplay"
-                  allowfullscreen
-                  loading="eager"
-                ></iframe>
-              </div>
-              <div class="frame-right show-map" id="frameRight">
-                <div id="map"></div>
-                <div class="frame-placeholder" id="framePlaceholder"></div>
-              </div>
-            </div>
-            <nav class="side-nav" id="sideNav">
-              <div class="nav-item active" id="navGallery">المعرض</div>
-              <div class="nav-item" id="navHome">الرئيسية</div>
-              <div class="nav-item" id="navAbout">امامة</div>
-              <div class="nav-item" id="navServices">المؤذنون</div>
-              <div class="nav-item" id="navContact">تواصل معنا</div>
-              <div class="nav-item" id="navExtra1">قسم 6</div>
-              <div class="nav-item" id="navExtra2">قسم 7</div>
-              <div class="nav-item" id="navExtra3">قسم 8</div>
-              <div class="nav-item" id="navExtra4">قسم 9</div>
-              <div class="nav-item" id="navExtra5">قسم 10</div>
-            </nav>
-
-            <nav class="mobile-nav" id="mobileNav">
-              <div class="nav-item active" id="mNavGallery">المعرض</div>
-              <div class="nav-item" id="mNavHome">الرئيسية</div>
-              <div class="nav-item" id="mNavAbout">امامة</div>
-              <div class="nav-item" id="mNavServices">المؤذنون</div>
-              <div class="nav-item" id="mNavContact">تواصل معنا</div>
-              <div class="nav-item" id="mNavExtra1">قسم 6</div>
-              <div class="nav-item" id="mNavExtra2">قسم 7</div>
-              <div class="nav-item" id="mNavExtra3">قسم 8</div>
-              <div class="nav-item" id="mNavExtra4">قسم 9</div>
-              <div class="nav-item" id="mNavExtra5">قسم 10</div>
-            </nav>
-          </div>
           <div class="display-table-wrap">
             <table class="display-table">
               <thead>
@@ -1934,7 +1944,7 @@
       </div>
     </section>
 <!-- GALLERY -->
-    <section id="sect-gallery" class="app-section" dir="rtl">
+    <section id="sect-gallery" class="app-section active-section" dir="rtl">
       <header class="shop-head">
         <nav class="nav-group" id="filters">
           <button class="chip active" data-filter="all" id="btnAll">الكل</button>
@@ -2112,7 +2122,10 @@
       </div>
     </section>
 
-  </aside>
+        </aside>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="modal-overlay" id="modalArtistOverlay">
@@ -2150,55 +2163,59 @@
   const enableMapbox = !!(mapEl && window.mapboxgl);
 
   if(enableMapbox){
-    mapboxgl.accessToken = MAPBOX_TOKEN;
-    map = new mapboxgl.Map({
-      container: "map",
-      style: USER_STYLE,
-      center: KAABA_CENTER,
-      zoom: startZoom,
-      pitch: KAABA_PITCH,
-      bearing: KAABA_BEARING,
-      projection: 'globe'
-    });
+    try{
+      mapboxgl.accessToken = MAPBOX_TOKEN;
+      map = new mapboxgl.Map({
+        container: "map",
+        style: USER_STYLE,
+        center: KAABA_CENTER,
+        zoom: startZoom,
+        pitch: KAABA_PITCH,
+        bearing: KAABA_BEARING,
+        projection: 'globe'
+      });
 
-    map.on('style.load', () => {
-      try {
-        map.setFog({
-          'color': 'rgb(255, 255, 255)',
-          'high-color': 'rgb(200, 200, 200)',
-          'space-color': 'rgb(0, 0, 0)',
-          'star-intensity': 0.6
-        });
-      } catch(e){}
-
-      const layers = map.getStyle().layers || [];
-      let labelLayerId;
-      for (const layer of layers) {
-        if (layer.type === 'symbol' && layer.layout && layer.layout['text-field']) {
-          labelLayerId = layer.id;
-          break;
-        }
-      }
-
-      if (!map.getLayer('3d-buildings-custom')) {
-        try{
-          map.addLayer({
-            'id': '3d-buildings-custom',
-            'source': 'composite',
-            'source-layer': 'building',
-            'filter': ['==', 'extrude', 'true'],
-            'type': 'fill-extrusion',
-            'minzoom': 15,
-            'paint': {
-              'fill-extrusion-color': '#aaa',
-              'fill-extrusion-height': ['get', 'height'],
-              'fill-extrusion-base': ['get', 'min_height'],
-              'fill-extrusion-opacity': 0.6
-            }
-          }, labelLayerId);
+      map.on('style.load', () => {
+        try {
+          map.setFog({
+            'color': 'rgb(255, 255, 255)',
+            'high-color': 'rgb(200, 200, 200)',
+            'space-color': 'rgb(0, 0, 0)',
+            'star-intensity': 0.6
+          });
         } catch(e){}
-      }
-    });
+
+        const layers = map.getStyle().layers || [];
+        let labelLayerId;
+        for (const layer of layers) {
+          if (layer.type === 'symbol' && layer.layout && layer.layout['text-field']) {
+            labelLayerId = layer.id;
+            break;
+          }
+        }
+
+        if (!map.getLayer('3d-buildings-custom')) {
+          try{
+            map.addLayer({
+              'id': '3d-buildings-custom',
+              'source': 'composite',
+              'source-layer': 'building',
+              'filter': ['==', 'extrude', 'true'],
+              'type': 'fill-extrusion',
+              'minzoom': 15,
+              'paint': {
+                'fill-extrusion-color': '#aaa',
+                'fill-extrusion-height': ['get', 'height'],
+                'fill-extrusion-base': ['get', 'min_height'],
+                'fill-extrusion-opacity': 0.6
+              }
+            }, labelLayerId);
+          } catch(e){}
+        }
+      });
+    } catch(e){
+      map = null;
+    }
   }
 
   const DISPLAY_CONTENT = {
@@ -2315,8 +2332,8 @@
 
   window.switchSection = function(id){
     document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active-section'));
-    const homeSection = document.getElementById('sect-home');
-    if(homeSection) homeSection.classList.add('active-section');
+    const target = document.getElementById(id);
+    if(target) target.classList.add('active-section');
 
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     const navIdMap = {
