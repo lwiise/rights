@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
@@ -13,7 +13,7 @@
     --muted:#666;
     --card-radius:32px;
     --btn-radius:30px;
-    --side-nav-height:380px;
+    --side-nav-height:520px;
     --side-nav-offset:34px;
   }
 
@@ -35,6 +35,8 @@
     width:100vw;
     max-width:none;
     gap:0;
+    position:relative;
+    overflow:hidden;
   }
 
   .home-split{
@@ -68,19 +70,19 @@
   }
 
   #map{
-    flex:0 0 50%;
-    width:50%;
+    position:absolute;
+    inset:0;
+    width:100%;
     height:100%;
-    background:#000;
-    position:relative;
-    overflow:hidden;
+    background:transparent;
+    pointer-events:none;
+    overflow:visible;
     border-radius:0;
-    box-shadow:0 26px 60px rgba(0,0,0,0.16);
+    box-shadow:none;
+    z-index:20;
   }
 
   .fnn3dFrame{
-    position:absolute;
-    inset:0;
     width:100%;
     height:100%;
     border:0;
@@ -145,7 +147,10 @@
     border-bottom:1px solid rgba(255,255,255,0.15);
     box-shadow:-10px 0 30px rgba(0,0,0,0.3);
     transition:background 0.3s, border-color 0.3s;
-    height:var(--side-nav-height);
+    height:auto;
+    max-height:80vh;
+    overflow:auto;
+    pointer-events:auto;
   }
   .side-nav.focused{
     background:rgba(0,0,0,0.75);
@@ -199,6 +204,7 @@
     max-width:720px;
     margin:0 auto;
     overflow:hidden;
+    pointer-events:auto;
   }
   .mobile-nav .nav-item{
     border:none;
@@ -219,8 +225,8 @@
   }
 
   .shop{
-    flex:0 0 50%;
-    width:50%;
+    flex:1 1 100%;
+    width:100%;
     display:flex;
     flex-direction:column;
     height:100%;
@@ -274,9 +280,57 @@
      - Left copy + CTA
      ========================================================= */
   #sect-home .section-scroll{
-    padding:0;
-    overflow:hidden;    /* no scroll in Home */
+    padding:32px 48px;
+    overflow:hidden;
     height:100%;
+  }
+
+  .display-layout{
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    min-height:0;
+  }
+  .display-head{
+    text-align:center;
+  }
+  .display-head h1{
+    margin:0;
+    font-size:34px;
+    font-weight:800;
+    color:#111;
+  }
+  .display-frame{
+    flex:1 1 auto;
+    min-height:0;
+    border:1px solid rgba(0,0,0,0.15);
+    border-radius:4px;
+    overflow:hidden;
+    background:#000;
+    display:flex;
+    align-items:stretch;
+    justify-content:stretch;
+  }
+  .display-table-wrap{
+    flex:0 0 auto;
+  }
+  .display-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14px;
+    background:#fff;
+  }
+  .display-table th,
+  .display-table td{
+    border:1px solid rgba(0,0,0,0.25);
+    padding:10px 12px;
+    text-align:right;
+    white-space:normal;
+  }
+  .display-table th{
+    background:#fafafa;
+    font-weight:700;
   }
 
   .home-screen{
@@ -1467,13 +1521,13 @@
     }
     .layout{ height:auto; min-height:100vh; }
     .layout{ flex-direction:column; }
-    #map{ width:100%; height:80vh; flex:none; }
+    #map{ width:100%; height:100%; }
     .shop{
       width:100%;
       height:auto;
       flex:none;
       border-radius:0;
-      margin-top:-30px;
+      margin-top:0;
       z-index:40;
       overflow:visible;
     }
@@ -1505,8 +1559,19 @@
       gap:12px;
     }
     #sect-home .section-scroll{
+      padding:20px;
       height:auto;
       overflow:visible;
+    }
+    .display-head h1{ font-size:26px; }
+    .display-frame{
+      height:55vh;
+      flex:none;
+    }
+    .display-table th,
+    .display-table td{
+      font-size:12px;
+      padding:8px;
     }
     .home-top{ --home-logo-width:min(520px, 92%); }
     .home-top small{ font-size:18px; padding-left:5%; }
@@ -1620,48 +1685,72 @@
 <body>
 <div class="layout">
   <div id="map">
-    <iframe
-      class="fnn3dFrame"
-      src="/fnn-3d/"
-      title="FNN 3D"
-      allow="fullscreen; autoplay"
-      allowfullscreen
-      loading="eager"
-    ></iframe>
     <!-- ✅ 3D popup container -->
     <nav class="side-nav" id="sideNav">
-      <div class="nav-item" id="navHome">الرئيسية</div>
+      <div class="nav-item active" id="navHome">الرئيسية</div>
       <div class="nav-item" id="navAbout">امامة</div>
       <div class="nav-item" id="navServices">المؤذنون</div>
-      <div class="nav-item active" id="navGallery">المعرض</div>
+      <div class="nav-item" id="navGallery">المعرض</div>
       <div class="nav-item" id="navContact">تواصل معنا</div>
+      <div class="nav-item" id="navExtra1">قسم 6</div>
+      <div class="nav-item" id="navExtra2">قسم 7</div>
+      <div class="nav-item" id="navExtra3">قسم 8</div>
+      <div class="nav-item" id="navExtra4">قسم 9</div>
+      <div class="nav-item" id="navExtra5">قسم 10</div>
     </nav>
 
     <nav class="mobile-nav" id="mobileNav">
-      <div class="nav-item" id="mNavHome">الرئيسية</div>
+      <div class="nav-item active" id="mNavHome">الرئيسية</div>
       <div class="nav-item" id="mNavAbout">امامة</div>
       <div class="nav-item" id="mNavServices">المؤذنون</div>
-      <div class="nav-item active" id="mNavGallery">المعرض</div>
+      <div class="nav-item" id="mNavGallery">المعرض</div>
       <div class="nav-item" id="mNavContact">تواصل معنا</div>
+      <div class="nav-item" id="mNavExtra1">قسم 6</div>
+      <div class="nav-item" id="mNavExtra2">قسم 7</div>
+      <div class="nav-item" id="mNavExtra3">قسم 8</div>
+      <div class="nav-item" id="mNavExtra4">قسم 9</div>
+      <div class="nav-item" id="mNavExtra5">قسم 10</div>
     </nav>
   </div>
 
   <aside class="shop" id="shop">
 
     <!-- HOME -->
-    <section id="sect-home" class="app-section active-section">
+    <section id="sect-home" class="app-section active-section" dir="rtl">
       <div class="section-scroll">
-        <div class="home-split">
-          <div class="home-split-right">
+        <div class="display-layout">
+          <header class="display-head">
+            <h1 id="displayHeadline">الرئيسية</h1>
+          </header>
+          <div class="display-frame">
             <iframe
-              class="sutroFrame"
-              src="https://vincentwoo.com/3d/sutro_tower/"
-              title="برج سوترو ثلاثي الأبعاد"
-              allow="xr-spatial-tracking; fullscreen; autoplay"
+              class="fnn3dFrame"
+              src="/fnn-3d/"
+              title="FNN 3D"
+              allow="fullscreen; autoplay"
               allowfullscreen
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
+              loading="eager"
             ></iframe>
+          </div>
+          <div class="display-table-wrap">
+            <table class="display-table">
+              <thead>
+                <tr>
+                  <th>المحتوى لليمين</th>
+                  <th>المحتوى لليسار</th>
+                  <th>التقنية المستخدمة</th>
+                  <th>الموضوع</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td id="tableRight">عرض بانورامي</td>
+                  <td id="tableLeft">مشهد تعريفي</td>
+                  <td id="tableTech">واجهة تفاعلية</td>
+                  <td id="tableTopic">مقدمة</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -2060,10 +2149,117 @@
     });
   }
 
+  const DISPLAY_CONTENT = {
+    'sect-home': {
+      title: 'الرئيسية',
+      table: {
+        right: 'عرض بانورامي',
+        left: 'مشهد تعريفي',
+        tech: 'واجهة تفاعلية',
+        topic: 'مقدمة'
+      }
+    },
+    'sect-about': {
+      title: 'امامة',
+      table: {
+        right: 'سيرة الإمامة',
+        left: 'محطات تاريخية',
+        tech: 'ملخص نصي',
+        topic: 'نبذة'
+      }
+    },
+    'sect-services': {
+      title: 'المؤذنون',
+      table: {
+        right: 'أدوار المؤذنين',
+        left: 'تنسيق الأذان',
+        tech: 'قائمة تفاعلية',
+        topic: 'خدمات'
+      }
+    },
+    'sect-gallery': {
+      title: 'المعرض',
+      table: {
+        right: 'درون 360',
+        left: 'الحرم يعرض في تجريدي',
+        tech: 'خريطة متحركة تفاعلية',
+        topic: 'عام'
+      }
+    },
+    'sect-contact': {
+      title: 'تواصل معنا',
+      table: {
+        right: 'طرق التواصل',
+        left: 'معلومات الرسائل',
+        tech: 'نموذج مباشر',
+        topic: 'تواصل'
+      }
+    },
+    'sect-extra-1': {
+      title: 'قسم 6',
+      table: {
+        right: 'عرض خاص',
+        left: 'محتوى موسع',
+        tech: 'شبكة بيانات',
+        topic: 'ملف'
+      }
+    },
+    'sect-extra-2': {
+      title: 'قسم 7',
+      table: {
+        right: 'مشهد ثانوي',
+        left: 'مخطط بصري',
+        tech: 'لوحة معلومات',
+        topic: 'تجربة'
+      }
+    },
+    'sect-extra-3': {
+      title: 'قسم 8',
+      table: {
+        right: 'زاوية عرض',
+        left: 'تقرير موجز',
+        tech: 'تحليل بصري',
+        topic: 'بيانات'
+      }
+    },
+    'sect-extra-4': {
+      title: 'قسم 9',
+      table: {
+        right: 'واجهة قصيرة',
+        left: 'ملاحظات',
+        tech: 'جدول تفاعلي',
+        topic: 'ملخص'
+      }
+    },
+    'sect-extra-5': {
+      title: 'قسم 10',
+      table: {
+        right: 'نموذج جديد',
+        left: 'نطاق إضافي',
+        tech: 'عرض مركب',
+        topic: 'أرشيف'
+      }
+    }
+  };
+
+  function setDisplayContent(key){
+    const data = DISPLAY_CONTENT[key] || DISPLAY_CONTENT['sect-home'];
+    const headline = document.getElementById('displayHeadline');
+    if(headline) headline.textContent = data.title;
+    const rightEl = document.getElementById('tableRight');
+    if(rightEl) rightEl.textContent = data.table.right;
+    const leftEl = document.getElementById('tableLeft');
+    if(leftEl) leftEl.textContent = data.table.left;
+    const techEl = document.getElementById('tableTech');
+    if(techEl) techEl.textContent = data.table.tech;
+    const topicEl = document.getElementById('tableTopic');
+    if(topicEl) topicEl.textContent = data.table.topic;
+  }
+
   window.switchSection = function(id){
     document.querySelectorAll('.app-section').forEach(s => s.classList.remove('active-section'));
-    const target = document.getElementById(id);
-    if(target) target.classList.add('active-section');
+    const homeSection = document.getElementById('sect-home');
+    if(homeSection) homeSection.classList.add('active-section');
 
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     const navIdMap = {
@@ -2071,20 +2267,32 @@
       'sect-about':'navAbout',
       'sect-services':'navServices',
       'sect-gallery':'navGallery',
-      'sect-contact':'navContact'
+      'sect-contact':'navContact',
+      'sect-extra-1':'navExtra1',
+      'sect-extra-2':'navExtra2',
+      'sect-extra-3':'navExtra3',
+      'sect-extra-4':'navExtra4',
+      'sect-extra-5':'navExtra5'
     };
     const mNavIdMap = {
       'sect-home':'mNavHome',
       'sect-about':'mNavAbout',
       'sect-services':'mNavServices',
       'sect-gallery':'mNavGallery',
-      'sect-contact':'mNavContact'
+      'sect-contact':'mNavContact',
+      'sect-extra-1':'mNavExtra1',
+      'sect-extra-2':'mNavExtra2',
+      'sect-extra-3':'mNavExtra3',
+      'sect-extra-4':'mNavExtra4',
+      'sect-extra-5':'mNavExtra5'
     };
 
     const navEl = document.getElementById(navIdMap[id]);
     if(navEl) navEl.classList.add('active');
     const mNavEl = document.getElementById(mNavIdMap[id]);
     if(mNavEl) mNavEl.classList.add('active');
+
+    setDisplayContent(id);
 
     if(id === 'sect-home' && map){
       const resetZoom = window.innerWidth < 900 ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
@@ -2106,12 +2314,22 @@
   safeAdd('navServices','click',() => switchSection('sect-services'));
   safeAdd('navGallery','click',() => switchSection('sect-gallery'));
   safeAdd('navContact','click',() => switchSection('sect-contact'));
+  safeAdd('navExtra1','click',() => switchSection('sect-extra-1'));
+  safeAdd('navExtra2','click',() => switchSection('sect-extra-2'));
+  safeAdd('navExtra3','click',() => switchSection('sect-extra-3'));
+  safeAdd('navExtra4','click',() => switchSection('sect-extra-4'));
+  safeAdd('navExtra5','click',() => switchSection('sect-extra-5'));
 
   safeAdd('mNavHome','click',() => switchSection('sect-home'));
   safeAdd('mNavAbout','click',() => switchSection('sect-about'));
   safeAdd('mNavServices','click',() => switchSection('sect-services'));
   safeAdd('mNavGallery','click',() => switchSection('sect-gallery'));
   safeAdd('mNavContact','click',() => switchSection('sect-contact'));
+  safeAdd('mNavExtra1','click',() => switchSection('sect-extra-1'));
+  safeAdd('mNavExtra2','click',() => switchSection('sect-extra-2'));
+  safeAdd('mNavExtra3','click',() => switchSection('sect-extra-3'));
+  safeAdd('mNavExtra4','click',() => switchSection('sect-extra-4'));
+  safeAdd('mNavExtra5','click',() => switchSection('sect-extra-5'));
 
   const homeSliderTrack = document.querySelector('.home-illustration-track');
   const homeSliderDots = document.getElementById('homeSliderDots');
@@ -2903,11 +3121,7 @@
     render(PRODUCTS);
 
     // Default active nav = Home
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    const navHome = document.getElementById('navHome');
-    if(navHome) navHome.classList.add('active');
-    const mNavHome = document.getElementById('mNavHome');
-    if(mNavHome) mNavHome.classList.add('active');
+    switchSection('sect-home');
 
     setupProcessAnimation();
   })();
