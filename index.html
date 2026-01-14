@@ -317,14 +317,17 @@
     flex-direction:column;
     position:relative;
     overflow:hidden;
+    gap:16px;
   }
   .frame-split{
     display:flex;
     flex-direction:row;
     direction:ltr;
     width:100%;
-    height:100%;
+    flex:1 1 auto;
+    height:auto;
     min-height:0;
+    position:relative;
   }
   .frame-left,
   .frame-right{
@@ -1742,33 +1745,36 @@
 <body>
 <div class="layout">
   <div class="display-frame">
-    <nav class="side-nav" id="sideNav">
-      <div class="nav-item active" id="navGallery">المعرض</div>
-      <div class="nav-item" id="navHome">الرئيسية</div>
-      <div class="nav-item" id="navAbout">امامة</div>
-      <div class="nav-item" id="navServices">المؤذنون</div>
-      <div class="nav-item" id="navContact">تواصل معنا</div>
-      <div class="nav-item" id="navExtra1">قسم 6</div>
-      <div class="nav-item" id="navExtra2">قسم 7</div>
-      <div class="nav-item" id="navExtra3">قسم 8</div>
-      <div class="nav-item" id="navExtra4">قسم 9</div>
-      <div class="nav-item" id="navExtra5">قسم 10</div>
-    </nav>
-
-    <nav class="mobile-nav" id="mobileNav">
-      <div class="nav-item active" id="mNavGallery">المعرض</div>
-      <div class="nav-item" id="mNavHome">الرئيسية</div>
-      <div class="nav-item" id="mNavAbout">امامة</div>
-      <div class="nav-item" id="mNavServices">المؤذنون</div>
-      <div class="nav-item" id="mNavContact">تواصل معنا</div>
-      <div class="nav-item" id="mNavExtra1">قسم 6</div>
-      <div class="nav-item" id="mNavExtra2">قسم 7</div>
-      <div class="nav-item" id="mNavExtra3">قسم 8</div>
-      <div class="nav-item" id="mNavExtra4">قسم 9</div>
-      <div class="nav-item" id="mNavExtra5">قسم 10</div>
-    </nav>
+    <header class="display-head" dir="rtl">
+      <h1 id="displayHeadline">المعرض</h1>
+    </header>
 
     <div class="frame-split">
+      <nav class="side-nav" id="sideNav">
+        <div class="nav-item active" id="navGallery">المعرض</div>
+        <div class="nav-item" id="navHome">الرئيسية</div>
+        <div class="nav-item" id="navAbout">امامة</div>
+        <div class="nav-item" id="navServices">المؤذنون</div>
+        <div class="nav-item" id="navContact">تواصل معنا</div>
+        <div class="nav-item" id="navExtra1">قسم 6</div>
+        <div class="nav-item" id="navExtra2">قسم 7</div>
+        <div class="nav-item" id="navExtra3">قسم 8</div>
+        <div class="nav-item" id="navExtra4">قسم 9</div>
+        <div class="nav-item" id="navExtra5">قسم 10</div>
+      </nav>
+
+      <nav class="mobile-nav" id="mobileNav">
+        <div class="nav-item active" id="mNavGallery">المعرض</div>
+        <div class="nav-item" id="mNavHome">الرئيسية</div>
+        <div class="nav-item" id="mNavAbout">امامة</div>
+        <div class="nav-item" id="mNavServices">المؤذنون</div>
+        <div class="nav-item" id="mNavContact">تواصل معنا</div>
+        <div class="nav-item" id="mNavExtra1">قسم 6</div>
+        <div class="nav-item" id="mNavExtra2">قسم 7</div>
+        <div class="nav-item" id="mNavExtra3">قسم 8</div>
+        <div class="nav-item" id="mNavExtra4">قسم 9</div>
+        <div class="nav-item" id="mNavExtra5">قسم 10</div>
+      </nav>
       <div class="frame-left">
         <iframe
           class="fnn3dFrame"
@@ -1787,33 +1793,7 @@
 
     <!-- HOME -->
     <section id="sect-home" class="app-section" dir="rtl">
-      <div class="section-scroll">
-        <div class="display-layout">
-          <header class="display-head">
-            <h1 id="displayHeadline">المعرض</h1>
-          </header>
-          <div class="display-table-wrap">
-            <table class="display-table">
-              <thead>
-                <tr>
-                  <th>المحتوى لليمين</th>
-                  <th>المحتوى لليسار</th>
-                  <th>التقنية المستخدمة</th>
-                  <th>الموضوع</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td id="tableRight">درون 360</td>
-                  <td id="tableLeft">الحرم يعرض في تجريدي</td>
-                  <td id="tableTech">خريطة متحركة تفاعلية</td>
-                  <td id="tableTopic">عام</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <div class="section-scroll"></div>
     </section>
 
         <!-- ABOUT -->
@@ -2124,6 +2104,26 @@
 
         </aside>
       </div>
+    </div>
+    <div class="display-table-wrap" dir="rtl">
+      <table class="display-table">
+        <thead>
+          <tr>
+            <th>المحتوى لليمين</th>
+            <th>المحتوى لليسار</th>
+            <th>التقنية المستخدمة</th>
+            <th>الموضوع</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="tableRight">درون 360</td>
+            <td id="tableLeft">الحرم يعرض في تجريدي</td>
+            <td id="tableTech">خريطة متحركة تفاعلية</td>
+            <td id="tableTopic">عام</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
