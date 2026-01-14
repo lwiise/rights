@@ -139,6 +139,7 @@
     transform:none;
     display:flex;
     flex-direction:column;
+    justify-content:space-between;
     z-index:20;
     background:rgba(0,0,0,0.5);
     backdrop-filter:blur(15px);
@@ -151,6 +152,7 @@
     max-height:100%;
     overflow:auto;
     pointer-events:auto;
+    padding:12px 8px;
   }
   .side-nav.focused{
     background:rgba(0,0,0,0.75);
@@ -317,7 +319,8 @@
     flex-direction:column;
     position:relative;
     overflow:hidden;
-    gap:16px;
+    gap:24px;
+    padding:24px 0 28px;
   }
   .frame-split{
     display:flex;
@@ -363,7 +366,7 @@
   }
   .display-table-wrap{
     flex:0 0 auto;
-    padding:0 32px;
+    padding:0 32px 24px;
   }
   .display-table{
     width:100%;
@@ -1619,6 +1622,8 @@
       height:auto;
       min-height:100vh;
       flex:none;
+      gap:18px;
+      padding:20px 0 24px;
     }
     .frame-split{ flex-direction:column; }
     .frame-left,
@@ -1627,7 +1632,7 @@
     }
     .frame-left{ height:45vh; }
     .frame-right{ height:auto; min-height:55vh; }
-    .display-table-wrap{ padding:0 16px; }
+    .display-table-wrap{ padding:0 16px 20px; }
     .display-table th,
     .display-table td{
       font-size:12px;
@@ -1752,7 +1757,6 @@
     <div class="frame-split">
       <nav class="side-nav" id="sideNav">
         <div class="nav-item active" id="navGallery">المعرض</div>
-        <div class="nav-item" id="navHome">الرئيسية</div>
         <div class="nav-item" id="navAbout">امامة</div>
         <div class="nav-item" id="navServices">المؤذنون</div>
         <div class="nav-item" id="navContact">تواصل معنا</div>
@@ -1765,7 +1769,6 @@
 
       <nav class="mobile-nav" id="mobileNav">
         <div class="nav-item active" id="mNavGallery">المعرض</div>
-        <div class="nav-item" id="mNavHome">الرئيسية</div>
         <div class="nav-item" id="mNavAbout">امامة</div>
         <div class="nav-item" id="mNavServices">المؤذنون</div>
         <div class="nav-item" id="mNavContact">تواصل معنا</div>
@@ -2081,7 +2084,6 @@
 
             <div class="ft-links">
               <div class="ft-title">التنقل</div>
-              <a href="#" onclick="switchSection('sect-home'); return false;">الرئيسية</a>
               <a href="#" onclick="switchSection('sect-about'); return false;">امامة</a>
               <a href="#" onclick="switchSection('sect-services'); return false;">المؤذنون</a>
               <a href="#" onclick="switchSection('sect-gallery'); return false;">المعرض</a>
