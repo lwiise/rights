@@ -1799,6 +1799,7 @@
       <div class="frame-left">
         <iframe
           class="fnn3dFrame"
+          id="leftKaabaFrame"
           src="/fnn-3d/"
           title="FNN 3D"
           allow="fullscreen; autoplay"
@@ -2341,6 +2342,38 @@
     }
   };
 
+  // Map sections to the 5-phase Kaaba nav in the left iframe
+  const KAABA_PHASE_MAP = {
+    'sect-gallery': 0,
+    'sect-about': 1,
+    'sect-services': 2,
+    'sect-contact': 3,
+    'sect-extra-1': 4,
+    'sect-extra-2': 0,
+    'sect-extra-3': 1,
+    'sect-extra-4': 2,
+    'sect-extra-5': 3,
+    'sect-home': 0
+  };
+  const leftKaabaFrame = document.getElementById('leftKaabaFrame');
+  let currentKaabaPhase = Number.isFinite(KAABA_PHASE_MAP['sect-gallery']) ? KAABA_PHASE_MAP['sect-gallery'] : 0;
+
+  function sendKaabaPhase(phase){
+    currentKaabaPhase = phase;
+    if(!leftKaabaFrame || !leftKaabaFrame.contentWindow) return;
+    leftKaabaFrame.contentWindow.postMessage({ type:'goToPhase', index: phase }, '*');
+  }
+
+  function syncKaabaPhase(sectionId){
+    const phase = KAABA_PHASE_MAP[sectionId];
+    if(!Number.isFinite(phase)) return;
+    sendKaabaPhase(phase);
+  }
+
+  if(leftKaabaFrame){
+    leftKaabaFrame.addEventListener('load', () => sendKaabaPhase(currentKaabaPhase));
+  }
+
   function setDisplayContent(key){
     const data = DISPLAY_CONTENT[key] || DISPLAY_CONTENT['sect-gallery'];
     const headline = document.getElementById('displayHeadline');
@@ -2401,6 +2434,7 @@
     if(mNavEl) mNavEl.classList.add('active');
 
     setDisplayContent(id);
+    syncKaabaPhase(id);
 
     if(id === 'sect-gallery' && map){
       const resetZoom = window.innerWidth < 900 ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;

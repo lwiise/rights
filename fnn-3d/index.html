@@ -282,6 +282,13 @@
             }
         });
 
+        window.addEventListener('message', (event) => {
+            const data = event.data;
+            if (!data || data.type !== 'goToPhase') return;
+            const idx = Number(data.index);
+            if (Number.isFinite(idx)) goToPhase(idx);
+        });
+
         function animate() {
             requestAnimationFrame(animate);
             material.uniforms.uTime.value = performance.now() / 1000;
