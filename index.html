@@ -16,7 +16,7 @@
     --btn-radius:30px;
     --side-nav-height:520px;
     --side-nav-offset:34px;
-    --side-nav-width:64px;
+    --side-nav-width:240px;
   }
 
   *,*::before,*::after{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
@@ -179,6 +179,8 @@
     overflow:auto;
     pointer-events:auto;
     padding:0;
+    direction:rtl;
+    text-align:right;
   }
   .side-nav.focused{
     background:rgba(0,0,0,0.75);
@@ -199,10 +201,14 @@
     flex:none;
     display:flex;
     align-items:center;
-    justify-content:center;
+    justify-content:flex-end;
     width:100%;
-    padding:10px 16px;
-    font-size:12px;
+    padding:12px 14px;
+    font-size:13px;
+    line-height:1.4;
+    white-space:normal;
+    text-transform:none;
+    letter-spacing:0;
   }
   .nav-item:last-child{ border-bottom:none; }
   .nav-item:hover,
@@ -243,13 +249,14 @@
     border:none;
     padding:10px 6px;
     border-radius:12px;
-    font-size:10px;
-    letter-spacing:0.05em;
+    font-size:9px;
+    letter-spacing:0;
     line-height:1.1;
     white-space:normal;
     background:transparent;
     flex:1;
     min-width:0;
+    text-transform:none;
   }
   .mobile-nav .nav-item:hover,
   .mobile-nav .nav-item.active{
@@ -2025,27 +2032,29 @@
     <div class="frame-top-bar" aria-hidden="true"></div>
     <div class="frame-split">
       <nav class="side-nav" id="sideNav">
-        <div class="nav-item active" id="navGallery">0.</div>
-        <div class="nav-item" id="navAbout">1.</div>
-        <div class="nav-item" id="navServices">2.</div>
-        <div class="nav-item" id="navContact">3.</div>
-        <div class="nav-item" id="navExtra1">4.</div>
-        <div class="nav-item" id="navExtra2">5.</div>
-        <div class="nav-item" id="navExtra3">6.</div>
-        <div class="nav-item" id="navExtra4">7.</div>
-        <div class="nav-item" id="navExtra5">8.</div>
+        <div class="nav-item" id="navHome">عام</div>
+        <div class="nav-item" id="navAbout">الإمامة</div>
+        <div class="nav-item" id="navServices">المؤذنون</div>
+        <div class="nav-item active" id="navGallery">الحلقات القرآنية والمصاحف</div>
+        <div class="nav-item" id="navContact">الحلقات العلمية والدروس</div>
+        <div class="nav-item" id="navExtra1">التطويف</div>
+        <div class="nav-item" id="navExtra2">المكتبة</div>
+        <div class="nav-item" id="navExtra3">الترجمة الشرعية</div>
+        <div class="nav-item" id="navExtra4">هيئة الأمر بالمعروف</div>
+        <div class="nav-item" id="navExtra5">التوجيه والإرشاد وإجابة السائلين</div>
       </nav>
 
       <nav class="mobile-nav" id="mobileNav">
-        <div class="nav-item active" id="mNavGallery">0.</div>
-        <div class="nav-item" id="mNavAbout">1.</div>
-        <div class="nav-item" id="mNavServices">2.</div>
-        <div class="nav-item" id="mNavContact">3.</div>
-        <div class="nav-item" id="mNavExtra1">4.</div>
-        <div class="nav-item" id="mNavExtra2">5.</div>
-        <div class="nav-item" id="mNavExtra3">6.</div>
-        <div class="nav-item" id="mNavExtra4">7.</div>
-        <div class="nav-item" id="mNavExtra5">8.</div>
+        <div class="nav-item" id="mNavHome">عام</div>
+        <div class="nav-item" id="mNavAbout">الإمامة</div>
+        <div class="nav-item" id="mNavServices">المؤذنون</div>
+        <div class="nav-item active" id="mNavGallery">الحلقات القرآنية والمصاحف</div>
+        <div class="nav-item" id="mNavContact">الحلقات العلمية والدروس</div>
+        <div class="nav-item" id="mNavExtra1">التطويف</div>
+        <div class="nav-item" id="mNavExtra2">المكتبة</div>
+        <div class="nav-item" id="mNavExtra3">الترجمة الشرعية</div>
+        <div class="nav-item" id="mNavExtra4">هيئة الأمر بالمعروف</div>
+        <div class="nav-item" id="mNavExtra5">التوجيه والإرشاد وإجابة السائلين</div>
       </nav>
       <button class="fullscreen-toggle frame-toggle" id="toggleFrame" type="button">Frame Full</button>
       <div class="frame-left">
