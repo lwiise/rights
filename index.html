@@ -360,6 +360,57 @@
     z-index:1;
     display:none;
   }
+  .map-kaaba-box{
+    position:absolute;
+    top:14px;
+    left:14px;
+    width:120px;
+    height:120px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,0.55);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:14px;
+    box-shadow:0 16px 30px rgba(0,0,0,0.45);
+    backdrop-filter:blur(6px);
+    z-index:6;
+    pointer-events:none;
+    perspective:600px;
+  }
+  .kaaba-cube{
+    width:64px;
+    height:64px;
+    position:relative;
+    transform-style:preserve-3d;
+    animation:kaabaSpin 18s linear infinite;
+  }
+  .kaaba-face{
+    position:absolute;
+    width:64px;
+    height:64px;
+    background:#0b0b0b;
+    border:1px solid rgba(255,255,255,0.1);
+    background-image:linear-gradient(to bottom, rgba(0,0,0,0) 0 44%, #d4af37 44% 56%, rgba(0,0,0,0) 56% 100%);
+  }
+  .kaaba-face.front{ transform:translateZ(32px); }
+  .kaaba-face.back{ transform:rotateY(180deg) translateZ(32px); }
+  .kaaba-face.right{ transform:rotateY(90deg) translateZ(32px); }
+  .kaaba-face.left{ transform:rotateY(-90deg) translateZ(32px); }
+  .kaaba-face.top{
+    transform:rotateX(90deg) translateZ(32px);
+    background:#111;
+    background-image:none;
+  }
+  .kaaba-face.bottom{
+    transform:rotateX(-90deg) translateZ(32px);
+    background:#070707;
+    background-image:none;
+  }
+  @keyframes kaabaSpin{
+    from{ transform:rotateX(12deg) rotateY(0deg); }
+    to{ transform:rotateX(12deg) rotateY(360deg); }
+  }
   .kaaba-panel{
     position:absolute;
     inset:0;
@@ -1582,6 +1633,126 @@
     font-weight:800;
   }
 
+  #sect-about,
+  #sect-services,
+  #sect-contact{
+    background:#000;
+    color:#fff;
+  }
+  #sect-about .section-scroll,
+  #sect-services .section-scroll,
+  #sect-contact .section-scroll{
+    background:#000;
+    color:#fff;
+  }
+  #sect-about .sec-title,
+  #sect-services .sec-title,
+  #sect-contact .sec-title{
+    color:#fff;
+  }
+  #sect-about .sec-sub,
+  #sect-services .sec-sub,
+  #sect-contact .sec-sub{
+    color:rgba(255,255,255,0.78);
+  }
+  #sect-about .about-lead,
+  #sect-about .about-sublead{
+    color:rgba(255,255,255,0.8);
+  }
+  #sect-about .about-card{
+    background:#0b0b0b;
+    border-color:#1e1e1e;
+    box-shadow:0 18px 40px rgba(0,0,0,0.55);
+  }
+  #sect-about .about-card-title{ color:#fff; }
+  #sect-about .about-card-meta{ color:rgba(255,255,255,0.6); }
+  #sect-about .about-card-desc{ color:rgba(255,255,255,0.75); }
+  #sect-about .about-card-media{
+    background:#111;
+    border-color:#222;
+  }
+  #sect-about .about-card-media::before{ background:rgba(255,255,255,0.08); }
+
+  #sect-services .svc-card{
+    background:#0b0b0b;
+    border-color:#1e1e1e;
+    box-shadow:0 18px 40px rgba(0,0,0,0.55);
+  }
+  #sect-services .svc-card:hover{ box-shadow:0 22px 48px rgba(0,0,0,0.7); }
+  #sect-services .svc-ico{
+    background:#111;
+    color:#d4af37;
+  }
+  #sect-services .svc-title{ color:#fff; }
+  #sect-services .svc-desc{ color:rgba(255,255,255,0.75); }
+
+  #sect-about .process,
+  #sect-services .process{
+    background:transparent;
+  }
+  #sect-about .process-head h2,
+  #sect-services .process-head h2{
+    color:#fff;
+  }
+  #sect-about .process-head p,
+  #sect-services .process-head p{
+    color:rgba(255,255,255,0.7);
+  }
+  #sect-about .proc-step,
+  #sect-services .proc-step{
+    background:#0b0b0b;
+    border-color:#1e1e1e;
+  }
+  #sect-about .proc-title,
+  #sect-services .proc-title{
+    color:#fff;
+  }
+  #sect-about .proc-desc,
+  #sect-services .proc-desc{
+    color:rgba(255,255,255,0.7);
+  }
+  #sect-about .proc-kicker,
+  #sect-services .proc-kicker{
+    color:rgba(255,255,255,0.55);
+  }
+  #sect-about .proc-illus,
+  #sect-services .proc-illus{
+    background:#111;
+    color:rgba(255,255,255,0.55);
+  }
+  #sect-about .proc-line,
+  #sect-services .proc-line{
+    background:rgba(255,255,255,0.2);
+  }
+  #sect-about .proc-dot,
+  #sect-services .proc-dot{
+    background:#d4af37;
+  }
+
+  #sect-contact .form-input{
+    background:#0f0f0f;
+    border-color:#222;
+    color:#fff;
+  }
+  #sect-contact .form-input::placeholder{ color:rgba(255,255,255,0.55); }
+  #sect-contact .form-input:focus{
+    border-color:#d4af37;
+    background:#111;
+  }
+  #sect-contact .btn-submit{
+    background:#d4af37;
+    color:#000;
+  }
+  #sect-contact #formSuccess{
+    background:#0f0f0f;
+    color:#fff;
+    border:1px solid #222;
+  }
+  #sect-contact .site-footer{
+    background:#0f0f0f;
+    box-shadow:0 18px 44px rgba(0,0,0,0.5);
+  }
+
   @media (max-width:900px){
     body{
       height:auto;
@@ -1806,6 +1977,16 @@
       <div class="frame-right show-map" id="frameRight">
         <div class="map-panel" id="mapPanel">
           <div id="map"></div>
+          <div class="map-kaaba-box" aria-hidden="true">
+            <div class="kaaba-cube">
+              <span class="kaaba-face front"></span>
+              <span class="kaaba-face back"></span>
+              <span class="kaaba-face right"></span>
+              <span class="kaaba-face left"></span>
+              <span class="kaaba-face top"></span>
+              <span class="kaaba-face bottom"></span>
+            </div>
+          </div>
         </div>
         <div class="kaaba-panel" id="kaabaPanel">
           <iframe
