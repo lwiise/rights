@@ -6,7 +6,7 @@
     <title>Sacred Makkah: Web MVP</title>
     <style>
         :root { --accent: #d4af37; }
-        body { margin: 0; overflow: hidden; background-color: #00050a; color: white; font-family: 'serif'; }
+        body { margin: 0; overflow: hidden; background-color: #e6e6e6; color: white; font-family: 'serif'; }
         canvas { display: block; }
 
         /* Navigation UI */
@@ -124,12 +124,13 @@
         const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.setClearColor(0xe6e6e6, 1);
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
         renderer.toneMappingExposure = 1.2;
 
         // Scene & camera
         const scene = new THREE.Scene();
-        scene.fog = new THREE.Fog(0x00050a, 8, 40);
+        scene.fog = new THREE.Fog(0xe6e6e6, 8, 40);
 
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 200);
         camera.position.set(12, 7, 12);
@@ -157,7 +158,7 @@
         // Ground
         const groundGeo = new THREE.CircleGeometry(60, 80);
         const groundMat = new THREE.MeshStandardMaterial({
-            color: 0x050b14,
+            color: 0xd9d9d9,
             roughness: 1,
             metalness: 0
         });
