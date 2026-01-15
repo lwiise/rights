@@ -127,7 +127,8 @@
     width:100%;
     height:100%;
     background:transparent;
-    touch-action:none;
+    touch-action:manipulation;
+    pointer-events:auto;
   }
 
   .side-nav{
@@ -322,13 +323,20 @@
     gap:0;
     padding:0;
   }
+  .frame-top-bar,
+  .frame-bottom-bar{
+    flex:0 0 10vh;
+    height:10vh;
+    width:100%;
+    background:#fff;
+  }
   .frame-split{
     display:flex;
     flex-direction:row;
     direction:ltr;
     width:100%;
-    flex:1 1 auto;
-    height:auto;
+    flex:0 0 80vh;
+    height:80vh;
     min-height:0;
     position:relative;
     border-top:2px solid #000;
@@ -1808,19 +1816,24 @@
     .display-head{ padding:0 16px; }
     .display-head h1{ font-size:26px; }
     .display-frame{
-      height:auto;
+      height:100vh;
       min-height:100vh;
       flex:none;
       gap:0;
       padding:0;
+    }
+    .frame-top-bar,
+    .frame-bottom-bar{
+      flex:0 0 10vh;
+      height:10vh;
     }
     .frame-split{ flex-direction:column; }
     .frame-left,
     .frame-right{
       width:100%;
     }
-    .frame-left{ height:45vh; }
-    .frame-right{ height:auto; min-height:55vh; }
+    .frame-left{ height:40vh; }
+    .frame-right{ height:40vh; min-height:40vh; }
     .display-table-wrap{ padding:0 16px 20px; }
     .display-table th,
     .display-table td{
@@ -1939,6 +1952,7 @@
 <body>
 <div class="layout">
   <div class="display-frame">
+    <div class="frame-top-bar" aria-hidden="true"></div>
     <div class="frame-split">
       <nav class="side-nav" id="sideNav">
         <div class="nav-item active" id="navGallery">0.</div>
@@ -2313,6 +2327,7 @@
         </aside>
       </div>
     </div>
+    <div class="frame-bottom-bar" aria-hidden="true"></div>
   </div>
 </div>
 
