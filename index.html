@@ -152,7 +152,7 @@
     max-height:100%;
     overflow:auto;
     pointer-events:auto;
-    padding:12px 8px;
+    padding:0;
   }
   .side-nav.focused{
     background:rgba(0,0,0,0.75);
@@ -319,8 +319,8 @@
     flex-direction:column;
     position:relative;
     overflow:hidden;
-    gap:24px;
-    padding:24px 0 28px;
+    gap:0;
+    padding:0;
   }
   .frame-split{
     display:flex;
@@ -356,7 +356,7 @@
   .map-panel{
     position:absolute;
     inset:0;
-    background:#f4f4f4;
+    background:#111;
     z-index:1;
     display:none;
   }
@@ -1640,8 +1640,8 @@
       height:auto;
       min-height:100vh;
       flex:none;
-      gap:18px;
-      padding:20px 0 24px;
+      gap:0;
+      padding:0;
     }
     .frame-split{ flex-direction:column; }
     .frame-left,
@@ -1768,33 +1768,29 @@
 <body>
 <div class="layout">
   <div class="display-frame">
-    <header class="display-head" dir="rtl">
-      <h1 id="displayHeadline">المعرض</h1>
-    </header>
-
     <div class="frame-split">
       <nav class="side-nav" id="sideNav">
-        <div class="nav-item active" id="navGallery">المعرض</div>
-        <div class="nav-item" id="navAbout">امامة</div>
-        <div class="nav-item" id="navServices">المؤذنون</div>
-        <div class="nav-item" id="navContact">تواصل معنا</div>
-        <div class="nav-item" id="navExtra1">قسم 6</div>
-        <div class="nav-item" id="navExtra2">قسم 7</div>
-        <div class="nav-item" id="navExtra3">قسم 8</div>
-        <div class="nav-item" id="navExtra4">قسم 9</div>
-        <div class="nav-item" id="navExtra5">قسم 10</div>
+        <div class="nav-item active" id="navGallery">0.</div>
+        <div class="nav-item" id="navAbout">1.</div>
+        <div class="nav-item" id="navServices">2.</div>
+        <div class="nav-item" id="navContact">3.</div>
+        <div class="nav-item" id="navExtra1">4.</div>
+        <div class="nav-item" id="navExtra2">5.</div>
+        <div class="nav-item" id="navExtra3">6.</div>
+        <div class="nav-item" id="navExtra4">7.</div>
+        <div class="nav-item" id="navExtra5">8.</div>
       </nav>
 
       <nav class="mobile-nav" id="mobileNav">
-        <div class="nav-item active" id="mNavGallery">المعرض</div>
-        <div class="nav-item" id="mNavAbout">امامة</div>
-        <div class="nav-item" id="mNavServices">المؤذنون</div>
-        <div class="nav-item" id="mNavContact">تواصل معنا</div>
-        <div class="nav-item" id="mNavExtra1">قسم 6</div>
-        <div class="nav-item" id="mNavExtra2">قسم 7</div>
-        <div class="nav-item" id="mNavExtra3">قسم 8</div>
-        <div class="nav-item" id="mNavExtra4">قسم 9</div>
-        <div class="nav-item" id="mNavExtra5">قسم 10</div>
+        <div class="nav-item active" id="mNavGallery">0.</div>
+        <div class="nav-item" id="mNavAbout">1.</div>
+        <div class="nav-item" id="mNavServices">2.</div>
+        <div class="nav-item" id="mNavContact">3.</div>
+        <div class="nav-item" id="mNavExtra1">4.</div>
+        <div class="nav-item" id="mNavExtra2">5.</div>
+        <div class="nav-item" id="mNavExtra3">6.</div>
+        <div class="nav-item" id="mNavExtra4">7.</div>
+        <div class="nav-item" id="mNavExtra5">8.</div>
       </nav>
       <div class="frame-left">
         <iframe
@@ -2136,26 +2132,6 @@
         </aside>
       </div>
     </div>
-    <div class="display-table-wrap" dir="rtl">
-      <table class="display-table">
-        <thead>
-          <tr>
-            <th>المحتوى لليمين</th>
-            <th>المحتوى لليسار</th>
-            <th>التقنية المستخدمة</th>
-            <th>الموضوع</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td id="tableRight">درون 360</td>
-            <td id="tableLeft">الحرم يعرض في تجريدي</td>
-            <td id="tableTech">خريطة متحركة تفاعلية</td>
-            <td id="tableTopic">عام</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 </div>
 
@@ -2178,7 +2154,7 @@
 
 <script>
   const MAPBOX_TOKEN = "pk.eyJ1IjoiYW5hc2thcm90aSIsImEiOiJjbWhqcHgwcmMwbWM0MmxwZ2V5Z2x5OTN0In0.bpOf-4BsljExZdYZUak_pw";
-  const USER_STYLE = "mapbox://styles/mapbox/streets-v12";
+  const USER_STYLE = "mapbox://styles/mapbox/dark-v11";
 
   const KAABA_CENTER = [39.8262, 21.4225];
   const KAABA_ZOOM_DESKTOP = 16.8;
@@ -2209,10 +2185,10 @@
       map.on('style.load', () => {
         try {
           map.setFog({
-            'color': 'rgb(255, 255, 255)',
-            'high-color': 'rgb(200, 200, 200)',
+            'color': 'rgb(20, 20, 20)',
+            'high-color': 'rgb(90, 90, 90)',
             'space-color': 'rgb(0, 0, 0)',
-            'star-intensity': 0.6
+            'star-intensity': 0.3
           });
         } catch(e){}
 
@@ -2235,7 +2211,7 @@
               'type': 'fill-extrusion',
               'minzoom': 15,
               'paint': {
-                'fill-extrusion-color': '#aaa',
+              'fill-extrusion-color': '#666',
                 'fill-extrusion-height': ['get', 'height'],
                 'fill-extrusion-base': ['get', 'min_height'],
                 'fill-extrusion-opacity': 0.6
