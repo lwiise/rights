@@ -131,6 +131,25 @@
     pointer-events:auto;
   }
 
+  .fullscreen-toggle{
+    position:absolute;
+    top:10px;
+    right:10px;
+    z-index:70;
+    padding:7px 12px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,0.35);
+    background:rgba(0,0,0,0.65);
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+  .fullscreen-toggle:hover{ background:rgba(0,0,0,0.85); }
+  .frame-toggle{ right:50%; transform:translateX(50%); }
+
   .side-nav{
     position:absolute;
     top:0;
@@ -352,6 +371,7 @@
   .frame-left{
     order:1;
     overflow:hidden;
+    position:relative;
   }
   .frame-right{
     order:2;
@@ -360,6 +380,48 @@
     background:#fff;
     display:flex;
     flex-direction:column;
+  }
+
+  body.fs-left .frame-left{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100vh;
+    z-index:2000;
+  }
+  body.fs-left .frame-right{ display:none; }
+  body.fs-left .frame-top-bar,
+  body.fs-left .frame-bottom-bar{ display:none; }
+  body.fs-left .frame-split{
+    height:100vh;
+    border-top:none;
+    border-bottom:none;
+  }
+  body.fs-left .frame-toggle{ display:none; }
+
+  body.fs-right .frame-right{
+    position:fixed;
+    inset:0;
+    width:100vw;
+    height:100vh;
+    z-index:2000;
+  }
+  body.fs-right .frame-left{ display:none; }
+  body.fs-right .frame-top-bar,
+  body.fs-right .frame-bottom-bar{ display:none; }
+  body.fs-right .frame-split{
+    height:100vh;
+    border-top:none;
+    border-bottom:none;
+  }
+  body.fs-right .frame-toggle{ display:none; }
+
+  body.fs-frame .frame-top-bar,
+  body.fs-frame .frame-bottom-bar{ display:none; }
+  body.fs-frame .frame-split{
+    height:100vh;
+    border-top:none;
+    border-bottom:none;
   }
   .map-panel{
     position:absolute;
@@ -1977,7 +2039,9 @@
         <div class="nav-item" id="mNavExtra4">7.</div>
         <div class="nav-item" id="mNavExtra5">8.</div>
       </nav>
+      <button class="fullscreen-toggle frame-toggle" id="toggleFrame" type="button">Frame Full</button>
       <div class="frame-left">
+        <button class="fullscreen-toggle left-toggle" id="toggleLeft" type="button">Left Full</button>
         <iframe
           class="fnn3dFrame"
           id="leftKaabaFrame"
@@ -1989,6 +2053,7 @@
         ></iframe>
       </div>
       <div class="frame-right show-map" id="frameRight">
+        <button class="fullscreen-toggle right-toggle" id="toggleRight" type="button">Right Full</button>
         <div class="map-panel" id="mapPanel">
           <div id="map"></div>
           <div class="map-kaaba-box" aria-hidden="true">
@@ -2529,6 +2594,7 @@
   };
   const leftKaabaFrame = document.getElementById('leftKaabaFrame');
   let currentKaabaPhase = Number.isFinite(KAABA_PHASE_MAP['sect-gallery']) ? KAABA_PHASE_MAP['sect-gallery'] : 0;
+  const bodyEl = document.body;
 
   function sendKaabaPhase(phase){
     currentKaabaPhase = phase;
@@ -2544,6 +2610,17 @@
 
   if(leftKaabaFrame){
     leftKaabaFrame.addEventListener('load', () => sendKaabaPhase(currentKaabaPhase));
+  }
+
+  function toggleFullscreen(mode){
+    const cls = `fs-${mode}`;
+    const isActive = bodyEl.classList.contains(cls);
+    bodyEl.classList.remove('fs-left','fs-right','fs-frame');
+    if(!isActive) bodyEl.classList.add(cls);
+    if(map){
+      requestAnimationFrame(() => map.resize());
+      setTimeout(() => map.resize(), 200);
+    }
   }
 
   function setDisplayContent(key){
@@ -2644,6 +2721,10 @@
   safeAdd('mNavExtra3','click',() => switchSection('sect-extra-3'));
   safeAdd('mNavExtra4','click',() => switchSection('sect-extra-4'));
   safeAdd('mNavExtra5','click',() => switchSection('sect-extra-5'));
+
+  safeAdd('toggleLeft','click',() => toggleFullscreen('left'));
+  safeAdd('toggleRight','click',() => toggleFullscreen('right'));
+  safeAdd('toggleFrame','click',() => toggleFullscreen('frame'));
 
   const homeSliderTrack = document.querySelector('.home-illustration-track');
   const homeSliderDots = document.getElementById('homeSliderDots');
