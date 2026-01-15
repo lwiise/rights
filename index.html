@@ -84,7 +84,7 @@
     display:block;
   }
 
-  .mapboxgl-canvas{ outline:none; filter:none; }
+  .mapboxgl-canvas{ outline:none; filter:grayscale(1) contrast(1.05); }
 
   /* ===== 3D POPUP OVER MAP (fixed box, model rotates inside) ===== */
   .map-3d-popup{
@@ -441,14 +441,14 @@
   .map-panel{
     position:absolute;
     inset:0;
-    background:#111;
+    background:#fff;
     z-index:1;
     display:none;
   }
   .map-kaaba-box{
     position:absolute;
     top:14px;
-    left:14px;
+    left:32px;
     width:120px;
     height:120px;
     display:flex;
@@ -463,38 +463,37 @@
     pointer-events:none;
     perspective:600px;
   }
-  .kaaba-cube{
-    width:64px;
-    height:64px;
-    position:relative;
-    transform-style:preserve-3d;
-    animation:kaabaSpin 18s linear infinite;
+  .map-wall{
+    width:78px;
+    height:78px;
+    border-radius:10px;
+    background:
+      linear-gradient(90deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 100%),
+      linear-gradient(0deg, rgba(255,255,255,0.06) 0 1px, transparent 1px 100%),
+      linear-gradient(90deg, rgba(0,0,0,0.25), rgba(0,0,0,0.1)),
+      #2b2b2b;
+    background-size:20px 12px, 20px 12px, 100% 100%, 100% 100%;
+    box-shadow:inset 0 2px 6px rgba(0,0,0,0.35);
   }
-  .kaaba-face{
-    position:absolute;
-    width:64px;
-    height:64px;
-    background:#0b0b0b;
-    border:1px solid rgba(255,255,255,0.1);
-    background-image:linear-gradient(to bottom, rgba(0,0,0,0) 0 44%, #d4af37 44% 56%, rgba(0,0,0,0) 56% 100%);
+  .map-gold-popup{
+    width:84px;
+    height:84px;
+    border-radius:18px;
+    background:rgba(0,0,0,0.55);
+    border:1px solid rgba(255,255,255,0.2);
+    box-shadow:0 14px 26px rgba(0,0,0,0.4);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    backdrop-filter:blur(6px);
+    pointer-events:none;
   }
-  .kaaba-face.front{ transform:translateZ(32px); }
-  .kaaba-face.back{ transform:rotateY(180deg) translateZ(32px); }
-  .kaaba-face.right{ transform:rotateY(90deg) translateZ(32px); }
-  .kaaba-face.left{ transform:rotateY(-90deg) translateZ(32px); }
-  .kaaba-face.top{
-    transform:rotateX(90deg) translateZ(32px);
-    background:#111;
-    background-image:none;
-  }
-  .kaaba-face.bottom{
-    transform:rotateX(-90deg) translateZ(32px);
-    background:#070707;
-    background-image:none;
-  }
-  @keyframes kaabaSpin{
-    from{ transform:rotateX(12deg) rotateY(0deg); }
-    to{ transform:rotateX(12deg) rotateY(360deg); }
+  .gold-ball{
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    background:radial-gradient(circle at 30% 30%, #fff2b2 0%, #f4d46a 35%, #d4af37 60%, #a57714 100%);
+    box-shadow:0 6px 14px rgba(212,175,55,0.55);
   }
   .kaaba-panel{
     position:absolute;
@@ -2069,19 +2068,12 @@
           loading="eager"
         ></iframe>
       </div>
-      <div class="frame-right show-map" id="frameRight">
+      <div class="frame-right" id="frameRight">
         <button class="fullscreen-toggle right-toggle" id="toggleRight" type="button">Right Full</button>
         <div class="map-panel" id="mapPanel">
           <div id="map"></div>
           <div class="map-kaaba-box" aria-hidden="true">
-            <div class="kaaba-cube">
-              <span class="kaaba-face front"></span>
-              <span class="kaaba-face back"></span>
-              <span class="kaaba-face right"></span>
-              <span class="kaaba-face left"></span>
-              <span class="kaaba-face top"></span>
-              <span class="kaaba-face bottom"></span>
-            </div>
+            <div class="map-wall" aria-hidden="true"></div>
           </div>
         </div>
         <div class="kaaba-panel" id="kaabaPanel">
@@ -2432,7 +2424,7 @@
 
 <script>
   const MAPBOX_TOKEN = "pk.eyJ1IjoiYW5hc2thcm90aSIsImEiOiJjbWhqcHgwcmMwbWM0MmxwZ2V5Z2x5OTN0In0.bpOf-4BsljExZdYZUak_pw";
-  const USER_STYLE = "mapbox://styles/mapbox/dark-v11";
+  const USER_STYLE = "mapbox://styles/mapbox/light-v11";
 
   const KAABA_CENTER = [39.8262, 21.4225];
   const KAABA_ZOOM_DESKTOP = 16.8;
@@ -2443,6 +2435,7 @@
   const startZoom = isMobile ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
 
   let map = null;
+  let goldMarker = null;
   const mapEl = document.getElementById('map');
   const frameRight = document.getElementById('frameRight');
   const enableMapbox = !!(mapEl && window.mapboxgl);
@@ -2463,10 +2456,10 @@
       map.on('style.load', () => {
         try {
           map.setFog({
-            'color': 'rgb(20, 20, 20)',
-            'high-color': 'rgb(90, 90, 90)',
-            'space-color': 'rgb(0, 0, 0)',
-            'star-intensity': 0.3
+            'color': 'rgb(245, 245, 245)',
+            'high-color': 'rgb(200, 200, 200)',
+            'space-color': 'rgb(225, 225, 225)',
+            'star-intensity': 0.1
           });
         } catch(e){}
 
@@ -2489,13 +2482,24 @@
               'type': 'fill-extrusion',
               'minzoom': 15,
               'paint': {
-              'fill-extrusion-color': '#666',
+              'fill-extrusion-color': '#bdbdbd',
                 'fill-extrusion-height': ['get', 'height'],
                 'fill-extrusion-base': ['get', 'min_height'],
                 'fill-extrusion-opacity': 0.6
               }
             }, labelLayerId);
           } catch(e){}
+        }
+
+        if(!goldMarker){
+          const goldEl = document.createElement('div');
+          goldEl.className = 'map-gold-popup';
+          const ball = document.createElement('div');
+          ball.className = 'gold-ball';
+          goldEl.appendChild(ball);
+          goldMarker = new mapboxgl.Marker({ element: goldEl, anchor: 'bottom', offset: [0, -24] })
+            .setLngLat(KAABA_CENTER)
+            .addTo(map);
         }
       });
     } catch(e){
@@ -2652,7 +2656,7 @@
     if(techEl) techEl.textContent = data.table.tech;
     const topicEl = document.getElementById('tableTopic');
     if(topicEl) topicEl.textContent = data.table.topic;
-    const showMap = key === 'sect-gallery';
+    const showMap = key === 'sect-home';
     const showKaaba = key === 'sect-extra-1';
     if(frameRight){
       frameRight.classList.toggle('show-map', showMap);
@@ -2702,7 +2706,7 @@
     setDisplayContent(id);
     syncKaabaPhase(id);
 
-    if(id === 'sect-gallery' && map){
+    if(id === 'sect-home' && map){
       const resetZoom = window.innerWidth < 900 ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
       map.flyTo({ center:KAABA_CENTER, zoom:resetZoom, pitch:KAABA_PITCH, bearing:KAABA_BEARING, duration:1800 });
     }
