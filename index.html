@@ -237,11 +237,10 @@
     font-weight:700;
   }
   .side-nav .nav-title{
-    display:none;
     position:absolute;
     top:50%;
     left:calc(100% + 12px);
-    transform:translateY(-50%);
+    transform:translateY(-50%) translateX(-6px);
     padding:8px 12px;
     border-radius:12px;
     background:rgba(0,0,0,0.78);
@@ -250,9 +249,14 @@
     text-align:right;
     direction:rtl;
     pointer-events:none;
+    opacity:0;
+    visibility:hidden;
+    transition:opacity 0.2s ease, transform 0.2s ease;
   }
   .side-nav .nav-item:hover .nav-title{
-    display:inline-flex;
+    opacity:1;
+    visibility:visible;
+    transform:translateY(-50%) translateX(0);
   }
   .side-nav .nav-item:hover .nav-num{
     display:none;
