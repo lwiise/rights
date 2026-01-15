@@ -186,8 +186,7 @@
     height:100%;
     max-height:100%;
     width:var(--side-nav-width);
-    overflow-y:auto;
-    overflow-x:visible;
+    overflow:visible;
     pointer-events:auto;
     padding:0;
     direction:rtl;
@@ -249,7 +248,8 @@
     white-space:nowrap;
     text-align:right;
     direction:rtl;
-    pointer-events:none;
+    pointer-events:auto;
+    z-index:30;
     opacity:0;
     visibility:hidden;
     filter:blur(4px);
