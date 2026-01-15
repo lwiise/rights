@@ -137,7 +137,9 @@
     top:10px;
     right:10px;
     z-index:70;
-    padding:7px 12px;
+    width:34px;
+    height:34px;
+    padding:0;
     border-radius:999px;
     border:1px solid rgba(255,255,255,0.35);
     background:rgba(0,0,0,0.65);
@@ -147,12 +149,20 @@
     letter-spacing:0.06em;
     text-transform:uppercase;
     cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
   }
   .fullscreen-toggle:hover{ background:rgba(0,0,0,0.85); }
   .frame-toggle{
     left:calc(var(--side-nav-width) + 12px);
     right:auto;
     transform:none;
+  }
+  .fullscreen-toggle svg{
+    width:16px;
+    height:16px;
+    display:block;
   }
 
   .side-nav{
@@ -203,12 +213,33 @@
     align-items:center;
     justify-content:flex-end;
     width:100%;
+    gap:0;
     padding:12px 14px;
     font-size:13px;
     line-height:1.4;
     white-space:normal;
     text-transform:none;
     letter-spacing:0;
+  }
+  .side-nav .nav-num{
+    width:28px;
+    height:28px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:999px;
+    background:rgba(255,255,255,0.12);
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+  }
+  .side-nav .nav-title{
+    display:none;
+    margin-right:10px;
+    color:inherit;
+  }
+  .side-nav .nav-item:hover .nav-title{
+    display:inline-block;
   }
   .nav-item:last-child{ border-bottom:none; }
   .nav-item:hover,
@@ -263,6 +294,8 @@
     padding:10px 6px;
     background:rgba(255,255,255,0.14);
   }
+  .mobile-nav .nav-num{ display:none; }
+  .mobile-nav .nav-title{ display:inline; }
 
   .shop{
     flex:1 1 auto;
@@ -495,12 +528,23 @@
     background:radial-gradient(circle at 30% 30%, #fff2b2 0%, #f4d46a 35%, #d4af37 60%, #a57714 100%);
     box-shadow:0 6px 14px rgba(212,175,55,0.55);
   }
-  .kaaba-panel{
+  .kaaba-panel,
+  .sketchfab-panel{
     position:absolute;
     inset:0;
-    background:#00050a;
+    background:#f2f2f2;
     z-index:2;
     display:none;
+  }
+  .sketchfab-panel .sketchfab-embed-wrapper{
+    width:100%;
+    height:100%;
+  }
+  .sketchfab-panel .sketchfab-embed-wrapper iframe{
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
   }
   .frame-right.show-map .map-panel{
     display:block;
@@ -515,6 +559,18 @@
     display:none;
   }
   .frame-right.show-kaaba .map-panel{
+    display:none;
+  }
+  .frame-right.show-sketchfab .sketchfab-panel{
+    display:block;
+  }
+  .frame-right.show-sketchfab .shop{
+    display:none;
+  }
+  .frame-right.show-sketchfab .map-panel{
+    display:none;
+  }
+  .frame-right.show-sketchfab .kaaba-panel{
     display:none;
   }
   .display-table-wrap{
@@ -2031,33 +2087,41 @@
     <div class="frame-top-bar" aria-hidden="true"></div>
     <div class="frame-split">
       <nav class="side-nav" id="sideNav">
-        <div class="nav-item" id="navHome">عام</div>
-        <div class="nav-item" id="navAbout">الإمامة</div>
-        <div class="nav-item" id="navServices">المؤذنون</div>
-        <div class="nav-item active" id="navGallery">الحلقات القرآنية والمصاحف</div>
-        <div class="nav-item" id="navContact">الحلقات العلمية والدروس</div>
-        <div class="nav-item" id="navExtra1">التطويف</div>
-        <div class="nav-item" id="navExtra2">المكتبة</div>
-        <div class="nav-item" id="navExtra3">الترجمة الشرعية</div>
-        <div class="nav-item" id="navExtra4">هيئة الأمر بالمعروف</div>
-        <div class="nav-item" id="navExtra5">التوجيه والإرشاد وإجابة السائلين</div>
+        <div class="nav-item" id="navHome"><span class="nav-num">1</span><span class="nav-title">عام</span></div>
+        <div class="nav-item" id="navAbout"><span class="nav-num">2</span><span class="nav-title">الإمامة</span></div>
+        <div class="nav-item" id="navServices"><span class="nav-num">3</span><span class="nav-title">المؤذنون</span></div>
+        <div class="nav-item active" id="navGallery"><span class="nav-num">4</span><span class="nav-title">الحلقات القرآنية والمصاحف</span></div>
+        <div class="nav-item" id="navContact"><span class="nav-num">5</span><span class="nav-title">الحلقات العلمية والدروس</span></div>
+        <div class="nav-item" id="navExtra1"><span class="nav-num">6</span><span class="nav-title">التطويف</span></div>
+        <div class="nav-item" id="navExtra2"><span class="nav-num">7</span><span class="nav-title">المكتبة</span></div>
+        <div class="nav-item" id="navExtra3"><span class="nav-num">8</span><span class="nav-title">الترجمة الشرعية</span></div>
+        <div class="nav-item" id="navExtra4"><span class="nav-num">9</span><span class="nav-title">هيئة الأمر بالمعروف</span></div>
+        <div class="nav-item" id="navExtra5"><span class="nav-num">10</span><span class="nav-title">التوجيه والإرشاد وإجابة السائلين</span></div>
       </nav>
 
       <nav class="mobile-nav" id="mobileNav">
-        <div class="nav-item" id="mNavHome">عام</div>
-        <div class="nav-item" id="mNavAbout">الإمامة</div>
-        <div class="nav-item" id="mNavServices">المؤذنون</div>
-        <div class="nav-item active" id="mNavGallery">الحلقات القرآنية والمصاحف</div>
-        <div class="nav-item" id="mNavContact">الحلقات العلمية والدروس</div>
-        <div class="nav-item" id="mNavExtra1">التطويف</div>
-        <div class="nav-item" id="mNavExtra2">المكتبة</div>
-        <div class="nav-item" id="mNavExtra3">الترجمة الشرعية</div>
-        <div class="nav-item" id="mNavExtra4">هيئة الأمر بالمعروف</div>
-        <div class="nav-item" id="mNavExtra5">التوجيه والإرشاد وإجابة السائلين</div>
+        <div class="nav-item" id="mNavHome"><span class="nav-num">1</span><span class="nav-title">عام</span></div>
+        <div class="nav-item" id="mNavAbout"><span class="nav-num">2</span><span class="nav-title">الإمامة</span></div>
+        <div class="nav-item" id="mNavServices"><span class="nav-num">3</span><span class="nav-title">المؤذنون</span></div>
+        <div class="nav-item active" id="mNavGallery"><span class="nav-num">4</span><span class="nav-title">الحلقات القرآنية والمصاحف</span></div>
+        <div class="nav-item" id="mNavContact"><span class="nav-num">5</span><span class="nav-title">الحلقات العلمية والدروس</span></div>
+        <div class="nav-item" id="mNavExtra1"><span class="nav-num">6</span><span class="nav-title">التطويف</span></div>
+        <div class="nav-item" id="mNavExtra2"><span class="nav-num">7</span><span class="nav-title">المكتبة</span></div>
+        <div class="nav-item" id="mNavExtra3"><span class="nav-num">8</span><span class="nav-title">الترجمة الشرعية</span></div>
+        <div class="nav-item" id="mNavExtra4"><span class="nav-num">9</span><span class="nav-title">هيئة الأمر بالمعروف</span></div>
+        <div class="nav-item" id="mNavExtra5"><span class="nav-num">10</span><span class="nav-title">التوجيه والإرشاد وإجابة السائلين</span></div>
       </nav>
-      <button class="fullscreen-toggle frame-toggle" id="toggleFrame" type="button">Frame Full</button>
+      <button class="fullscreen-toggle frame-toggle" id="toggleFrame" type="button" aria-label="Frame fullscreen">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
       <div class="frame-left">
-        <button class="fullscreen-toggle left-toggle" id="toggleLeft" type="button">Left Full</button>
+        <button class="fullscreen-toggle left-toggle" id="toggleLeft" type="button" aria-label="Left fullscreen">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
         <iframe
           class="fnn3dFrame"
           id="leftKaabaFrame"
@@ -2069,7 +2133,11 @@
         ></iframe>
       </div>
       <div class="frame-right" id="frameRight">
-        <button class="fullscreen-toggle right-toggle" id="toggleRight" type="button">Right Full</button>
+        <button class="fullscreen-toggle right-toggle" id="toggleRight" type="button" aria-label="Right fullscreen">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </button>
         <div class="map-panel" id="mapPanel">
           <div id="map"></div>
           <div class="map-kaaba-box" aria-hidden="true">
@@ -2085,6 +2153,23 @@
             allowfullscreen
             loading="eager"
           ></iframe>
+        </div>
+        <div class="sketchfab-panel" id="sketchfabPanel">
+          <div class="sketchfab-embed-wrapper">
+            <iframe
+              title="Masjid Al-Haram Makkah"
+              frameborder="0"
+              allowfullscreen
+              mozallowfullscreen="true"
+              webkitallowfullscreen="true"
+              allow="autoplay; fullscreen; xr-spatial-tracking"
+              xr-spatial-tracking
+              execution-while-out-of-viewport
+              execution-while-not-rendered
+              web-share
+              src="https://sketchfab.com/models/7d84e450db6240bd9add035640ba2005/embed">
+            </iframe>
+          </div>
         </div>
         <aside class="shop" id="shop">
 
@@ -2658,9 +2743,11 @@
     if(topicEl) topicEl.textContent = data.table.topic;
     const showMap = key === 'sect-home';
     const showKaaba = key === 'sect-extra-1';
+    const showSketchfab = key === 'sect-extra-5';
     if(frameRight){
       frameRight.classList.toggle('show-map', showMap);
       frameRight.classList.toggle('show-kaaba', showKaaba);
+      frameRight.classList.toggle('show-sketchfab', showSketchfab);
     }
     if(map && showMap){
       map.resize();
