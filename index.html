@@ -529,18 +529,19 @@
     object-fit:cover;
   }
   .right-slider-nav{
-    flex:0 0 48px;
-    height:48px;
-    width:100%;
+    position:absolute;
+    bottom:10px;
+    left:50%;
+    transform:translateX(-50%);
+    height:40px;
     display:flex;
     align-items:center;
     justify-content:center;
     gap:10px;
-    background:#f7f7f7;
-    border-bottom:1px solid rgba(0,0,0,0.15);
-    box-shadow:0 2px 10px rgba(0,0,0,0.12);
-    position:relative;
-    z-index:5;
+    background:transparent;
+    border:0;
+    box-shadow:none;
+    z-index:6;
   }
   .slide-nav-btn{
     width:32px;
@@ -553,7 +554,8 @@
     align-items:center;
     justify-content:center;
     cursor:pointer;
-    transition:transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    box-shadow:0 6px 16px rgba(0,0,0,0.18);
+    transition:transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   }
   .slide-nav-btn svg{
     width:14px;
@@ -564,6 +566,7 @@
     background:#111;
     color:#fff;
     border-color:#111;
+    box-shadow:0 8px 18px rgba(0,0,0,0.25);
   }
   .slide-nav-btn:hover{ transform:translateY(-1px); }
 
@@ -711,6 +714,147 @@
     background:radial-gradient(circle at 30% 30%, #fff2b2 0%, #f4d46a 35%, #d4af37 60%, #a57714 100%);
     box-shadow:0 6px 14px rgba(212,175,55,0.55);
   }
+  .books-panel{
+    position:absolute;
+    inset:0;
+    background:#f2f2f2;
+    display:none;
+    padding:16px;
+    gap:14px;
+    flex-direction:column;
+    overflow:hidden;
+    z-index:2;
+  }
+  .books-gallery{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(0, 1fr));
+    gap:12px;
+    flex:0 0 auto;
+  }
+  .book-card{
+    border:1px solid rgba(0,0,0,0.15);
+    border-radius:12px;
+    overflow:hidden;
+    background:#fff;
+    padding:0;
+    cursor:pointer;
+    transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+  .book-card img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    aspect-ratio:3 / 4;
+  }
+  .book-card.active{
+    border-color:#111;
+    box-shadow:0 10px 18px rgba(0,0,0,0.18);
+    transform:translateY(-2px);
+  }
+  .book-detail{
+    flex:1 1 auto;
+    min-height:0;
+    display:grid;
+    grid-template-columns:minmax(0, 0.9fr) minmax(0, 1.1fr);
+    gap:14px;
+  }
+  .book-summary{
+    background:#fff;
+    border:1px solid rgba(0,0,0,0.1);
+    border-radius:12px;
+    padding:14px;
+    overflow:auto;
+    direction:rtl;
+    text-align:right;
+  }
+  .book-summary h3{
+    margin:0 0 8px;
+    font-size:16px;
+    color:#111;
+  }
+  .book-summary p{
+    margin:0;
+    font-size:13px;
+    line-height:1.7;
+    color:#444;
+  }
+  .pdf-viewer{
+    background:#fff;
+    border:1px solid rgba(0,0,0,0.1);
+    border-radius:12px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    min-height:0;
+  }
+  .pdf-controls{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:8px 10px;
+    background:#f7f7f7;
+    border-bottom:1px solid rgba(0,0,0,0.1);
+  }
+  .pdf-btn{
+    width:30px;
+    height:30px;
+    border-radius:8px;
+    border:1px solid rgba(0,0,0,0.2);
+    background:#fff;
+    color:#111;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+  }
+  .pdf-btn[disabled]{ opacity:0.45; cursor:not-allowed; }
+  .pdf-page{
+    font-size:12px;
+    color:#333;
+    margin-right:auto;
+  }
+  .pdf-download{
+    margin-left:auto;
+    font-size:12px;
+    font-weight:700;
+    color:#111;
+    text-decoration:none;
+    padding:6px 10px;
+    border-radius:8px;
+    border:1px solid rgba(0,0,0,0.2);
+    background:#fff;
+  }
+  .pdf-canvas-wrap{
+    flex:1 1 auto;
+    min-height:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+    position:relative;
+  }
+  .pdf-canvas-wrap canvas{
+    max-width:100%;
+    height:auto;
+  }
+  .pdf-loading{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    color:#666;
+    background:rgba(255,255,255,0.8);
+  }
+  .pdf-page-enter{
+    animation:pdfFade 0.35s ease;
+  }
+  @keyframes pdfFade{
+    from{ opacity:0; transform:translateY(8px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
   .kaaba-panel,
   .sketchfab-panel{
     position:absolute;
@@ -754,6 +898,15 @@
     display:none;
   }
   .frame-right.show-sketchfab .kaaba-panel{
+    display:none;
+  }
+  .frame-right.show-books .books-panel{
+    display:flex;
+  }
+  .frame-right.show-books .shop,
+  .frame-right.show-books .map-panel,
+  .frame-right.show-books .kaaba-panel,
+  .frame-right.show-books .sketchfab-panel{
     display:none;
   }
   .display-table-wrap{
@@ -2382,6 +2535,35 @@
                 </iframe>
               </div>
             </div>
+            <div class="books-panel" id="booksPanel">
+              <div class="books-gallery" id="booksGallery"></div>
+              <div class="book-detail">
+                <div class="book-summary">
+                  <h3 id="bookTitle">كتاب</h3>
+                  <p id="bookSummary">اختر كتابًا لعرض الملخص وملف القراءة.</p>
+                </div>
+                <div class="pdf-viewer">
+                  <div class="pdf-controls">
+                    <button class="pdf-btn" type="button" id="pdfPrev" aria-label="الصفحة السابقة">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <div class="pdf-page"><span id="pdfPageNum">1</span> / <span id="pdfPageCount">--</span></div>
+                    <button class="pdf-btn" type="button" id="pdfNext" aria-label="الصفحة التالية">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <a class="pdf-download" id="pdfDownload" href="#" target="_blank" rel="noopener">تحميل PDF</a>
+                  </div>
+                  <div class="pdf-canvas-wrap" id="pdfCanvasWrap">
+                    <div class="pdf-loading" id="pdfLoading">جار التحميل...</div>
+                    <canvas id="pdfCanvas"></canvas>
+                  </div>
+                </div>
+              </div>
+            </div>
             <aside class="shop" id="shop">
 
     <!-- HOME -->
@@ -2731,6 +2913,7 @@
 
 <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <script>
   const MAPBOX_TOKEN = "pk.eyJ1IjoiYW5hc2thcm90aSIsImEiOiJjbWhqcHgwcmMwbWM0MmxwZ2V5Z2x5OTN0In0.bpOf-4BsljExZdYZUak_pw";
@@ -2815,6 +2998,10 @@
     } catch(e){
       map = null;
     }
+  }
+
+  if(window.pdfjsLib){
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
   }
 
   const mapWall = document.getElementById('mapWall');
@@ -3065,6 +3252,144 @@
     }
   }
 
+  const bookImages = [
+    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
+    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
+    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg"
+  ];
+  const bookPdfs = [
+    "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    "https://www.africau.edu/images/default/sample.pdf",
+    "https://www.orimi.com/pdf-test.pdf"
+  ];
+  const bookData = Array.from({ length: 9 }, (_, i) => ({
+    title: `كتاب ${i + 1}`,
+    summary: "ملخص موجز عن الكتاب يوضح الفكرة الرئيسية والمحتوى بشكل سريع ومركّز لزوار المعرض.",
+    image: bookImages[i % bookImages.length],
+    pdf: bookPdfs[i % bookPdfs.length]
+  }));
+
+  const booksGallery = document.getElementById('booksGallery');
+  const bookTitle = document.getElementById('bookTitle');
+  const bookSummary = document.getElementById('bookSummary');
+  const pdfCanvas = document.getElementById('pdfCanvas');
+  const pdfCanvasWrap = document.getElementById('pdfCanvasWrap');
+  const pdfLoading = document.getElementById('pdfLoading');
+  const pdfPrev = document.getElementById('pdfPrev');
+  const pdfNext = document.getElementById('pdfNext');
+  const pdfPageNum = document.getElementById('pdfPageNum');
+  const pdfPageCount = document.getElementById('pdfPageCount');
+  const pdfDownload = document.getElementById('pdfDownload');
+
+  let pdfDoc = null;
+  let pdfPage = 1;
+  let pdfRendering = false;
+  let pdfPending = null;
+
+  function renderPdfPage(num){
+    if(!pdfDoc || !pdfCanvas || !pdfCanvasWrap) return;
+    pdfRendering = true;
+    pdfDoc.getPage(num).then(page => {
+      const viewport = page.getViewport({ scale: 1 });
+      const wrapWidth = Math.max(240, pdfCanvasWrap.clientWidth - 16);
+      const scale = wrapWidth / viewport.width;
+      const scaledViewport = page.getViewport({ scale });
+      const ctx = pdfCanvas.getContext('2d');
+      pdfCanvas.height = scaledViewport.height;
+      pdfCanvas.width = scaledViewport.width;
+      if(pdfLoading) pdfLoading.style.display = "none";
+      pdfCanvas.classList.remove('pdf-page-enter');
+      void pdfCanvas.offsetWidth;
+      pdfCanvas.classList.add('pdf-page-enter');
+      return page.render({ canvasContext: ctx, viewport: scaledViewport }).promise;
+    }).then(() => {
+      pdfRendering = false;
+      if(pdfPending !== null){
+        const pending = pdfPending;
+        pdfPending = null;
+        renderPdfPage(pending);
+      }
+      if(pdfPageNum) pdfPageNum.textContent = String(pdfPage);
+      if(pdfPageCount && pdfDoc) pdfPageCount.textContent = String(pdfDoc.numPages);
+      if(pdfPrev) pdfPrev.disabled = pdfPage <= 1;
+      if(pdfNext) pdfNext.disabled = pdfDoc ? pdfPage >= pdfDoc.numPages : true;
+    }).catch(() => {
+      pdfRendering = false;
+      if(pdfLoading) pdfLoading.textContent = "تعذر تحميل الملف.";
+    });
+  }
+
+  function queuePdfPage(num){
+    if(pdfRendering){
+      pdfPending = num;
+    } else {
+      renderPdfPage(num);
+    }
+  }
+
+  function loadPdf(url){
+    if(!window.pdfjsLib || !url) return;
+    if(pdfLoading){
+      pdfLoading.style.display = "flex";
+      pdfLoading.textContent = "جار التحميل...";
+    }
+    window.pdfjsLib.getDocument(url).promise.then(doc => {
+      pdfDoc = doc;
+      pdfPage = 1;
+      if(pdfPageCount) pdfPageCount.textContent = String(doc.numPages);
+      if(pdfDownload) pdfDownload.href = url;
+      queuePdfPage(pdfPage);
+    }).catch(() => {
+      if(pdfLoading) pdfLoading.textContent = "تعذر تحميل الملف.";
+    });
+  }
+
+  function selectBook(index){
+    const book = bookData[index];
+    if(!book) return;
+    if(bookTitle) bookTitle.textContent = book.title;
+    if(bookSummary) bookSummary.textContent = book.summary;
+    if(booksGallery){
+      booksGallery.querySelectorAll('.book-card').forEach((card, idx) => {
+        card.classList.toggle('active', idx === index);
+      });
+    }
+    loadPdf(book.pdf);
+  }
+
+  if(booksGallery){
+    booksGallery.innerHTML = bookData.map((book, idx) => `
+      <button class="book-card${idx === 0 ? ' active' : ''}" type="button" data-index="${idx}">
+        <img src="${book.image}" alt="${book.title}">
+      </button>
+    `).join('');
+    booksGallery.querySelectorAll('.book-card').forEach(card => {
+      card.addEventListener('click', () => selectBook(Number(card.dataset.index)));
+    });
+    selectBook(0);
+  }
+
+  if(pdfPrev){
+    pdfPrev.addEventListener('click', () => {
+      if(pdfPage <= 1) return;
+      pdfPage -= 1;
+      queuePdfPage(pdfPage);
+    });
+  }
+  if(pdfNext){
+    pdfNext.addEventListener('click', () => {
+      if(!pdfDoc || pdfPage >= pdfDoc.numPages) return;
+      pdfPage += 1;
+      queuePdfPage(pdfPage);
+    });
+  }
+
+  window.addEventListener('resize', () => {
+    if(pdfDoc){
+      queuePdfPage(pdfPage);
+    }
+  });
+
   function setDisplayContent(key){
     const data = DISPLAY_CONTENT[key] || DISPLAY_CONTENT['sect-gallery'];
     const headline = document.getElementById('displayHeadline');
@@ -3080,13 +3405,18 @@
     const showMap = key === 'sect-home';
     const showKaaba = key === 'sect-extra-1';
     const showSketchfab = key === 'sect-contact';
+    const showBooks = key === 'sect-extra-2';
     if(frameRight){
       frameRight.classList.toggle('show-map', showMap);
       frameRight.classList.toggle('show-kaaba', showKaaba);
       frameRight.classList.toggle('show-sketchfab', showSketchfab);
+      frameRight.classList.toggle('show-books', showBooks);
     }
     if(map && showMap){
       map.resize();
+    }
+    if(showBooks){
+      setRightSlide(0);
     }
     if(currentView === 'gallery'){
       if(showMap){
