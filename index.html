@@ -419,6 +419,32 @@
     height:10vh;
     width:100%;
     background:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .view-switcher{
+    display:inline-flex;
+    border:1px solid #7f7f7f;
+    border-radius:8px;
+    overflow:hidden;
+    background:#f2f2f2;
+  }
+  .view-tab{
+    min-width:120px;
+    padding:10px 22px;
+    border:0;
+    background:transparent;
+    color:#222;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    transition:background 0.2s ease, color 0.2s ease;
+  }
+  .view-tab + .view-tab{ border-left:1px solid #7f7f7f; }
+  .view-tab.active{
+    background:#fff;
+    color:#111;
   }
   .frame-split{
     display:flex;
@@ -2108,7 +2134,12 @@
 <body>
 <div class="layout">
   <div class="display-frame">
-    <div class="frame-top-bar" aria-hidden="true"></div>
+    <div class="frame-top-bar">
+      <div class="view-switcher" role="tablist" aria-label="عرض التبديل">
+        <button class="view-tab active" type="button" data-view="display">العرض</button>
+        <button class="view-tab" type="button" data-view="gallery">المعرض</button>
+      </div>
+    </div>
     <div class="frame-split">
       <nav class="side-nav" id="sideNav">
         <div class="nav-item" id="navHome"><span class="nav-num">1</span><span class="nav-title">عام</span></div>
@@ -2725,6 +2756,8 @@
   const leftKaabaFrame = document.getElementById('leftKaabaFrame');
   let currentKaabaPhase = Number.isFinite(KAABA_PHASE_MAP['sect-gallery']) ? KAABA_PHASE_MAP['sect-gallery'] : 0;
   const bodyEl = document.body;
+  let currentView = 'display';
+  let galleryMapFrame = null;
 
   function sendKaabaPhase(phase){
     currentKaabaPhase = phase;
@@ -2753,6 +2786,46 @@
     }
   }
 
+  function startGalleryMapMotion(){
+    if(!map) return;
+    if(typeof map.isStyleLoaded === 'function' && !map.isStyleLoaded()){
+      map.once('load', startGalleryMapMotion);
+      return;
+    }
+    if(galleryMapFrame) return;
+    const animate = () => {
+      if(!map || currentView !== 'gallery' || !frameRight || !frameRight.classList.contains('show-map')){
+        galleryMapFrame = null;
+        return;
+      }
+      map.rotateTo((map.getBearing() + 0.08) % 360, { duration: 0 });
+      galleryMapFrame = requestAnimationFrame(animate);
+    };
+    galleryMapFrame = requestAnimationFrame(animate);
+  }
+
+  function stopGalleryMapMotion(){
+    if(galleryMapFrame){
+      cancelAnimationFrame(galleryMapFrame);
+      galleryMapFrame = null;
+    }
+    if(map && frameRight && frameRight.classList.contains('show-map')){
+      map.easeTo({ bearing: KAABA_BEARING, pitch: KAABA_PITCH, duration: 600 });
+    }
+  }
+
+  function setView(view){
+    currentView = view;
+    document.querySelectorAll('.view-tab').forEach(tab => {
+      tab.classList.toggle('active', tab.dataset.view === view);
+    });
+    if(view === 'gallery'){
+      startGalleryMapMotion();
+    } else {
+      stopGalleryMapMotion();
+    }
+  }
+
   function setDisplayContent(key){
     const data = DISPLAY_CONTENT[key] || DISPLAY_CONTENT['sect-gallery'];
     const headline = document.getElementById('displayHeadline');
@@ -2775,6 +2848,13 @@
     }
     if(map && showMap){
       map.resize();
+    }
+    if(currentView === 'gallery'){
+      if(showMap){
+        startGalleryMapMotion();
+      } else {
+        stopGalleryMapMotion();
+      }
     }
   }
 
@@ -2857,6 +2937,11 @@
   safeAdd('toggleLeft','click',() => toggleFullscreen('left'));
   safeAdd('toggleRight','click',() => toggleFullscreen('right'));
   safeAdd('toggleFrame','click',() => toggleFullscreen('frame'));
+
+  document.querySelectorAll('.view-tab').forEach(tab => {
+    tab.addEventListener('click', () => setView(tab.dataset.view));
+  });
+  setView('display');
 
   const homeSliderTrack = document.querySelector('.home-illustration-track');
   const homeSliderDots = document.getElementById('homeSliderDots');
