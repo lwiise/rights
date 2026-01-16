@@ -742,7 +742,7 @@
     background:#f2f2f2;
     display:none;
     padding:16px;
-    padding-bottom:72px;
+    padding-bottom:120px;
     gap:14px;
     flex-direction:column;
     overflow-y:auto;
@@ -811,6 +811,8 @@
     flex-direction:column;
     gap:12px;
     min-height:0;
+    flex:1 1 auto;
+    height:100%;
   }
   .book-detail-view.active{ display:flex; }
   .book-detail-hero{
@@ -900,15 +902,21 @@
     background:#fff;
     border:1px solid rgba(0,0,0,0.12);
     border-radius:12px;
-    padding:16px;
+    padding:20px 22px;
+    margin-top:6px;
+    margin-bottom:8px;
+    min-height:92px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
     overflow:hidden;
     direction:rtl;
     text-align:right;
     box-shadow:0 6px 14px rgba(0,0,0,0.08);
   }
   .book-summary h3{
-    margin:0 0 8px;
-    font-size:16px;
+    margin:0;
+    font-size:15px;
     color:#111;
   }
   .book-summary p{
@@ -928,7 +936,9 @@
     min-height:320px;
     position:relative;
     box-shadow:0 12px 22px rgba(0,0,0,0.18);
-    padding:14px;
+    padding:12px;
+    flex:1 1 auto;
+    margin-bottom:64px;
   }
   .pdf-controls{
     position:absolute;
@@ -995,7 +1005,7 @@
     background:#3a3a3a;
     position:relative;
     min-height:220px;
-    padding:24px 32px 80px;
+    padding:18px 20px 90px;
     border:1px solid rgba(0,0,0,0.2);
     border-radius:10px;
   }
@@ -3582,7 +3592,7 @@
     pdfDoc.getPage(num).then(page => {
       pdfScale = Math.min(Math.max(pdfScale, PDF_MIN_SCALE), PDF_MAX_SCALE);
       const viewport = page.getViewport({ scale: 1 });
-      const wrapWidth = Math.max(240, pdfCanvasWrap.clientWidth - 64);
+      const wrapWidth = Math.max(240, pdfCanvasWrap.clientWidth - 40);
       const baseScale = wrapWidth / viewport.width;
       const scale = baseScale * pdfScale;
       const scaledViewport = page.getViewport({ scale });
