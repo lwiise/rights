@@ -425,6 +425,16 @@
   }
   .frame-bottom-bar{
     justify-content:flex-end;
+    padding:0;
+    gap:0;
+  }
+  .frame-bottom-spacer{
+    flex:0 0 50%;
+  }
+  .frame-bottom-right{
+    flex:0 0 50%;
+    display:flex;
+    justify-content:flex-end;
     padding-right:32px;
   }
   .barcode{
@@ -3121,7 +3131,10 @@
       </div>
     </div>
     <div class="frame-bottom-bar">
-      <div class="barcode" aria-hidden="true"></div>
+      <div class="frame-bottom-spacer" aria-hidden="true"></div>
+      <div class="frame-bottom-right">
+        <div class="barcode" aria-hidden="true"></div>
+      </div>
     </div>
   </div>
 </div>
