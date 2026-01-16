@@ -428,31 +428,6 @@
     padding:0;
     gap:0;
   }
-  .frame-bottom-spacer{
-    flex:0 0 50%;
-  }
-  .frame-bottom-right{
-    flex:0 0 50%;
-    display:flex;
-    justify-content:flex-end;
-    padding-right:32px;
-  }
-  .barcode{
-    width:180px;
-    height:34px;
-    background:
-      repeating-linear-gradient(
-        90deg,
-        #111 0 2px,
-        transparent 2px 5px,
-        #111 5px 6px,
-        transparent 6px 10px
-      );
-    background-color:#fff;
-    border:1px solid rgba(0,0,0,0.2);
-    border-radius:4px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.12);
-  }
   .view-switcher{
     display:inline-flex;
     border:1px solid #7f7f7f;
@@ -499,6 +474,10 @@
     order:1;
     overflow:hidden;
     position:relative;
+  }
+  .frame-left .fnn3dFrame{
+    width:calc(100% + var(--side-nav-width));
+    margin-left:calc(var(--side-nav-width) * -1);
   }
   .frame-right{
     order:2;
@@ -3131,10 +3110,6 @@
       </div>
     </div>
     <div class="frame-bottom-bar">
-      <div class="frame-bottom-spacer" aria-hidden="true"></div>
-      <div class="frame-bottom-right">
-        <div class="barcode" aria-hidden="true"></div>
-      </div>
     </div>
   </div>
 </div>
