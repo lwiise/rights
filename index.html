@@ -801,7 +801,7 @@
     border:1px solid rgba(0,0,0,0.1);
     border-radius:12px;
     padding:14px;
-    overflow:auto;
+    overflow:hidden;
     direction:rtl;
     text-align:right;
   }
@@ -817,8 +817,8 @@
     color:#444;
   }
   .pdf-viewer{
-    background:#fff;
-    border:1px solid rgba(0,0,0,0.1);
+    background:#2f2f2f;
+    border:1px solid #2f2f2f;
     border-radius:12px;
     overflow:hidden;
     display:flex;
@@ -831,16 +831,18 @@
     align-items:center;
     gap:8px;
     padding:8px 10px;
-    background:#f7f7f7;
-    border-bottom:1px solid rgba(0,0,0,0.1);
+    background:rgba(0,0,0,0.75);
+    border-top:1px solid rgba(255,255,255,0.12);
+    border-bottom:0;
+    order:2;
   }
   .pdf-btn{
     width:30px;
     height:30px;
     border-radius:8px;
-    border:1px solid rgba(0,0,0,0.2);
-    background:#fff;
-    color:#111;
+    border:1px solid rgba(255,255,255,0.35);
+    background:transparent;
+    color:#fff;
     display:inline-flex;
     align-items:center;
     justify-content:center;
@@ -849,7 +851,7 @@
   .pdf-btn[disabled]{ opacity:0.45; cursor:not-allowed; }
   .pdf-page{
     font-size:12px;
-    color:#333;
+    color:#fff;
     margin-right:auto;
   }
   .pdf-download{
@@ -860,7 +862,7 @@
     text-decoration:none;
     padding:6px 10px;
     border-radius:8px;
-    border:1px solid rgba(0,0,0,0.2);
+    border:1px solid rgba(255,255,255,0.2);
     background:#fff;
   }
   .pdf-canvas-wrap{
@@ -869,14 +871,39 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#fff;
+    background:#2f2f2f;
     position:relative;
     min-height:220px;
+    padding:18px 54px;
+    order:1;
   }
   .pdf-canvas-wrap canvas{
     max-width:100%;
     height:auto;
+    background:#fff;
+    box-shadow:0 18px 40px rgba(0,0,0,0.45);
+    border-radius:2px;
   }
+  .pdf-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:44px;
+    height:44px;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,0.35);
+    background:rgba(0,0,0,0.35);
+    color:#fff;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:background 0.2s ease, transform 0.2s ease;
+  }
+  .pdf-arrow:hover{ background:rgba(0,0,0,0.55); }
+  .pdf-arrow[disabled]{ opacity:0.4; cursor:not-allowed; }
+  .pdf-prev-overlay{ left:12px; }
+  .pdf-next-overlay{ right:12px; }
   .pdf-loading{
     position:absolute;
     inset:0;
@@ -2602,6 +2629,16 @@
                     <a class="pdf-download" id="pdfDownload" href="#" target="_blank" rel="noopener">تحميل PDF</a>
                   </div>
                   <div class="pdf-canvas-wrap" id="pdfCanvasWrap">
+                    <button class="pdf-arrow pdf-prev-overlay" type="button" id="pdfPrevOverlay" aria-label="الصفحة السابقة">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <button class="pdf-arrow pdf-next-overlay" type="button" id="pdfNextOverlay" aria-label="الصفحة التالية">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
                     <div class="pdf-loading" id="pdfLoading">جار التحميل...</div>
                     <canvas id="pdfCanvas"></canvas>
                   </div>
@@ -3324,6 +3361,8 @@
   const pdfLoading = document.getElementById('pdfLoading');
   const pdfPrev = document.getElementById('pdfPrev');
   const pdfNext = document.getElementById('pdfNext');
+  const pdfPrevOverlay = document.getElementById('pdfPrevOverlay');
+  const pdfNextOverlay = document.getElementById('pdfNextOverlay');
   const pdfPageNum = document.getElementById('pdfPageNum');
   const pdfPageCount = document.getElementById('pdfPageCount');
   const pdfDownload = document.getElementById('pdfDownload');
@@ -3360,6 +3399,8 @@
       if(pdfPageCount && pdfDoc) pdfPageCount.textContent = String(pdfDoc.numPages);
       if(pdfPrev) pdfPrev.disabled = pdfPage <= 1;
       if(pdfNext) pdfNext.disabled = pdfDoc ? pdfPage >= pdfDoc.numPages : true;
+      if(pdfPrevOverlay) pdfPrevOverlay.disabled = pdfPage <= 1;
+      if(pdfNextOverlay) pdfNextOverlay.disabled = pdfDoc ? pdfPage >= pdfDoc.numPages : true;
     }).catch(() => {
       pdfRendering = false;
       if(pdfLoading) pdfLoading.textContent = "تعذر تحميل الملف.";
@@ -3436,6 +3477,20 @@
   }
   if(pdfNext){
     pdfNext.addEventListener('click', () => {
+      if(!pdfDoc || pdfPage >= pdfDoc.numPages) return;
+      pdfPage += 1;
+      queuePdfPage(pdfPage);
+    });
+  }
+  if(pdfPrevOverlay){
+    pdfPrevOverlay.addEventListener('click', () => {
+      if(pdfPage <= 1) return;
+      pdfPage -= 1;
+      queuePdfPage(pdfPage);
+    });
+  }
+  if(pdfNextOverlay){
+    pdfNextOverlay.addEventListener('click', () => {
       if(!pdfDoc || pdfPage >= pdfDoc.numPages) return;
       pdfPage += 1;
       queuePdfPage(pdfPage);
