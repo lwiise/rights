@@ -423,6 +423,26 @@
     align-items:center;
     justify-content:center;
   }
+  .frame-bottom-bar{
+    justify-content:flex-end;
+    padding-right:32px;
+  }
+  .barcode{
+    width:180px;
+    height:34px;
+    background:
+      repeating-linear-gradient(
+        90deg,
+        #111 0 2px,
+        transparent 2px 5px,
+        #111 5px 6px,
+        transparent 6px 10px
+      );
+    background-color:#fff;
+    border:1px solid rgba(0,0,0,0.2);
+    border-radius:4px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.12);
+  }
   .view-switcher{
     display:inline-flex;
     border:1px solid #7f7f7f;
@@ -517,7 +537,10 @@
     justify-content:center;
     gap:10px;
     background:#f7f7f7;
-    border-top:1px solid rgba(0,0,0,0.15);
+    border-bottom:1px solid rgba(0,0,0,0.15);
+    box-shadow:0 2px 10px rgba(0,0,0,0.12);
+    position:relative;
+    z-index:5;
   }
   .slide-nav-btn{
     width:32px;
@@ -608,10 +631,28 @@
     box-shadow:0 16px 30px rgba(0,0,0,0.45);
     backdrop-filter:blur(6px);
     z-index:6;
-    pointer-events:none;
+    pointer-events:auto;
     perspective:600px;
+    cursor:grab;
+    user-select:none;
+    touch-action:none;
+  }
+  .map-kaaba-box:active{ cursor:grabbing; }
+  .map-wall-rotator{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transform-style:preserve-3d;
+    animation:wallSpin 18s linear infinite;
   }
   .map-wall{
+    --wall-depth:12px;
+    --wall-rot-x:-12deg;
+    --wall-rot-y:18deg;
+    --wall-content-x:0px;
+    --wall-content-y:0px;
     width:78px;
     height:78px;
     border-radius:10px;
@@ -621,7 +662,34 @@
       linear-gradient(90deg, rgba(0,0,0,0.25), rgba(0,0,0,0.1)),
       #2b2b2b;
     background-size:20px 12px, 20px 12px, 100% 100%, 100% 100%;
-    box-shadow:inset 0 2px 6px rgba(0,0,0,0.35);
+    box-shadow:0 10px 24px rgba(0,0,0,0.45);
+    transform-style:preserve-3d;
+    transform:translateZ(6px) rotateX(var(--wall-rot-x)) rotateY(var(--wall-rot-y));
+    transition:transform 0.15s ease;
+    position:relative;
+  }
+  .map-wall::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:10px;
+    background:rgba(0,0,0,0.2);
+    transform:translateZ(calc(var(--wall-depth) * -1));
+  }
+  .map-wall-content{
+    position:absolute;
+    inset:10px;
+    border-radius:8px;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0)),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0 2px, transparent 2px 10px),
+      #1f1f1f;
+    transform:translate3d(var(--wall-content-x), var(--wall-content-y), 8px);
+    box-shadow:inset 0 2px 6px rgba(0,0,0,0.35), 0 6px 12px rgba(0,0,0,0.35);
+  }
+  @keyframes wallSpin{
+    from{ transform:rotateY(0deg); }
+    to{ transform:rotateY(360deg); }
   }
   .map-gold-popup{
     width:34px;
@@ -2258,12 +2326,33 @@
             <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </button>
+        <div class="right-slider-nav" id="rightSliderNav" aria-label="Right slider navigation">
+          <button class="slide-nav-btn active" type="button" data-slide="0" aria-label="Slide 1">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="5" fill="currentColor" />
+            </svg>
+          </button>
+          <button class="slide-nav-btn" type="button" data-slide="1" aria-label="Slide 2">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="5" fill="currentColor" />
+            </svg>
+          </button>
+          <button class="slide-nav-btn" type="button" data-slide="2" aria-label="Slide 3">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="5" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
         <div class="right-slider" id="rightSlider">
           <div class="right-slide" data-slide="0">
             <div class="map-panel" id="mapPanel">
               <div id="map"></div>
-              <div class="map-kaaba-box" aria-hidden="true">
-                <div class="map-wall" aria-hidden="true"></div>
+              <div class="map-kaaba-box" id="mapWallBox">
+                <div class="map-wall-rotator">
+                  <div class="map-wall" id="mapWall">
+                    <div class="map-wall-content" aria-hidden="true"></div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="kaaba-panel" id="kaabaPanel">
@@ -2618,26 +2707,11 @@
             </div>
           </div>
         </div>
-        <div class="right-slider-nav" id="rightSliderNav" aria-label="Right slider navigation">
-          <button class="slide-nav-btn active" type="button" data-slide="0" aria-label="Slide 1">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <circle cx="12" cy="12" r="5" fill="currentColor" />
-            </svg>
-          </button>
-          <button class="slide-nav-btn" type="button" data-slide="1" aria-label="Slide 2">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <circle cx="12" cy="12" r="5" fill="currentColor" />
-            </svg>
-          </button>
-          <button class="slide-nav-btn" type="button" data-slide="2" aria-label="Slide 3">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-              <circle cx="12" cy="12" r="5" fill="currentColor" />
-            </svg>
-          </button>
-        </div>
       </div>
     </div>
-    <div class="frame-bottom-bar" aria-hidden="true"></div>
+    <div class="frame-bottom-bar">
+      <div class="barcode" aria-hidden="true"></div>
+    </div>
   </div>
 </div>
 
@@ -2741,6 +2815,59 @@
     } catch(e){
       map = null;
     }
+  }
+
+  const mapWall = document.getElementById('mapWall');
+  const mapWallBox = document.getElementById('mapWallBox');
+  const mapWallContent = mapWall ? mapWall.querySelector('.map-wall-content') : null;
+  if(mapWall && mapWallBox && mapWallContent){
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let baseRotX = -12;
+    let baseRotY = 18;
+    let startRotX = baseRotX;
+    let startRotY = baseRotY;
+    let contentX = 0;
+    let contentY = 0;
+    let startContentX = 0;
+    let startContentY = 0;
+    const clamp = (val, min, max) => Math.min(max, Math.max(min, val));
+    const applyWall = () => {
+      mapWall.style.setProperty('--wall-rot-x', `${baseRotX}deg`);
+      mapWall.style.setProperty('--wall-rot-y', `${baseRotY}deg`);
+      mapWall.style.setProperty('--wall-content-x', `${contentX}px`);
+      mapWall.style.setProperty('--wall-content-y', `${contentY}px`);
+    };
+    applyWall();
+
+    mapWallBox.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      startRotX = baseRotX;
+      startRotY = baseRotY;
+      startContentX = contentX;
+      startContentY = contentY;
+      mapWallBox.setPointerCapture(e.pointerId);
+    });
+    mapWallBox.addEventListener('pointermove', (e) => {
+      if(!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      baseRotY = clamp(startRotY + dx * 0.25, -30, 30);
+      baseRotX = clamp(startRotX - dy * 0.25, -30, 30);
+      contentX = clamp(startContentX + dx * 0.12, -10, 10);
+      contentY = clamp(startContentY + dy * 0.12, -10, 10);
+      applyWall();
+    });
+    const endDrag = (e) => {
+      if(!isDragging) return;
+      isDragging = false;
+      mapWallBox.releasePointerCapture(e.pointerId);
+    };
+    mapWallBox.addEventListener('pointerup', endDrag);
+    mapWallBox.addEventListener('pointercancel', endDrag);
   }
 
   const DISPLAY_CONTENT = {
@@ -2952,7 +3079,7 @@
     if(topicEl) topicEl.textContent = data.table.topic;
     const showMap = key === 'sect-home';
     const showKaaba = key === 'sect-extra-1';
-    const showSketchfab = key === 'sect-extra-5';
+    const showSketchfab = key === 'sect-contact';
     if(frameRight){
       frameRight.classList.toggle('show-map', showMap);
       frameRight.classList.toggle('show-kaaba', showKaaba);
