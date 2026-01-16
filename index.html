@@ -938,7 +938,7 @@
     box-shadow:0 12px 22px rgba(0,0,0,0.18);
     padding:0 0 120px;
     flex:0 0 auto;
-    margin:0 0 40px 0;
+    margin:0 0 30px 0;
   }
   .pdf-controls{
     position:absolute;
@@ -3232,9 +3232,7 @@
 
   if(window.pdfjsLib){
     window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-    if(window.location && window.location.protocol === 'file:'){
-      window.pdfjsLib.disableWorker = true;
-    }
+    window.pdfjsLib.disableWorker = true;
   }
 
   const mapWall = document.getElementById('mapWall');
@@ -3658,8 +3656,11 @@
       disableAutoFetch: true
     }).then(applyDoc).catch(() => {
       fetch(url, { mode: 'cors', credentials: 'omit', cache: 'no-store' })
-        .then(res => res.arrayBuffer())
-        .then(buffer => loadTask({ data: buffer }))
+        .then(res => {
+          if(!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.arrayBuffer();
+        })
+        .then(buffer => loadTask({ data: new Uint8Array(buffer) }))
         .then(applyDoc)
         .catch((err) => {
           if(pdfLoading) pdfLoading.textContent = "تعذر تحميل الملف.";
