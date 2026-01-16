@@ -732,6 +732,22 @@
     flex-direction:column;
     gap:12px;
   }
+  .books-gallery-head{
+    display:flex;
+    flex-direction:column;
+    gap:4px;
+  }
+  .books-gallery-title{
+    margin:0;
+    font-size:18px;
+    font-weight:800;
+    color:#111;
+  }
+  .books-gallery-sub{
+    margin:0;
+    font-size:12px;
+    color:#666;
+  }
   .books-gallery{
     display:grid;
     grid-template-columns:repeat(3, minmax(0, 1fr));
@@ -747,6 +763,7 @@
     cursor:pointer;
     transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     text-align:center;
+    box-shadow:0 8px 18px rgba(0,0,0,0.12);
   }
   .book-card img{
     width:100%;
@@ -774,6 +791,41 @@
     min-height:0;
   }
   .book-detail-view.active{ display:flex; }
+  .book-detail-hero{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    background:#fff;
+    border:1px solid rgba(0,0,0,0.1);
+    border-radius:12px;
+    padding:12px;
+  }
+  .book-cover{
+    width:110px;
+    flex:0 0 110px;
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 10px 20px rgba(0,0,0,0.18);
+  }
+  .book-cover img{
+    width:100%;
+    height:auto;
+    display:block;
+  }
+  .book-meta{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+    font-size:12px;
+    color:#444;
+    direction:rtl;
+    text-align:right;
+  }
+  .book-meta strong{
+    display:block;
+    font-size:14px;
+    color:#111;
+  }
   .book-detail-head{
     display:flex;
     align-items:center;
@@ -2603,12 +2655,27 @@
             </div>
             <div class="books-panel" id="booksPanel">
               <div class="books-gallery-view" id="booksGalleryView">
+                <div class="books-gallery-head">
+                  <h3 class="books-gallery-title">معرض الكتب</h3>
+                  <p class="books-gallery-sub">نماذج كتب رقمية متاحة للعرض والقراءة.</p>
+                </div>
                 <div class="books-gallery" id="booksGallery"></div>
               </div>
               <div class="book-detail-view" id="bookDetailView">
                 <div class="book-detail-head">
                   <button class="book-back" type="button" id="bookBack">رجوع</button>
                   <h3 class="book-detail-title" id="bookTitle">كتاب</h3>
+                </div>
+                <div class="book-detail-hero">
+                  <div class="book-cover">
+                    <img id="bookCover" src="" alt="">
+                  </div>
+                  <div class="book-meta">
+                    <div>المؤلف</div>
+                    <strong id="bookAuthor">—</strong>
+                    <div>الفئة</div>
+                    <strong id="bookCategory">—</strong>
+                  </div>
                 </div>
                 <div class="book-summary">
                   <p id="bookSummary">اختر كتابًا لعرض الملخص وملف القراءة.</p>
@@ -3333,28 +3400,89 @@
     }
   }
 
-  const bookImages = [
-    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
-    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
-    "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg"
+  const bookData = [
+    {
+      title: "القرآن الكريم",
+      author: "مصحف المدينة",
+      category: "القرآن وعلومه",
+      summary: "نص القرآن الكريم كاملاً مع تنسيق واضح للقراءة الإلكترونية.",
+      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
+      pdf: "pdfs/book-1.pdf"
+    },
+    {
+      title: "صحيح البخاري",
+      author: "الإمام البخاري",
+      category: "حديث نبوي",
+      summary: "مختارات من أحاديث صحيحة مرتبة بعناية لسهولة التصفح.",
+      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
+      pdf: "pdfs/book-2.pdf"
+    },
+    {
+      title: "صحيح مسلم",
+      author: "الإمام مسلم",
+      category: "حديث نبوي",
+      summary: "عرض مختصر لأبواب الحديث مع ترتيب سلس للقراءة الرقمية.",
+      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
+      pdf: "pdfs/book-3.pdf"
+    },
+    {
+      title: "رياض الصالحين",
+      author: "الإمام النووي",
+      category: "تزكية وأخلاق",
+      summary: "مختارات تربوية وأخلاقية بإسلوب مبسط للقارئ.",
+      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
+      pdf: "pdfs/book-1.pdf"
+    },
+    {
+      title: "الأربعون النووية",
+      author: "الإمام النووي",
+      category: "حديث نبوي",
+      summary: "أربعون حديثًا جامعًا لأصول الدين والآداب.",
+      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
+      pdf: "pdfs/book-2.pdf"
+    },
+    {
+      title: "تفسير ابن كثير",
+      author: "ابن كثير",
+      category: "تفسير",
+      summary: "مختارات تفسيرية مختصرة تسهّل فهم الآيات.",
+      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
+      pdf: "pdfs/book-3.pdf"
+    },
+    {
+      title: "الفقه الميسر",
+      author: "مجموعة مؤلفين",
+      category: "فقه",
+      summary: "مبادئ فقهية أساسية بلغة سهلة للمبتدئين.",
+      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
+      pdf: "pdfs/book-1.pdf"
+    },
+    {
+      title: "زاد المعاد",
+      author: "ابن القيم",
+      category: "سيرة وفقه",
+      summary: "لمحات مختصرة من السيرة مع فوائد تربوية.",
+      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
+      pdf: "pdfs/book-2.pdf"
+    },
+    {
+      title: "الرحيق المختوم",
+      author: "صفي الرحمن المباركفوري",
+      category: "سيرة",
+      summary: "عرض موجز للسيرة النبوية بأسلوب قصصي.",
+      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
+      pdf: "pdfs/book-3.pdf"
+    }
   ];
-  const bookPdfs = [
-    "pdfs/book-1.pdf",
-    "pdfs/book-2.pdf",
-    "pdfs/book-3.pdf"
-  ];
-  const bookData = Array.from({ length: 9 }, (_, i) => ({
-    title: `كتاب ${i + 1}`,
-    summary: "ملخص موجز عن الكتاب يوضح الفكرة الرئيسية والمحتوى بشكل سريع ومركّز لزوار المعرض.",
-    image: bookImages[i % bookImages.length],
-    pdf: bookPdfs[i % bookPdfs.length]
-  }));
 
   const booksGallery = document.getElementById('booksGallery');
   const booksGalleryView = document.getElementById('booksGalleryView');
   const bookDetailView = document.getElementById('bookDetailView');
   const bookTitle = document.getElementById('bookTitle');
   const bookSummary = document.getElementById('bookSummary');
+  const bookCover = document.getElementById('bookCover');
+  const bookAuthor = document.getElementById('bookAuthor');
+  const bookCategory = document.getElementById('bookCategory');
   const bookBack = document.getElementById('bookBack');
   const pdfCanvas = document.getElementById('pdfCanvas');
   const pdfCanvasWrap = document.getElementById('pdfCanvasWrap');
@@ -3437,6 +3565,12 @@
     if(!book) return;
     if(bookTitle) bookTitle.textContent = book.title;
     if(bookSummary) bookSummary.textContent = book.summary;
+    if(bookCover){
+      bookCover.src = book.image;
+      bookCover.alt = book.title;
+    }
+    if(bookAuthor) bookAuthor.textContent = book.author || "—";
+    if(bookCategory) bookCategory.textContent = book.category || "—";
     if(booksGallery){
       booksGallery.querySelectorAll('.book-card').forEach((card, idx) => {
         card.classList.toggle('active', idx === index);
