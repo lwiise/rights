@@ -934,7 +934,7 @@
     flex-direction:column;
     min-height:0;
     position:relative;
-    padding:0;
+    padding:0 0 72px;
     flex:0 0 auto;
     margin:0 0 30px 0;
   }
@@ -1003,7 +1003,7 @@
     position:relative;
     min-height:0;
     width:100%;
-    padding:0 0 80px;
+    padding:0;
     border:1px solid rgba(0,0,0,0.15);
     border-radius:12px;
     overflow:hidden;
@@ -2761,35 +2761,35 @@
                   <div class="pdf-canvas-wrap" id="pdfCanvasWrap">
                     <div class="pdf-loading" id="pdfLoading">جار التحميل...</div>
                     <canvas id="pdfCanvas"></canvas>
-                    <div class="pdf-controls" dir="rtl">
-                      <button class="pdf-btn" type="button" id="pdfPrev" aria-label="الصفحة السابقة">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                          <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </button>
-                      <button class="pdf-btn" type="button" id="pdfNext" aria-label="الصفحة التالية">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                          <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </button>
-                      <div class="pdf-page"><span id="pdfPageNum">1</span> / <span id="pdfPageCount">--</span></div>
-                      <button class="pdf-btn" type="button" id="pdfZoomOut" aria-label="تصغير">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                          <path d="M6 12h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-                        </svg>
-                      </button>
-                      <button class="pdf-btn" type="button" id="pdfZoomIn" aria-label="تكبير">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                          <path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
-                        </svg>
-                      </button>
-                      <button class="pdf-btn" type="button" id="pdfFullscreen" aria-label="ملء الشاشة">
-                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                          <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                      </button>
-                      <a class="pdf-download" id="pdfDownload" href="#" target="_blank" rel="noopener">تحميل PDF</a>
-                    </div>
+                  </div>
+                  <div class="pdf-controls" dir="rtl">
+                    <button class="pdf-btn" type="button" id="pdfPrev" aria-label="الصفحة السابقة">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <button class="pdf-btn" type="button" id="pdfNext" aria-label="الصفحة التالية">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <div class="pdf-page"><span id="pdfPageNum">1</span> / <span id="pdfPageCount">--</span></div>
+                    <button class="pdf-btn" type="button" id="pdfZoomOut" aria-label="تصغير">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M6 12h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                      </svg>
+                    </button>
+                    <button class="pdf-btn" type="button" id="pdfZoomIn" aria-label="تكبير">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                      </svg>
+                    </button>
+                    <button class="pdf-btn" type="button" id="pdfFullscreen" aria-label="ملء الشاشة">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <a class="pdf-download" id="pdfDownload" href="#" target="_blank" rel="noopener">تحميل PDF</a>
                   </div>
                 </div>
             </div>
