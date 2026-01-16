@@ -813,7 +813,6 @@
     min-height:0;
     flex:1 1 auto;
     height:100%;
-    padding-bottom:30px;
   }
   .book-detail-view.active{ display:flex; }
   .book-detail-hero{
@@ -927,25 +926,20 @@
     color:#444;
   }
   .pdf-viewer{
-    background:#fff;
-    border:1px solid rgba(0,0,0,0.15);
+    background:transparent;
+    border:0;
     border-radius:12px;
-    overflow:hidden;
+    overflow:visible;
     display:flex;
     flex-direction:column;
     min-height:0;
-    min-height:320px;
     position:relative;
-    box-shadow:0 12px 22px rgba(0,0,0,0.18);
-    padding:0 0 120px;
+    padding:0;
     flex:0 0 auto;
-    margin:0;
+    margin:0 0 30px 0;
   }
   .pdf-controls{
-    position:absolute;
-    left:50%;
-    bottom:16px;
-    transform:translateX(-50%);
+    position:static;
     display:flex;
     align-items:center;
     gap:10px;
@@ -954,8 +948,9 @@
     border:1px solid rgba(255,255,255,0.18);
     border-radius:999px;
     box-shadow:0 10px 20px rgba(0,0,0,0.28);
-    z-index:3;
     direction:rtl;
+    align-self:center;
+    margin-top:18px;
   }
   .pdf-btn{
     width:30px;
@@ -1007,8 +1002,10 @@
     min-height:0;
     width:100%;
     padding:0;
-    border:0;
-    border-radius:0;
+    border:1px solid rgba(0,0,0,0.15);
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 14px 28px rgba(0,0,0,0.18);
   }
   .pdf-canvas-wrap canvas{
     width:100%;
@@ -2759,15 +2756,19 @@
                   <p id="bookSummary">اختر كتابًا لعرض الملخص وملف القراءة.</p>
                 </div>
                 <div class="pdf-viewer" id="pdfViewer">
+                  <div class="pdf-canvas-wrap" id="pdfCanvasWrap">
+                    <div class="pdf-loading" id="pdfLoading">جار التحميل...</div>
+                    <canvas id="pdfCanvas"></canvas>
+                  </div>
                   <div class="pdf-controls" dir="rtl">
-                    <button class="pdf-btn" type="button" id="pdfNext" aria-label="الصفحة التالية">
-                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </button>
                     <button class="pdf-btn" type="button" id="pdfPrev" aria-label="الصفحة السابقة">
                       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <button class="pdf-btn" type="button" id="pdfNext" aria-label="الصفحة التالية">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
                     </button>
                     <div class="pdf-page"><span id="pdfPageNum">1</span> / <span id="pdfPageCount">--</span></div>
@@ -2787,10 +2788,6 @@
                       </svg>
                     </button>
                     <a class="pdf-download" id="pdfDownload" href="#" target="_blank" rel="noopener">تحميل PDF</a>
-                  </div>
-                  <div class="pdf-canvas-wrap" id="pdfCanvasWrap">
-                    <div class="pdf-loading" id="pdfLoading">جار التحميل...</div>
-                    <canvas id="pdfCanvas"></canvas>
                   </div>
                 </div>
               </div>
@@ -3491,7 +3488,7 @@
       category: "القرآن وعلومه",
       summary: "نص القرآن الكريم كاملاً مع تنسيق واضح للقراءة الإلكترونية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
-      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
+      pdf: "pdfs/arxiv-1707.08567.pdf"
     },
     {
       title: "صحيح البخاري",
@@ -3499,7 +3496,7 @@
       category: "حديث نبوي",
       summary: "مختارات من أحاديث صحيحة مرتبة بعناية لسهولة التصفح.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
-      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
+      pdf: "pdfs/arxiv-1707.08567.pdf"
     },
     {
       title: "صحيح مسلم",
@@ -3507,7 +3504,7 @@
       category: "حديث نبوي",
       summary: "عرض مختصر لأبواب الحديث مع ترتيب سلس للقراءة الرقمية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
-      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
+      pdf: "pdfs/arxiv-1707.08567.pdf"
     },
     {
       title: "رياض الصالحين",
@@ -3515,7 +3512,7 @@
       category: "تزكية وأخلاق",
       summary: "مختارات تربوية وأخلاقية بإسلوب مبسط للقارئ.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
-      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
+      pdf: "pdfs/arxiv-1707.08567.pdf"
     },
     {
       title: "الأربعون النووية",
@@ -3523,7 +3520,7 @@
       category: "حديث نبوي",
       summary: "أربعون حديثًا جامعًا لأصول الدين والآداب.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
-      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
+      pdf: "pdfs/arxiv-1707.08567.pdf"
     },
     {
       title: "تفسير ابن كثير",
@@ -3531,7 +3528,7 @@
       category: "تفسير",
       summary: "مختارات تفسيرية مختصرة تسهّل فهم الآيات.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
-      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
+      pdf: "pdfs/arxiv-1707.08567.pdf"
     },
     {
       title: "الفقه الميسر",
@@ -3539,7 +3536,7 @@
       category: "فقه",
       summary: "مبادئ فقهية أساسية بلغة سهلة للمبتدئين.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
-      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
+      pdf: "pdfs/arxiv-1707.08567.pdf"
     },
     {
       title: "زاد المعاد",
@@ -3547,7 +3544,7 @@
       category: "سيرة وفقه",
       summary: "لمحات مختصرة من السيرة مع فوائد تربوية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
-      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
+      pdf: "pdfs/arxiv-1707.08567.pdf"
     },
     {
       title: "الرحيق المختوم",
@@ -3555,7 +3552,7 @@
       category: "سيرة",
       summary: "عرض موجز للسيرة النبوية بأسلوب قصصي.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
-      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
+      pdf: "pdfs/arxiv-1707.08567.pdf"
     }
   ];
 
@@ -3675,7 +3672,22 @@
           })
           .then(buffer => loadTask({ data: new Uint8Array(buffer), disableWorker: true }))
           .then(doc => applyDoc(doc, source))
-          .catch(() => tryLoad(index + 1));
+          .catch(() => {
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', source, true);
+            xhr.responseType = 'arraybuffer';
+            xhr.onload = () => {
+              if(xhr.status === 200 || xhr.status === 0){
+                loadTask({ data: new Uint8Array(xhr.response), disableWorker: true })
+                  .then(doc => applyDoc(doc, source))
+                  .catch(() => tryLoad(index + 1));
+              } else {
+                tryLoad(index + 1);
+              }
+            };
+            xhr.onerror = () => tryLoad(index + 1);
+            xhr.send();
+          });
       });
     };
     tryLoad(0);
