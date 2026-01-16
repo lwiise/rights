@@ -813,6 +813,7 @@
     min-height:0;
     flex:1 1 auto;
     height:100%;
+    padding-bottom:30px;
   }
   .book-detail-view.active{ display:flex; }
   .book-detail-hero{
@@ -938,7 +939,7 @@
     box-shadow:0 12px 22px rgba(0,0,0,0.18);
     padding:0 0 120px;
     flex:0 0 auto;
-    margin:0 0 30px 0;
+    margin:0;
   }
   .pdf-controls{
     position:absolute;
@@ -3579,6 +3580,7 @@
   const pdfPageNum = document.getElementById('pdfPageNum');
   const pdfPageCount = document.getElementById('pdfPageCount');
   const pdfDownload = document.getElementById('pdfDownload');
+  const fallbackPdfUrl = "pdfs/arxiv-1707.08567.pdf";
 
   let pdfDoc = null;
   let pdfPage = 1;
@@ -3639,34 +3641,44 @@
       pdfLoading.style.display = "flex";
       pdfLoading.textContent = "جار التحميل...";
     }
-    const applyDoc = (doc) => {
+    const sources = Array.isArray(url) ? url.slice() : [url];
+    if(fallbackPdfUrl && !sources.includes(fallbackPdfUrl)){
+      sources.push(fallbackPdfUrl);
+    }
+    const loadTask = (options) => window.pdfjsLib.getDocument(options).promise;
+    const applyDoc = (doc, source) => {
       pdfDoc = doc;
       pdfPage = 1;
       pdfScale = 1;
       if(pdfPageCount) pdfPageCount.textContent = String(doc.numPages);
-      if(pdfDownload) pdfDownload.href = url;
+      if(pdfDownload) pdfDownload.href = source || url;
       queuePdfPage(pdfPage);
     };
-    const loadTask = (options) => window.pdfjsLib.getDocument(options).promise;
-    loadTask({
-      url,
-      withCredentials: false,
-      disableRange: true,
-      disableStream: true,
-      disableAutoFetch: true
-    }).then(applyDoc).catch(() => {
-      fetch(url, { mode: 'cors', credentials: 'omit', cache: 'no-store' })
-        .then(res => {
-          if(!res.ok) throw new Error(`HTTP ${res.status}`);
-          return res.arrayBuffer();
-        })
-        .then(buffer => loadTask({ data: new Uint8Array(buffer) }))
-        .then(applyDoc)
-        .catch((err) => {
-          if(pdfLoading) pdfLoading.textContent = "تعذر تحميل الملف.";
-          if(window && window.console) console.error(err);
-        });
-    });
+    const tryLoad = (index) => {
+      if(index >= sources.length){
+        if(pdfLoading) pdfLoading.textContent = "تعذر تحميل الملف.";
+        return;
+      }
+      const source = sources[index];
+      loadTask({
+        url: source,
+        withCredentials: false,
+        disableRange: true,
+        disableStream: true,
+        disableAutoFetch: true,
+        disableWorker: true
+      }).then(doc => applyDoc(doc, source)).catch(() => {
+        fetch(source, { mode: 'cors', credentials: 'omit', cache: 'no-store' })
+          .then(res => {
+            if(!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.arrayBuffer();
+          })
+          .then(buffer => loadTask({ data: new Uint8Array(buffer), disableWorker: true }))
+          .then(doc => applyDoc(doc, source))
+          .catch(() => tryLoad(index + 1));
+      });
+    };
+    tryLoad(0);
   }
 
   function openBook(index){
