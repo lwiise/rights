@@ -478,6 +478,71 @@
     display:flex;
     flex-direction:column;
   }
+  .right-slider{
+    flex:1 1 auto;
+    width:100%;
+    height:100%;
+    display:flex;
+    transition:transform 0.45s ease;
+    min-height:0;
+  }
+  .right-slide{
+    flex:0 0 100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .slide-image-wrap{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f2f2f2;
+  }
+  .slide-image-wrap img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+  }
+  .right-slider-nav{
+    flex:0 0 48px;
+    height:48px;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:#f7f7f7;
+    border-top:1px solid rgba(0,0,0,0.15);
+  }
+  .slide-nav-btn{
+    width:32px;
+    height:32px;
+    border-radius:999px;
+    border:1px solid rgba(0,0,0,0.25);
+    background:#fff;
+    color:#333;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+  }
+  .slide-nav-btn svg{
+    width:14px;
+    height:14px;
+    display:block;
+  }
+  .slide-nav-btn.active{
+    background:#111;
+    color:#fff;
+    border-color:#111;
+  }
+  .slide-nav-btn:hover{ transform:translateY(-1px); }
 
   body.fs-left .frame-left{
     position:fixed;
@@ -2193,40 +2258,42 @@
             <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </button>
-        <div class="map-panel" id="mapPanel">
-          <div id="map"></div>
-          <div class="map-kaaba-box" aria-hidden="true">
-            <div class="map-wall" aria-hidden="true"></div>
-          </div>
-        </div>
-        <div class="kaaba-panel" id="kaabaPanel">
-          <iframe
-            class="fnn3dFrame"
-            src="/fnn-3d-kaaba/"
-            title="FNN 3D Kaaba"
-            allow="fullscreen; autoplay"
-            allowfullscreen
-            loading="eager"
-          ></iframe>
-        </div>
-        <div class="sketchfab-panel" id="sketchfabPanel">
-          <div class="sketchfab-embed-wrapper">
-            <iframe
-              title="Masjid Al-Haram Makkah"
-              frameborder="0"
-              allowfullscreen
-              mozallowfullscreen="true"
-              webkitallowfullscreen="true"
-              allow="autoplay; fullscreen; xr-spatial-tracking"
-              xr-spatial-tracking
-              execution-while-out-of-viewport
-              execution-while-not-rendered
-              web-share
-              src="https://sketchfab.com/models/7d84e450db6240bd9add035640ba2005/embed?autostart=1&autospin=0.2&preload=1">
-            </iframe>
-          </div>
-        </div>
-        <aside class="shop" id="shop">
+        <div class="right-slider" id="rightSlider">
+          <div class="right-slide" data-slide="0">
+            <div class="map-panel" id="mapPanel">
+              <div id="map"></div>
+              <div class="map-kaaba-box" aria-hidden="true">
+                <div class="map-wall" aria-hidden="true"></div>
+              </div>
+            </div>
+            <div class="kaaba-panel" id="kaabaPanel">
+              <iframe
+                class="fnn3dFrame"
+                src="/fnn-3d-kaaba/"
+                title="FNN 3D Kaaba"
+                allow="fullscreen; autoplay"
+                allowfullscreen
+                loading="eager"
+              ></iframe>
+            </div>
+            <div class="sketchfab-panel" id="sketchfabPanel">
+              <div class="sketchfab-embed-wrapper">
+                <iframe
+                  title="Masjid Al-Haram Makkah"
+                  frameborder="0"
+                  allowfullscreen
+                  mozallowfullscreen="true"
+                  webkitallowfullscreen="true"
+                  allow="autoplay; fullscreen; xr-spatial-tracking"
+                  xr-spatial-tracking
+                  execution-while-out-of-viewport
+                  execution-while-not-rendered
+                  web-share
+                  src="https://sketchfab.com/models/7d84e450db6240bd9add035640ba2005/embed?autostart=1&autospin=0.2&preload=1">
+                </iframe>
+              </div>
+            </div>
+            <aside class="shop" id="shop">
 
     <!-- HOME -->
     <section id="sect-home" class="app-section" dir="rtl">
@@ -2538,7 +2605,36 @@
       </div>
     </section>
 
-        </aside>
+            </aside>
+          </div>
+          <div class="right-slide" data-slide="1">
+            <div class="slide-image-wrap">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/3/32/Reading_a_holy_Quran.jpg" alt="صورة للحلقات القرآنية">
+            </div>
+          </div>
+          <div class="right-slide" data-slide="2">
+            <div class="slide-image-wrap">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/5/50/Birmingham_Quran_manuscript.jpg" alt="صورة للمصاحف">
+            </div>
+          </div>
+        </div>
+        <div class="right-slider-nav" id="rightSliderNav" aria-label="Right slider navigation">
+          <button class="slide-nav-btn active" type="button" data-slide="0" aria-label="Slide 1">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="5" fill="currentColor" />
+            </svg>
+          </button>
+          <button class="slide-nav-btn" type="button" data-slide="1" aria-label="Slide 2">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="5" fill="currentColor" />
+            </svg>
+          </button>
+          <button class="slide-nav-btn" type="button" data-slide="2" aria-label="Slide 3">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="12" cy="12" r="5" fill="currentColor" />
+            </svg>
+          </button>
+        </div>
       </div>
     </div>
     <div class="frame-bottom-bar" aria-hidden="true"></div>
@@ -2826,6 +2922,22 @@
     }
   }
 
+  const rightSlider = document.getElementById('rightSlider');
+  const slideButtons = document.querySelectorAll('.slide-nav-btn');
+  function setRightSlide(index){
+    if(!rightSlider) return;
+    const maxIndex = slideButtons.length ? slideButtons.length - 1 : 0;
+    const clamped = Math.max(0, Math.min(index, maxIndex));
+    rightSlider.style.transform = `translateX(-${clamped * 100}%)`;
+    slideButtons.forEach(btn => {
+      btn.classList.toggle('active', Number(btn.dataset.slide) === clamped);
+    });
+    if(map && clamped === 0 && frameRight && frameRight.classList.contains('show-map')){
+      requestAnimationFrame(() => map.resize());
+      setTimeout(() => map.resize(), 200);
+    }
+  }
+
   function setDisplayContent(key){
     const data = DISPLAY_CONTENT[key] || DISPLAY_CONTENT['sect-gallery'];
     const headline = document.getElementById('displayHeadline');
@@ -2942,6 +3054,13 @@
     tab.addEventListener('click', () => setView(tab.dataset.view));
   });
   setView('display');
+
+  slideButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      setRightSlide(Number(btn.dataset.slide));
+    });
+  });
+  setRightSlide(0);
 
   const homeSliderTrack = document.querySelector('.home-illustration-track');
   const homeSliderDots = document.getElementById('homeSliderDots');
