@@ -727,6 +727,11 @@
     -webkit-overflow-scrolling:touch;
     z-index:2;
   }
+  .books-gallery-view{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
   .books-gallery{
     display:grid;
     grid-template-columns:repeat(3, minmax(0, 1fr));
@@ -741,6 +746,7 @@
     padding:0;
     cursor:pointer;
     transition:transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    text-align:center;
   }
   .book-card img{
     width:100%;
@@ -749,17 +755,46 @@
     object-fit:cover;
     aspect-ratio:3 / 4;
   }
+  .book-card-title{
+    display:block;
+    padding:8px 6px 10px;
+    font-size:12px;
+    font-weight:700;
+    color:#222;
+  }
   .book-card.active{
     border-color:#111;
     box-shadow:0 10px 18px rgba(0,0,0,0.18);
     transform:translateY(-2px);
   }
-  .book-detail{
-    flex:1 1 auto;
+  .book-detail-view{
+    display:none;
+    flex-direction:column;
+    gap:12px;
     min-height:0;
-    display:grid;
-    grid-template-columns:minmax(0, 0.9fr) minmax(0, 1.1fr);
-    gap:14px;
+  }
+  .book-detail-view.active{ display:flex; }
+  .book-detail-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+  }
+  .book-back{
+    border:1px solid rgba(0,0,0,0.2);
+    background:#fff;
+    color:#111;
+    border-radius:8px;
+    padding:6px 10px;
+    font-size:12px;
+    font-weight:700;
+    cursor:pointer;
+  }
+  .book-detail-title{
+    margin:0;
+    font-size:18px;
+    font-weight:800;
+    color:#111;
   }
   .book-summary{
     background:#fff;
@@ -789,6 +824,7 @@
     display:flex;
     flex-direction:column;
     min-height:0;
+    min-height:320px;
   }
   .pdf-controls{
     display:flex;
@@ -835,6 +871,7 @@
     justify-content:center;
     background:#fff;
     position:relative;
+    min-height:220px;
   }
   .pdf-canvas-wrap canvas{
     max-width:100%;
@@ -2538,10 +2575,15 @@
               </div>
             </div>
             <div class="books-panel" id="booksPanel">
-              <div class="books-gallery" id="booksGallery"></div>
-              <div class="book-detail">
+              <div class="books-gallery-view" id="booksGalleryView">
+                <div class="books-gallery" id="booksGallery"></div>
+              </div>
+              <div class="book-detail-view" id="bookDetailView">
+                <div class="book-detail-head">
+                  <button class="book-back" type="button" id="bookBack">رجوع</button>
+                  <h3 class="book-detail-title" id="bookTitle">كتاب</h3>
+                </div>
                 <div class="book-summary">
-                  <h3 id="bookTitle">كتاب</h3>
                   <p id="bookSummary">اختر كتابًا لعرض الملخص وملف القراءة.</p>
                 </div>
                 <div class="pdf-viewer">
@@ -3272,8 +3314,11 @@
   }));
 
   const booksGallery = document.getElementById('booksGallery');
+  const booksGalleryView = document.getElementById('booksGalleryView');
+  const bookDetailView = document.getElementById('bookDetailView');
   const bookTitle = document.getElementById('bookTitle');
   const bookSummary = document.getElementById('bookSummary');
+  const bookBack = document.getElementById('bookBack');
   const pdfCanvas = document.getElementById('pdfCanvas');
   const pdfCanvasWrap = document.getElementById('pdfCanvasWrap');
   const pdfLoading = document.getElementById('pdfLoading');
@@ -3346,7 +3391,7 @@
     });
   }
 
-  function selectBook(index){
+  function openBook(index){
     const book = bookData[index];
     if(!book) return;
     if(bookTitle) bookTitle.textContent = book.title;
@@ -3356,19 +3401,30 @@
         card.classList.toggle('active', idx === index);
       });
     }
+    if(booksGalleryView) booksGalleryView.style.display = "none";
+    if(bookDetailView) bookDetailView.classList.add('active');
     loadPdf(book.pdf);
   }
 
   if(booksGallery){
     booksGallery.innerHTML = bookData.map((book, idx) => `
-      <button class="book-card${idx === 0 ? ' active' : ''}" type="button" data-index="${idx}">
+      <button class="book-card" type="button" data-index="${idx}">
         <img src="${book.image}" alt="${book.title}">
+        <span class="book-card-title">${book.title}</span>
       </button>
     `).join('');
     booksGallery.querySelectorAll('.book-card').forEach(card => {
-      card.addEventListener('click', () => selectBook(Number(card.dataset.index)));
+      card.addEventListener('click', () => openBook(Number(card.dataset.index)));
     });
-    selectBook(0);
+    if(booksGalleryView) booksGalleryView.style.display = "flex";
+    if(bookDetailView) bookDetailView.classList.remove('active');
+  }
+
+  if(bookBack){
+    bookBack.addEventListener('click', () => {
+      if(booksGalleryView) booksGalleryView.style.display = "flex";
+      if(bookDetailView) bookDetailView.classList.remove('active');
+    });
   }
 
   if(pdfPrev){
@@ -3419,6 +3475,8 @@
     }
     if(showBooks){
       setRightSlide(0);
+      if(booksGalleryView) booksGalleryView.style.display = "flex";
+      if(bookDetailView) bookDetailView.classList.remove('active');
     }
     if(currentView === 'gallery'){
       if(showMap){
