@@ -3801,11 +3801,11 @@
       frameRight.classList.toggle('show-sketchfab', showSketchfab);
       frameRight.classList.toggle('show-books', showBooks);
     }
+    setRightSlide(0);
     if(map && showMap){
       map.resize();
     }
     if(showBooks){
-      setRightSlide(0);
       if(booksGalleryView) booksGalleryView.style.display = "flex";
       if(bookDetailView) bookDetailView.classList.remove('active');
     }
