@@ -902,10 +902,10 @@
     background:#fff;
     border:1px solid rgba(0,0,0,0.12);
     border-radius:12px;
-    padding:20px 22px;
-    margin-top:6px;
-    margin-bottom:8px;
-    min-height:92px;
+    padding:24px 26px;
+    margin-top:10px;
+    margin-bottom:12px;
+    min-height:120px;
     display:flex;
     flex-direction:column;
     gap:8px;
@@ -916,17 +916,17 @@
   }
   .book-summary h3{
     margin:0;
-    font-size:15px;
+    font-size:16px;
     color:#111;
   }
   .book-summary p{
     margin:0;
-    font-size:13px;
-    line-height:1.7;
+    font-size:14px;
+    line-height:1.8;
     color:#444;
   }
   .pdf-viewer{
-    background:#e6e6e6;
+    background:#fff;
     border:1px solid rgba(0,0,0,0.15);
     border-radius:12px;
     overflow:hidden;
@@ -936,9 +936,9 @@
     min-height:320px;
     position:relative;
     box-shadow:0 12px 22px rgba(0,0,0,0.18);
-    padding:12px;
-    flex:1 1 auto;
-    margin-bottom:64px;
+    padding:0 0 120px;
+    flex:0 0 auto;
+    margin-bottom:88px;
   }
   .pdf-controls{
     position:absolute;
@@ -997,24 +997,25 @@
     border-color:rgba(255,255,255,0.6);
   }
   .pdf-canvas-wrap{
-    flex:1 1 auto;
-    min-height:0;
+    flex:0 0 auto;
     display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#3a3a3a;
+    align-items:flex-start;
+    justify-content:flex-start;
+    background:#fff;
     position:relative;
-    min-height:220px;
-    padding:18px 20px 90px;
-    border:1px solid rgba(0,0,0,0.2);
-    border-radius:10px;
+    min-height:0;
+    width:100%;
+    padding:0;
+    border:0;
+    border-radius:0;
   }
   .pdf-canvas-wrap canvas{
-    max-width:100%;
+    width:100%;
     height:auto;
+    display:block;
     background:#fff;
-    box-shadow:0 18px 40px rgba(0,0,0,0.45);
-    border-radius:2px;
+    box-shadow:none;
+    border-radius:0;
   }
   .pdf-loading{
     position:absolute;
@@ -3488,7 +3489,7 @@
       category: "القرآن وعلومه",
       summary: "نص القرآن الكريم كاملاً مع تنسيق واضح للقراءة الإلكترونية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
-      pdf: "pdfs/book-1.pdf"
+      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
     },
     {
       title: "صحيح البخاري",
@@ -3496,7 +3497,7 @@
       category: "حديث نبوي",
       summary: "مختارات من أحاديث صحيحة مرتبة بعناية لسهولة التصفح.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
-      pdf: "pdfs/book-2.pdf"
+      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
     },
     {
       title: "صحيح مسلم",
@@ -3504,7 +3505,7 @@
       category: "حديث نبوي",
       summary: "عرض مختصر لأبواب الحديث مع ترتيب سلس للقراءة الرقمية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
-      pdf: "pdfs/book-3.pdf"
+      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
     },
     {
       title: "رياض الصالحين",
@@ -3512,7 +3513,7 @@
       category: "تزكية وأخلاق",
       summary: "مختارات تربوية وأخلاقية بإسلوب مبسط للقارئ.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
-      pdf: "pdfs/book-1.pdf"
+      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
     },
     {
       title: "الأربعون النووية",
@@ -3520,7 +3521,7 @@
       category: "حديث نبوي",
       summary: "أربعون حديثًا جامعًا لأصول الدين والآداب.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
-      pdf: "pdfs/book-2.pdf"
+      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
     },
     {
       title: "تفسير ابن كثير",
@@ -3528,7 +3529,7 @@
       category: "تفسير",
       summary: "مختارات تفسيرية مختصرة تسهّل فهم الآيات.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
-      pdf: "pdfs/book-3.pdf"
+      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
     },
     {
       title: "الفقه الميسر",
@@ -3536,7 +3537,7 @@
       category: "فقه",
       summary: "مبادئ فقهية أساسية بلغة سهلة للمبتدئين.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
-      pdf: "pdfs/book-1.pdf"
+      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
     },
     {
       title: "زاد المعاد",
@@ -3544,7 +3545,7 @@
       category: "سيرة وفقه",
       summary: "لمحات مختصرة من السيرة مع فوائد تربوية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
-      pdf: "pdfs/book-2.pdf"
+      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
     },
     {
       title: "الرحيق المختوم",
@@ -3552,7 +3553,7 @@
       category: "سيرة",
       summary: "عرض موجز للسيرة النبوية بأسلوب قصصي.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
-      pdf: "pdfs/book-3.pdf"
+      pdf: "https://arxiv.org/pdf/1707.08567.pdf"
     }
   ];
 
@@ -3592,7 +3593,9 @@
     pdfDoc.getPage(num).then(page => {
       pdfScale = Math.min(Math.max(pdfScale, PDF_MIN_SCALE), PDF_MAX_SCALE);
       const viewport = page.getViewport({ scale: 1 });
-      const wrapWidth = Math.max(240, pdfCanvasWrap.clientWidth - 40);
+      const wrapStyles = window.getComputedStyle(pdfCanvasWrap);
+      const padX = (parseFloat(wrapStyles.paddingLeft) || 0) + (parseFloat(wrapStyles.paddingRight) || 0);
+      const wrapWidth = Math.max(240, pdfCanvasWrap.clientWidth - padX);
       const baseScale = wrapWidth / viewport.width;
       const scale = baseScale * pdfScale;
       const scaledViewport = page.getViewport({ scale });
