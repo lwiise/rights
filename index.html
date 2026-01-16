@@ -938,7 +938,7 @@
     box-shadow:0 12px 22px rgba(0,0,0,0.18);
     padding:0 0 120px;
     flex:0 0 auto;
-    margin-bottom:88px;
+    margin:40px;
   }
   .pdf-controls{
     position:absolute;
@@ -3638,7 +3638,14 @@
       pdfLoading.style.display = "flex";
       pdfLoading.textContent = "جار التحميل...";
     }
-    window.pdfjsLib.getDocument(url).promise.then(doc => {
+    const loadingTask = window.pdfjsLib.getDocument({
+      url,
+      withCredentials: false,
+      disableRange: true,
+      disableStream: true,
+      disableAutoFetch: true
+    });
+    loadingTask.promise.then(doc => {
       pdfDoc = doc;
       pdfPage = 1;
       pdfScale = 1;
