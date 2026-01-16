@@ -530,14 +530,14 @@
   }
   .right-slider-nav{
     position:absolute;
-    bottom:10px;
+    bottom:18px;
     left:50%;
     transform:translateX(-50%);
     height:40px;
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:10px;
+    gap:12px;
     background:transparent;
     border:0;
     box-shadow:none;
@@ -556,6 +556,7 @@
     cursor:pointer;
     box-shadow:0 6px 16px rgba(0,0,0,0.18);
     transition:transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    position:relative;
   }
   .slide-nav-btn svg{
     width:14px;
@@ -567,8 +568,29 @@
     color:#fff;
     border-color:#111;
     box-shadow:0 8px 18px rgba(0,0,0,0.25);
+    transform:scale(1.08);
   }
   .slide-nav-btn:hover{ transform:translateY(-1px); }
+  .slide-nav-btn::after{
+    content:attr(data-label);
+    position:absolute;
+    bottom:calc(100% + 8px);
+    left:50%;
+    transform:translateX(-50%) translateY(4px);
+    padding:4px 8px;
+    border-radius:8px;
+    background:rgba(0,0,0,0.75);
+    color:#fff;
+    font-size:11px;
+    white-space:nowrap;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.2s ease, transform 0.2s ease;
+  }
+  .slide-nav-btn:hover::after{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+  }
 
   body.fs-left .frame-left{
     position:fixed;
@@ -793,19 +815,20 @@
   .book-detail-view.active{ display:flex; }
   .book-detail-hero{
     display:flex;
-    gap:12px;
+    gap:16px;
     align-items:flex-start;
     background:#fff;
-    border:1px solid rgba(0,0,0,0.1);
+    border:1px solid rgba(0,0,0,0.18);
     border-radius:12px;
-    padding:12px;
+    padding:16px;
+    box-shadow:0 10px 18px rgba(0,0,0,0.12);
   }
   .book-cover{
-    width:110px;
-    flex:0 0 110px;
-    border-radius:10px;
+    width:130px;
+    flex:0 0 130px;
+    border-radius:12px;
     overflow:hidden;
-    box-shadow:0 10px 20px rgba(0,0,0,0.18);
+    box-shadow:0 12px 24px rgba(0,0,0,0.18);
   }
   .book-cover img{
     width:100%;
@@ -813,13 +836,26 @@
     display:block;
   }
   .book-meta{
-    display:flex;
-    flex-direction:column;
-    gap:6px;
+    display:grid;
+    grid-template-columns:1fr;
+    row-gap:8px;
     font-size:12px;
     color:#444;
     direction:rtl;
     text-align:right;
+  }
+  .book-label{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    color:#666;
+    font-size:12px;
+  }
+  .book-label svg{
+    width:14px;
+    height:14px;
+    display:block;
+    color:#555;
   }
   .book-meta strong{
     display:block;
@@ -829,33 +865,46 @@
   .book-detail-head{
     display:flex;
     align-items:center;
-    justify-content:space-between;
     gap:10px;
+    width:100%;
+    direction:ltr;
   }
   .book-back{
-    border:1px solid rgba(0,0,0,0.2);
-    background:#fff;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    border:1px solid rgba(0,0,0,0.15);
+    background:#f7f7f7;
     color:#111;
     border-radius:8px;
-    padding:6px 10px;
+    padding:4px 10px;
     font-size:12px;
     font-weight:700;
     cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,0.08);
+  }
+  .book-back svg{
+    width:14px;
+    height:14px;
+    display:block;
   }
   .book-detail-title{
-    margin:0;
+    margin:0 0 0 auto;
     font-size:18px;
     font-weight:800;
     color:#111;
+    direction:rtl;
+    text-align:right;
   }
   .book-summary{
     background:#fff;
-    border:1px solid rgba(0,0,0,0.1);
+    border:1px solid rgba(0,0,0,0.12);
     border-radius:12px;
-    padding:14px;
+    padding:16px;
     overflow:hidden;
     direction:rtl;
     text-align:right;
+    box-shadow:0 6px 14px rgba(0,0,0,0.08);
   }
   .book-summary h3{
     margin:0 0 8px;
@@ -869,24 +918,33 @@
     color:#444;
   }
   .pdf-viewer{
-    background:#2f2f2f;
-    border:1px solid #2f2f2f;
+    background:#e6e6e6;
+    border:1px solid rgba(0,0,0,0.15);
     border-radius:12px;
     overflow:hidden;
     display:flex;
     flex-direction:column;
     min-height:0;
     min-height:320px;
+    position:relative;
+    box-shadow:0 12px 22px rgba(0,0,0,0.18);
+    padding:14px;
   }
   .pdf-controls{
+    position:absolute;
+    left:50%;
+    bottom:16px;
+    transform:translateX(-50%);
     display:flex;
     align-items:center;
-    gap:8px;
-    padding:8px 10px;
-    background:rgba(0,0,0,0.75);
-    border-top:1px solid rgba(255,255,255,0.12);
-    border-bottom:0;
-    order:2;
+    gap:10px;
+    padding:8px 12px;
+    background:rgba(0,0,0,0.78);
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:999px;
+    box-shadow:0 10px 20px rgba(0,0,0,0.28);
+    z-index:3;
+    direction:rtl;
   }
   .pdf-btn{
     width:30px;
@@ -899,23 +957,34 @@
     align-items:center;
     justify-content:center;
     cursor:pointer;
+    transition:transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  }
+  .pdf-btn:hover{
+    background:rgba(255,255,255,0.12);
+    border-color:rgba(255,255,255,0.6);
+    transform:translateY(-1px);
   }
   .pdf-btn[disabled]{ opacity:0.45; cursor:not-allowed; }
   .pdf-page{
     font-size:12px;
     color:#fff;
-    margin-right:auto;
+    margin-inline:6px;
   }
   .pdf-download{
-    margin-left:auto;
+    margin-right:auto;
     font-size:12px;
     font-weight:700;
-    color:#111;
+    color:#fff;
     text-decoration:none;
     padding:6px 10px;
     border-radius:8px;
-    border:1px solid rgba(255,255,255,0.2);
-    background:#fff;
+    border:1px solid rgba(255,255,255,0.3);
+    background:transparent;
+    transition:background 0.2s ease, border-color 0.2s ease;
+  }
+  .pdf-download:hover{
+    background:rgba(255,255,255,0.12);
+    border-color:rgba(255,255,255,0.6);
   }
   .pdf-canvas-wrap{
     flex:1 1 auto;
@@ -923,11 +992,12 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    background:#2f2f2f;
+    background:#3a3a3a;
     position:relative;
     min-height:220px;
-    padding:18px 54px;
-    order:1;
+    padding:24px 32px 80px;
+    border:1px solid rgba(0,0,0,0.2);
+    border-radius:10px;
   }
   .pdf-canvas-wrap canvas{
     max-width:100%;
@@ -936,26 +1006,6 @@
     box-shadow:0 18px 40px rgba(0,0,0,0.45);
     border-radius:2px;
   }
-  .pdf-arrow{
-    position:absolute;
-    top:50%;
-    transform:translateY(-50%);
-    width:44px;
-    height:44px;
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,0.35);
-    background:rgba(0,0,0,0.35);
-    color:#fff;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    cursor:pointer;
-    transition:background 0.2s ease, transform 0.2s ease;
-  }
-  .pdf-arrow:hover{ background:rgba(0,0,0,0.55); }
-  .pdf-arrow[disabled]{ opacity:0.4; cursor:not-allowed; }
-  .pdf-prev-overlay{ left:12px; }
-  .pdf-next-overlay{ right:12px; }
   .pdf-loading{
     position:absolute;
     inset:0;
@@ -2598,17 +2648,17 @@
           </svg>
         </button>
         <div class="right-slider-nav" id="rightSliderNav" aria-label="Right slider navigation">
-          <button class="slide-nav-btn active" type="button" data-slide="0" aria-label="Slide 1">
+          <button class="slide-nav-btn active" type="button" data-slide="0" data-label="الشريحة 1" aria-label="Slide 1">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <circle cx="12" cy="12" r="5" fill="currentColor" />
             </svg>
           </button>
-          <button class="slide-nav-btn" type="button" data-slide="1" aria-label="Slide 2">
+          <button class="slide-nav-btn" type="button" data-slide="1" data-label="الشريحة 2" aria-label="Slide 2">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <circle cx="12" cy="12" r="5" fill="currentColor" />
             </svg>
           </button>
-          <button class="slide-nav-btn" type="button" data-slide="2" aria-label="Slide 3">
+          <button class="slide-nav-btn" type="button" data-slide="2" data-label="الشريحة 3" aria-label="Slide 3">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <circle cx="12" cy="12" r="5" fill="currentColor" />
             </svg>
@@ -2663,7 +2713,12 @@
               </div>
               <div class="book-detail-view" id="bookDetailView">
                 <div class="book-detail-head">
-                  <button class="book-back" type="button" id="bookBack">رجوع</button>
+                  <button class="book-back" type="button" id="bookBack">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                      <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    رجوع
+                  </button>
                   <h3 class="book-detail-title" id="bookTitle">كتاب</h3>
                 </div>
                 <div class="book-detail-hero">
@@ -2671,41 +2726,57 @@
                     <img id="bookCover" src="" alt="">
                   </div>
                   <div class="book-meta">
-                    <div>المؤلف</div>
+                    <div class="book-label">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M7 18h10M8 6h8M9 10h6M10 14h4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                      </svg>
+                      المؤلف
+                    </div>
                     <strong id="bookAuthor">—</strong>
-                    <div>الفئة</div>
+                    <div class="book-label">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M4 7h16M4 12h10M4 17h7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                      </svg>
+                      الفئة
+                    </div>
                     <strong id="bookCategory">—</strong>
                   </div>
                 </div>
                 <div class="book-summary">
+                  <h3>ملخص الكتاب</h3>
                   <p id="bookSummary">اختر كتابًا لعرض الملخص وملف القراءة.</p>
                 </div>
-                <div class="pdf-viewer">
-                  <div class="pdf-controls">
-                    <button class="pdf-btn" type="button" id="pdfPrev" aria-label="الصفحة السابقة">
+                <div class="pdf-viewer" id="pdfViewer">
+                  <div class="pdf-controls" dir="rtl">
+                    <button class="pdf-btn" type="button" id="pdfNext" aria-label="الصفحة التالية">
                       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
                     </button>
-                    <div class="pdf-page"><span id="pdfPageNum">1</span> / <span id="pdfPageCount">--</span></div>
-                    <button class="pdf-btn" type="button" id="pdfNext" aria-label="الصفحة التالية">
+                    <button class="pdf-btn" type="button" id="pdfPrev" aria-label="الصفحة السابقة">
                       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    <div class="pdf-page"><span id="pdfPageNum">1</span> / <span id="pdfPageCount">--</span></div>
+                    <button class="pdf-btn" type="button" id="pdfZoomOut" aria-label="تصغير">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M6 12h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                      </svg>
+                    </button>
+                    <button class="pdf-btn" type="button" id="pdfZoomIn" aria-label="تكبير">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+                      </svg>
+                    </button>
+                    <button class="pdf-btn" type="button" id="pdfFullscreen" aria-label="ملء الشاشة">
+                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
                     </button>
                     <a class="pdf-download" id="pdfDownload" href="#" target="_blank" rel="noopener">تحميل PDF</a>
                   </div>
                   <div class="pdf-canvas-wrap" id="pdfCanvasWrap">
-                    <button class="pdf-arrow pdf-prev-overlay" type="button" id="pdfPrevOverlay" aria-label="الصفحة السابقة">
-                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </button>
-                    <button class="pdf-arrow pdf-next-overlay" type="button" id="pdfNextOverlay" aria-label="الصفحة التالية">
-                      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                        <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </button>
                     <div class="pdf-loading" id="pdfLoading">جار التحميل...</div>
                     <canvas id="pdfCanvas"></canvas>
                   </div>
@@ -3489,8 +3560,10 @@
   const pdfLoading = document.getElementById('pdfLoading');
   const pdfPrev = document.getElementById('pdfPrev');
   const pdfNext = document.getElementById('pdfNext');
-  const pdfPrevOverlay = document.getElementById('pdfPrevOverlay');
-  const pdfNextOverlay = document.getElementById('pdfNextOverlay');
+  const pdfZoomIn = document.getElementById('pdfZoomIn');
+  const pdfZoomOut = document.getElementById('pdfZoomOut');
+  const pdfFullscreen = document.getElementById('pdfFullscreen');
+  const pdfViewer = document.getElementById('pdfViewer');
   const pdfPageNum = document.getElementById('pdfPageNum');
   const pdfPageCount = document.getElementById('pdfPageCount');
   const pdfDownload = document.getElementById('pdfDownload');
@@ -3499,14 +3572,19 @@
   let pdfPage = 1;
   let pdfRendering = false;
   let pdfPending = null;
+  let pdfScale = 1;
+  const PDF_MIN_SCALE = 0.6;
+  const PDF_MAX_SCALE = 2.4;
 
   function renderPdfPage(num){
     if(!pdfDoc || !pdfCanvas || !pdfCanvasWrap) return;
     pdfRendering = true;
     pdfDoc.getPage(num).then(page => {
+      pdfScale = Math.min(Math.max(pdfScale, PDF_MIN_SCALE), PDF_MAX_SCALE);
       const viewport = page.getViewport({ scale: 1 });
-      const wrapWidth = Math.max(240, pdfCanvasWrap.clientWidth - 16);
-      const scale = wrapWidth / viewport.width;
+      const wrapWidth = Math.max(240, pdfCanvasWrap.clientWidth - 64);
+      const baseScale = wrapWidth / viewport.width;
+      const scale = baseScale * pdfScale;
       const scaledViewport = page.getViewport({ scale });
       const ctx = pdfCanvas.getContext('2d');
       pdfCanvas.height = scaledViewport.height;
@@ -3527,8 +3605,6 @@
       if(pdfPageCount && pdfDoc) pdfPageCount.textContent = String(pdfDoc.numPages);
       if(pdfPrev) pdfPrev.disabled = pdfPage <= 1;
       if(pdfNext) pdfNext.disabled = pdfDoc ? pdfPage >= pdfDoc.numPages : true;
-      if(pdfPrevOverlay) pdfPrevOverlay.disabled = pdfPage <= 1;
-      if(pdfNextOverlay) pdfNextOverlay.disabled = pdfDoc ? pdfPage >= pdfDoc.numPages : true;
     }).catch(() => {
       pdfRendering = false;
       if(pdfLoading) pdfLoading.textContent = "تعذر تحميل الملف.";
@@ -3552,6 +3628,7 @@
     window.pdfjsLib.getDocument(url).promise.then(doc => {
       pdfDoc = doc;
       pdfPage = 1;
+      pdfScale = 1;
       if(pdfPageCount) pdfPageCount.textContent = String(doc.numPages);
       if(pdfDownload) pdfDownload.href = url;
       queuePdfPage(pdfPage);
@@ -3616,20 +3693,34 @@
       queuePdfPage(pdfPage);
     });
   }
-  if(pdfPrevOverlay){
-    pdfPrevOverlay.addEventListener('click', () => {
-      if(pdfPage <= 1) return;
-      pdfPage -= 1;
+  if(pdfZoomIn){
+    pdfZoomIn.addEventListener('click', () => {
+      pdfScale = Math.min(pdfScale * 1.15, PDF_MAX_SCALE);
       queuePdfPage(pdfPage);
     });
   }
-  if(pdfNextOverlay){
-    pdfNextOverlay.addEventListener('click', () => {
-      if(!pdfDoc || pdfPage >= pdfDoc.numPages) return;
-      pdfPage += 1;
+  if(pdfZoomOut){
+    pdfZoomOut.addEventListener('click', () => {
+      pdfScale = Math.max(pdfScale / 1.15, PDF_MIN_SCALE);
       queuePdfPage(pdfPage);
     });
   }
+  if(pdfFullscreen && pdfViewer){
+    pdfFullscreen.addEventListener('click', () => {
+      if(document.fullscreenElement){
+        document.exitFullscreen();
+      } else {
+        pdfViewer.requestFullscreen().catch(() => {});
+      }
+    });
+  }
+
+  document.addEventListener('fullscreenchange', () => {
+    if(!pdfViewer) return;
+    if(document.fullscreenElement === pdfViewer || !document.fullscreenElement){
+      if(pdfDoc) queuePdfPage(pdfPage);
+    }
+  });
 
   window.addEventListener('resize', () => {
     if(pdfDoc){
