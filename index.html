@@ -428,32 +428,12 @@
     padding:0;
     gap:0;
   }
-  .view-switcher{
-    display:inline-flex;
-    border:1px solid #7f7f7f;
-    border-radius:8px;
-    overflow:hidden;
-    background:#f2f2f2;
-  }
-  .view-tab{
-    min-width:120px;
-    padding:10px 22px;
-    border:0;
-    background:transparent;
-    color:#222;
-    font-size:16px;
-    font-weight:700;
-    cursor:pointer;
-    transition:background 0.2s ease, color 0.2s ease;
-    text-decoration:none;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-  }
-  .view-tab + .view-tab{ border-left:1px solid #7f7f7f; }
-  .view-tab.active{
-    background:#fff;
+  .frame-headline{
+    margin:0;
+    font-size:28px;
+    font-weight:800;
     color:#111;
+    letter-spacing:0.02em;
   }
   .frame-split{
     display:flex;
@@ -1039,12 +1019,19 @@
   }
   .kaaba-panel,
   .kaaba-dup-panel,
-  .sketchfab-panel{
+  .sketchfab-panel,
+  .sutro-panel{
     position:absolute;
     inset:0;
     background:#f2f2f2;
     z-index:2;
     display:none;
+  }
+  .sutro-panel iframe{
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
   }
   .sketchfab-panel .sketchfab-embed-wrapper{
     width:100%;
@@ -1091,6 +1078,17 @@
     display:none;
   }
   .frame-right.show-sketchfab .kaaba-panel{
+    display:none;
+  }
+  .frame-right.show-sutro .sutro-panel{
+    display:block;
+  }
+  .frame-right.show-sutro .shop,
+  .frame-right.show-sutro .map-panel,
+  .frame-right.show-sutro .kaaba-panel,
+  .frame-right.show-sutro .kaaba-dup-panel,
+  .frame-right.show-sutro .sketchfab-panel,
+  .frame-right.show-sutro .books-panel{
     display:none;
   }
   .frame-right.show-books .books-panel{
@@ -2614,10 +2612,7 @@
 <div class="layout">
   <div class="display-frame">
     <div class="frame-top-bar">
-      <div class="view-switcher" role="tablist" aria-label="عرض التبديل">
-        <button class="view-tab active" type="button" data-view="display">العرض</button>
-        <a class="view-tab" href="gallery.html" target="_blank" rel="noopener">المعرض</a>
-      </div>
+      <h1 class="frame-headline">المعرض</h1>
     </div>
     <div class="frame-split">
       <nav class="side-nav" id="sideNav">
@@ -2737,6 +2732,16 @@
                   src="https://sketchfab.com/models/7d84e450db6240bd9add035640ba2005/embed?autostart=1&autospin=0.2&preload=1">
                 </iframe>
               </div>
+            </div>
+            <div class="sutro-panel" id="sutroPanel">
+              <iframe
+                title="Sutro Tower in 3D"
+                src="https://vincentwoo.com/3d/sutro_tower/"
+                allow="xr-spatial-tracking; fullscreen; autoplay"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
             </div>
             <div class="books-panel" id="booksPanel">
               <div class="books-gallery-view" id="booksGalleryView">
@@ -3114,7 +3119,7 @@
               <div class="ft-title">التنقل</div>
               <a href="#" onclick="switchSection('sect-about'); return false;">امامة</a>
               <a href="#" onclick="switchSection('sect-services'); return false;">المؤذنون</a>
-              <a href="gallery.html">المعرض</a>
+              <a href="#" onclick="switchSection('sect-gallery'); return false;">المعرض</a>
               <a href="#" onclick="switchSection('sect-contact'); return false;">تواصل معنا</a>
             </div>
 
@@ -3136,12 +3141,12 @@
           </div>
           <div class="right-slide" data-slide="1">
             <div class="slide-image-wrap">
-              <img src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e348c37975c0a06a_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_10%20PM.png" alt="صورة للحلقات القرآنية">
+              <img id="rightSlideImg1" src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e348c37975c0a06a_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_10%20PM.png" alt="صورة للحلقات القرآنية">
             </div>
           </div>
           <div class="right-slide" data-slide="2">
             <div class="slide-image-wrap">
-              <img src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c615c5f7359cf0e0bcd_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_14%20PM.png" alt="صورة للمصاحف">
+              <img id="rightSlideImg2" src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c615c5f7359cf0e0bcd_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_14%20PM.png" alt="صورة للمصاحف">
             </div>
           </div>
         </div>
@@ -3422,7 +3427,7 @@
   const leftKaabaFrame = document.getElementById('leftKaabaFrame');
   let currentKaabaPhase = Number.isFinite(KAABA_PHASE_MAP['sect-gallery']) ? KAABA_PHASE_MAP['sect-gallery'] : 0;
   const bodyEl = document.body;
-  let currentView = 'display';
+  let currentView = 'gallery';
   let galleryMapFrame = null;
 
   function sendKaabaPhase(phase){
@@ -3494,6 +3499,36 @@
 
   const rightSlider = document.getElementById('rightSlider');
   const slideButtons = document.querySelectorAll('.slide-nav-btn');
+  const slideImg1 = document.getElementById('rightSlideImg1');
+  const slideImg2 = document.getElementById('rightSlideImg2');
+  const defaultSlides = {
+    img1: slideImg1 ? { src: slideImg1.getAttribute('src'), alt: slideImg1.getAttribute('alt') } : null,
+    img2: slideImg2 ? { src: slideImg2.getAttribute('src'), alt: slideImg2.getAttribute('alt') } : null
+  };
+  const option6Slides = [
+    {
+      src: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696bc3e23deb3a77ac31ab29_WhatsApp%20Image%202026-01-16%20at%2014.35.00.jpeg",
+      alt: "صورة للمعرض - شريحة 2"
+    },
+    {
+      src: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696bc3e23489ad8363e12f87_WhatsApp%20Image%202026-01-16%20at%2014.36.23.jpeg",
+      alt: "صورة للمعرض - شريحة 3"
+    }
+  ];
+  function setOption6Slides(active){
+    if(!slideImg1 || !slideImg2 || !defaultSlides.img1 || !defaultSlides.img2) return;
+    if(active){
+      slideImg1.src = option6Slides[0].src;
+      slideImg1.alt = option6Slides[0].alt;
+      slideImg2.src = option6Slides[1].src;
+      slideImg2.alt = option6Slides[1].alt;
+    } else {
+      slideImg1.src = defaultSlides.img1.src;
+      slideImg1.alt = defaultSlides.img1.alt;
+      slideImg2.src = defaultSlides.img2.src;
+      slideImg2.alt = defaultSlides.img2.alt;
+    }
+  }
   function setRightSlide(index){
     if(!rightSlider) return;
     const maxIndex = slideButtons.length ? slideButtons.length - 1 : 0;
@@ -3828,17 +3863,20 @@
     const topicEl = document.getElementById('tableTopic');
     if(topicEl) topicEl.textContent = data.table.topic;
     const showMap = key === 'sect-home';
-    const showKaaba = key === 'sect-extra-1';
-    const showKaabaDup = key === 'sect-extra-5';
+    const showKaaba = key === 'sect-extra-5';
+    const showKaabaDup = key === 'sect-extra-1';
+    const showSutro = key === 'sect-extra-4';
     const showSketchfab = key === 'sect-contact';
     const showBooks = key === 'sect-extra-2';
     if(frameRight){
       frameRight.classList.toggle('show-map', showMap);
       frameRight.classList.toggle('show-kaaba', showKaaba);
       frameRight.classList.toggle('show-kaaba-dup', showKaabaDup);
+      frameRight.classList.toggle('show-sutro', showSutro);
       frameRight.classList.toggle('show-sketchfab', showSketchfab);
       frameRight.classList.toggle('show-books', showBooks);
     }
+    setOption6Slides(key === 'sect-extra-1');
     if(map && showMap){
       map.resize();
     }
@@ -3914,7 +3952,7 @@
   safeAdd('navHome','click',() => switchSection('sect-home'));
   safeAdd('navAbout','click',() => switchSection('sect-about'));
   safeAdd('navServices','click',() => switchSection('sect-services'));
-  safeAdd('navGallery','click',() => { window.location.href = 'gallery.html'; });
+  safeAdd('navGallery','click',() => switchSection('sect-gallery'));
   safeAdd('navContact','click',() => switchSection('sect-contact'));
   safeAdd('navExtra1','click',() => switchSection('sect-extra-1'));
   safeAdd('navExtra2','click',() => switchSection('sect-extra-2'));
@@ -3925,7 +3963,7 @@
   safeAdd('mNavHome','click',() => switchSection('sect-home'));
   safeAdd('mNavAbout','click',() => switchSection('sect-about'));
   safeAdd('mNavServices','click',() => switchSection('sect-services'));
-  safeAdd('mNavGallery','click',() => { window.location.href = 'gallery.html'; });
+  safeAdd('mNavGallery','click',() => switchSection('sect-gallery'));
   safeAdd('mNavContact','click',() => switchSection('sect-contact'));
   safeAdd('mNavExtra1','click',() => switchSection('sect-extra-1'));
   safeAdd('mNavExtra2','click',() => switchSection('sect-extra-2'));
@@ -3945,7 +3983,7 @@
       setView(view);
     });
   });
-  setView('display');
+  setView('gallery');
 
   slideButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -4744,18 +4782,10 @@
     render(PRODUCTS);
 
     // Default active nav = Gallery
-    switchSection('sect-home');
+    switchSection('sect-gallery');
 
     setupProcessAnimation();
   })();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
