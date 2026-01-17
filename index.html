@@ -614,6 +614,37 @@
     z-index:1;
     display:none;
   }
+  .map-country-nav{
+    position:absolute;
+    right:18px;
+    bottom:18px;
+    display:none;
+    flex-direction:column;
+    gap:8px;
+    z-index:6;
+    background:rgba(0,0,0,0.55);
+    border:1px solid rgba(255,255,255,0.18);
+    padding:10px 12px;
+    border-radius:14px;
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+  .map-country-nav button{
+    border:0;
+    background:rgba(255,255,255,0.12);
+    color:#fff;
+    font-size:12px;
+    font-weight:700;
+    padding:6px 10px;
+    border-radius:10px;
+    cursor:pointer;
+    text-align:center;
+    transition:background 0.2s ease, transform 0.2s ease;
+  }
+  .map-country-nav button:hover{
+    background:rgba(255,255,255,0.22);
+    transform:translateY(-1px);
+  }
   .map-kaaba-box{
     position:absolute;
     top:14px;
@@ -1078,6 +1109,12 @@
     display:none;
   }
   .frame-right.show-sketchfab .kaaba-panel{
+    display:none;
+  }
+  .frame-right.show-world-nav .map-country-nav{
+    display:flex;
+  }
+  .frame-right.show-world-nav #mapWallBox{
     display:none;
   }
   .frame-right.show-sutro .sutro-panel{
@@ -2688,6 +2725,14 @@
           <div class="right-slide" data-slide="0">
             <div class="map-panel" id="mapPanel">
               <div id="map"></div>
+              <div class="map-country-nav" id="mapCountryNav">
+                <button type="button" data-country="sa">السعودية</button>
+                <button type="button" data-country="eg">مصر</button>
+                <button type="button" data-country="tr">تركيا</button>
+                <button type="button" data-country="id">إندونيسيا</button>
+                <button type="button" data-country="ma">المغرب</button>
+                <button type="button" data-country="us">الولايات المتحدة</button>
+              </div>
               <div class="map-kaaba-box" id="mapWallBox">
                 <div class="map-wall-rotator">
                   <div class="map-wall" id="mapWall">
@@ -3186,12 +3231,50 @@
   const KAABA_BEARING = -25;
   const isMobile = window.innerWidth < 900;
   const startZoom = isMobile ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
+  const WORLD_VIEW = { center:[0, 20], zoom:1.35, pitch:0, bearing:0 };
+  const COUNTRY_TARGETS = {
+    sa: { center:[45.0792, 23.8859], zoom:4.2 },
+    eg: { center:[30.8025, 26.8206], zoom:4.3 },
+    tr: { center:[35.2433, 38.9637], zoom:4.4 },
+    id: { center:[113.9213, -0.7893], zoom:4.0 },
+    ma: { center:[-7.0926, 31.7917], zoom:4.3 },
+    us: { center:[-98.5795, 39.8283], zoom:3.6 }
+  };
+
+  function easeInOutQuad(t){
+    return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  }
+
+  function focusWorldMap(){
+    if(!map) return;
+    map.easeTo({
+      center: WORLD_VIEW.center,
+      zoom: WORLD_VIEW.zoom,
+      pitch: WORLD_VIEW.pitch,
+      bearing: WORLD_VIEW.bearing,
+      duration: 1500,
+      easing: easeInOutQuad
+    });
+  }
+
+  function focusKaabaMap(){
+    if(!map) return;
+    map.easeTo({
+      center: KAABA_CENTER,
+      zoom: startZoom,
+      pitch: KAABA_PITCH,
+      bearing: KAABA_BEARING,
+      duration: 1500,
+      easing: easeInOutQuad
+    });
+  }
 
   let map = null;
   let goldMarker = null;
   const mapEl = document.getElementById('map');
   const frameRight = document.getElementById('frameRight');
   const enableMapbox = !!(mapEl && window.mapboxgl);
+  const mapCountryNav = document.getElementById('mapCountryNav');
 
   if(enableMapbox){
     try{
@@ -3258,6 +3341,23 @@
     } catch(e){
       map = null;
     }
+  }
+
+  if(mapCountryNav){
+    mapCountryNav.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-country]');
+      if(!btn || !map) return;
+      const target = COUNTRY_TARGETS[btn.dataset.country];
+      if(!target) return;
+      map.easeTo({
+        center: target.center,
+        zoom: target.zoom,
+        pitch: 0,
+        bearing: 0,
+        duration: 8000,
+        easing: easeInOutQuad
+      });
+    });
   }
 
   if(window.pdfjsLib){
@@ -3862,12 +3962,13 @@
     if(techEl) techEl.textContent = data.table.tech;
     const topicEl = document.getElementById('tableTopic');
     if(topicEl) topicEl.textContent = data.table.topic;
-    const showMap = key === 'sect-home';
+    const showMap = key === 'sect-contact' || key === 'sect-extra-3';
     const showKaaba = key === 'sect-extra-5';
     const showKaabaDup = key === 'sect-extra-1';
     const showSutro = key === 'sect-extra-4';
-    const showSketchfab = key === 'sect-contact';
+    const showSketchfab = key === 'sect-home';
     const showBooks = key === 'sect-extra-2';
+    const showWorldNav = key === 'sect-extra-3';
     if(frameRight){
       frameRight.classList.toggle('show-map', showMap);
       frameRight.classList.toggle('show-kaaba', showKaaba);
@@ -3875,17 +3976,26 @@
       frameRight.classList.toggle('show-sutro', showSutro);
       frameRight.classList.toggle('show-sketchfab', showSketchfab);
       frameRight.classList.toggle('show-books', showBooks);
+      frameRight.classList.toggle('show-world-nav', showWorldNav);
     }
     setOption6Slides(key === 'sect-extra-1');
+    if(goldMarker && goldMarker.getElement()){
+      goldMarker.getElement().style.display = showWorldNav ? 'none' : 'flex';
+    }
     if(map && showMap){
       map.resize();
+      if(showWorldNav){
+        focusWorldMap();
+      } else {
+        focusKaabaMap();
+      }
     }
     if(showBooks){
       if(booksGalleryView) booksGalleryView.style.display = "flex";
       if(bookDetailView) bookDetailView.classList.remove('active');
     }
     if(currentView === 'gallery'){
-      if(showMap){
+      if(showMap && !showWorldNav){
         startGalleryMapMotion();
       } else {
         stopGalleryMapMotion();
