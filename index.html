@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>FNN ART - ??????</title>
+<title>FNN ART - المعرض</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.7.0/mapbox-gl.css" rel="stylesheet" />
 <style>
@@ -91,7 +91,7 @@
     position:absolute;
     left:50%;
     top:50%;
-    /* ? up by 50% of its size + left by 20% of its size */
+    /* ✅ up by 50% of its size + left by 20% of its size */
     transform:translate(-70%, -100%);
     width:50%;
     aspect-ratio:1/1;
@@ -332,7 +332,7 @@
     position:relative;
     z-index:5;
     box-shadow:0 26px 60px rgba(0,0,0,0.10);
-    overflow:hidden; /* ? prevent right overflow */
+    overflow:hidden; /* ✅ prevent right overflow */
     border-radius:0;
   }
 
@@ -1395,7 +1395,7 @@
     justify-content:stretch;
     padding-left:0;
   }
-  /* ? no hover on second image + fit screen */
+  /* ✅ no hover on second image + fit screen */
   .home-illustration{
     width:100%;
     height:100%;
@@ -2614,36 +2614,36 @@
 <div class="layout">
   <div class="display-frame">
     <div class="frame-top-bar">
-      <div class="view-switcher" role="tablist" aria-label="??? ???????">
-        <button class="view-tab active" type="button" data-view="display">?????</button>
-        <a class="view-tab" href="gallery.html">??????</a>
+      <div class="view-switcher" role="tablist" aria-label="عرض التبديل">
+        <button class="view-tab active" type="button" data-view="display">العرض</button>
+        <a class="view-tab" href="gallery.html">المعرض</a>
       </div>
     </div>
     <div class="frame-split">
       <nav class="side-nav" id="sideNav">
-        <div class="nav-item" id="navHome"><span class="nav-num">1</span><span class="nav-title">???</span></div>
-        <div class="nav-item" id="navAbout"><span class="nav-num">2</span><span class="nav-title">???????</span></div>
-        <div class="nav-item" id="navServices"><span class="nav-num">3</span><span class="nav-title">????????</span></div>
-        <div class="nav-item active" id="navGallery"><span class="nav-num">4</span><span class="nav-title">??????? ???????? ????????</span></div>
-        <div class="nav-item" id="navContact"><span class="nav-num">5</span><span class="nav-title">??????? ??????? ???????</span></div>
-        <div class="nav-item" id="navExtra1"><span class="nav-num">6</span><span class="nav-title">???????</span></div>
-        <div class="nav-item" id="navExtra2"><span class="nav-num">7</span><span class="nav-title">???????</span></div>
-        <div class="nav-item" id="navExtra3"><span class="nav-num">8</span><span class="nav-title">??????? ???????</span></div>
-        <div class="nav-item" id="navExtra4"><span class="nav-num">9</span><span class="nav-title">???? ????? ????????</span></div>
-        <div class="nav-item" id="navExtra5"><span class="nav-num">10</span><span class="nav-title">??????? ???????? ?????? ????????</span></div>
+        <div class="nav-item" id="navHome"><span class="nav-num">1</span><span class="nav-title">عام</span></div>
+        <div class="nav-item" id="navAbout"><span class="nav-num">2</span><span class="nav-title">الإمامة</span></div>
+        <div class="nav-item" id="navServices"><span class="nav-num">3</span><span class="nav-title">المؤذنون</span></div>
+        <div class="nav-item active" id="navGallery"><span class="nav-num">4</span><span class="nav-title">الحلقات القرآنية والمصاحف</span></div>
+        <div class="nav-item" id="navContact"><span class="nav-num">5</span><span class="nav-title">الحلقات العلمية والدروس</span></div>
+        <div class="nav-item" id="navExtra1"><span class="nav-num">6</span><span class="nav-title">التطويف</span></div>
+        <div class="nav-item" id="navExtra2"><span class="nav-num">7</span><span class="nav-title">المكتبة</span></div>
+        <div class="nav-item" id="navExtra3"><span class="nav-num">8</span><span class="nav-title">الترجمة الشرعية</span></div>
+        <div class="nav-item" id="navExtra4"><span class="nav-num">9</span><span class="nav-title">هيئة الأمر بالمعروف</span></div>
+        <div class="nav-item" id="navExtra5"><span class="nav-num">10</span><span class="nav-title">التوجيه والإرشاد وإجابة السائلين</span></div>
       </nav>
 
       <nav class="mobile-nav" id="mobileNav">
-        <div class="nav-item" id="mNavHome"><span class="nav-num">1</span><span class="nav-title">???</span></div>
-        <div class="nav-item" id="mNavAbout"><span class="nav-num">2</span><span class="nav-title">???????</span></div>
-        <div class="nav-item" id="mNavServices"><span class="nav-num">3</span><span class="nav-title">????????</span></div>
-        <div class="nav-item active" id="mNavGallery"><span class="nav-num">4</span><span class="nav-title">??????? ???????? ????????</span></div>
-        <div class="nav-item" id="mNavContact"><span class="nav-num">5</span><span class="nav-title">??????? ??????? ???????</span></div>
-        <div class="nav-item" id="mNavExtra1"><span class="nav-num">6</span><span class="nav-title">???????</span></div>
-        <div class="nav-item" id="mNavExtra2"><span class="nav-num">7</span><span class="nav-title">???????</span></div>
-        <div class="nav-item" id="mNavExtra3"><span class="nav-num">8</span><span class="nav-title">??????? ???????</span></div>
-        <div class="nav-item" id="mNavExtra4"><span class="nav-num">9</span><span class="nav-title">???? ????? ????????</span></div>
-        <div class="nav-item" id="mNavExtra5"><span class="nav-num">10</span><span class="nav-title">??????? ???????? ?????? ????????</span></div>
+        <div class="nav-item" id="mNavHome"><span class="nav-num">1</span><span class="nav-title">عام</span></div>
+        <div class="nav-item" id="mNavAbout"><span class="nav-num">2</span><span class="nav-title">الإمامة</span></div>
+        <div class="nav-item" id="mNavServices"><span class="nav-num">3</span><span class="nav-title">المؤذنون</span></div>
+        <div class="nav-item active" id="mNavGallery"><span class="nav-num">4</span><span class="nav-title">الحلقات القرآنية والمصاحف</span></div>
+        <div class="nav-item" id="mNavContact"><span class="nav-num">5</span><span class="nav-title">الحلقات العلمية والدروس</span></div>
+        <div class="nav-item" id="mNavExtra1"><span class="nav-num">6</span><span class="nav-title">التطويف</span></div>
+        <div class="nav-item" id="mNavExtra2"><span class="nav-num">7</span><span class="nav-title">المكتبة</span></div>
+        <div class="nav-item" id="mNavExtra3"><span class="nav-num">8</span><span class="nav-title">الترجمة الشرعية</span></div>
+        <div class="nav-item" id="mNavExtra4"><span class="nav-num">9</span><span class="nav-title">هيئة الأمر بالمعروف</span></div>
+        <div class="nav-item" id="mNavExtra5"><span class="nav-num">10</span><span class="nav-title">التوجيه والإرشاد وإجابة السائلين</span></div>
       </nav>
       <button class="fullscreen-toggle frame-toggle" id="toggleFrame" type="button" aria-label="Frame fullscreen">
         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -2673,17 +2673,17 @@
           </svg>
         </button>
         <div class="right-slider-nav" id="rightSliderNav" aria-label="Right slider navigation">
-          <button class="slide-nav-btn active" type="button" data-slide="0" data-label="??????? 1" aria-label="Slide 1">
+          <button class="slide-nav-btn active" type="button" data-slide="0" data-label="الشريحة 1" aria-label="Slide 1">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <circle cx="12" cy="12" r="5" fill="currentColor" />
             </svg>
           </button>
-          <button class="slide-nav-btn" type="button" data-slide="1" data-label="??????? 2" aria-label="Slide 2">
+          <button class="slide-nav-btn" type="button" data-slide="1" data-label="الشريحة 2" aria-label="Slide 2">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <circle cx="12" cy="12" r="5" fill="currentColor" />
             </svg>
           </button>
-          <button class="slide-nav-btn" type="button" data-slide="2" data-label="??????? 3" aria-label="Slide 3">
+          <button class="slide-nav-btn" type="button" data-slide="2" data-label="الشريحة 3" aria-label="Slide 3">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
               <circle cx="12" cy="12" r="5" fill="currentColor" />
             </svg>
@@ -2741,8 +2741,8 @@
             <div class="books-panel" id="booksPanel">
               <div class="books-gallery-view" id="booksGalleryView">
                 <div class="books-gallery-head">
-                  <h3 class="books-gallery-title">???? ?????</h3>
-                  <p class="books-gallery-sub">????? ??? ????? ????? ????? ????????.</p>
+                  <h3 class="books-gallery-title">معرض الكتب</h3>
+                  <p class="books-gallery-sub">نماذج كتب رقمية متاحة للعرض والقراءة.</p>
                 </div>
                 <div class="books-gallery" id="booksGallery"></div>
               </div>
@@ -2752,16 +2752,15 @@
                     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                       <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    ????
+                    رجوع
                   </button>
-                  <h3 class="book-detail-title" id="bookTitle">????</h3>
+                  <h3 class="book-detail-title" id="bookTitle">كتاب</h3>
                 </div>
                 <div class="book-detail-card">
-                <div class="book-summary">
-                  <h3>???? ??????</h3>
-                  <p id="bookSummary">???? ?????? ???? ?????? ???? ???????.</p>
-                </div>
-                  <div class="book-detail-hero">
+                  <div class="book-summary">
+                  <h3>ملخص الكتاب</h3>
+                  <p id="bookSummary">اختر كتابًا لعرض الملخص وملف القراءة.</p>
+                </div><div class="book-detail-hero">
                   <div class="book-cover">
                     <img id="bookCover" src="" alt="">
                   </div>
@@ -2770,52 +2769,53 @@
                       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M7 18h10M8 6h8M9 10h6M10 14h4" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
                       </svg>
-                      ??????
+                      المؤلف
                     </div>
-                    <strong id="bookAuthor">�</strong>
+                    <strong id="bookAuthor">—</strong>
                     <div class="book-label">
                       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M4 7h16M4 12h10M4 17h7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
                       </svg>
-                      ?????
+                      الفئة
                     </div>
-                    <strong id="bookCategory">�</strong>
+                    <strong id="bookCategory">—</strong>
                   </div>
                 </div>
+                
                 </div>
                 <div class="pdf-viewer" id="pdfViewer">
                   <div class="pdf-canvas-wrap" id="pdfCanvasWrap">
-                    <div class="pdf-loading" id="pdfLoading">??? ???????...</div>
+                    <div class="pdf-loading" id="pdfLoading">جار التحميل...</div>
                     <canvas id="pdfCanvas"></canvas>
                   </div>
                   <div class="pdf-controls" dir="rtl">
-                    <button class="pdf-btn" type="button" id="pdfPrev" aria-label="?????? ???????">
+                    <button class="pdf-btn" type="button" id="pdfPrev" aria-label="الصفحة السابقة">
                       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
                     </button>
-                    <button class="pdf-btn" type="button" id="pdfNext" aria-label="?????? ???????">
+                    <button class="pdf-btn" type="button" id="pdfNext" aria-label="الصفحة التالية">
                       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
                     </button>
                     <div class="pdf-page"><span id="pdfPageNum">1</span> / <span id="pdfPageCount">--</span></div>
-                    <button class="pdf-btn" type="button" id="pdfZoomOut" aria-label="?????">
+                    <button class="pdf-btn" type="button" id="pdfZoomOut" aria-label="تصغير">
                       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M6 12h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
                       </svg>
                     </button>
-                    <button class="pdf-btn" type="button" id="pdfZoomIn" aria-label="?????">
+                    <button class="pdf-btn" type="button" id="pdfZoomIn" aria-label="تكبير">
                       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
                       </svg>
                     </button>
-                    <button class="pdf-btn" type="button" id="pdfFullscreen" aria-label="??? ??????">
+                    <button class="pdf-btn" type="button" id="pdfFullscreen" aria-label="ملء الشاشة">
                       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
                         <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                       </svg>
                     </button>
-                    <a class="pdf-download" id="pdfDownload" href="#" target="_blank" rel="noopener">????? PDF</a>
+                    <a class="pdf-download" id="pdfDownload" href="#" target="_blank" rel="noopener">تحميل PDF</a>
                   </div>
                 </div>
             </div>
@@ -2831,55 +2831,55 @@
     <section id="sect-about" class="app-section" dir="rtl">
       <div class="section-scroll">
         <div class="about-wrap">
-          <h1 class="sec-title">?????</h1>
+          <h1 class="sec-title">امامة</h1>
 
           <p class="about-lead">
-            ??????? ????? ???? ??? ??? ???????? ????? ?????? ??????? ??? ????? ?????? ?? ???? ????. ???? ??? ????? ?? ???? ?????? ?????? ?? ???????? ?????? ??????? ??????? ??????.
+            الإمامة رسالة تجمع بين حسن التلاوة، وجمال الخلق، والقدرة على توحيد القلوب في بيوت الله. نعرض هنا لمحات عن أئمة بارزين أثّروا في الملايين بصوتهم وخطبتهم وحضورهم الروحي.
           </p>
 
           <p class="about-sublead">
-            ??? ??????? ???? ???? ????? ?????? ?? ?????? ????? ?????? ?????: ??? ??????? ????? ???????? ????? ??????? ???????? ??? ??????. ????? ????? ???? ??????? ?????? ??????? ?????? ????? ?????? ?????? ????????????.
+            هذه النماذج ليست مجرد أصوات جميلة، بل مسارات علمية ودعوية ممتدة: حفظ للقرآن، تعليم للأجيال، وخدمة للحرمين والمساجد حول العالم. هدفنا إبراز قيمة الإمامة بوصفها مسؤولية وأمانة تُبنى بالعلم والورع والاستمرارية.
           </p>
 
           <div class="about-grid">
             <article class="about-card">
               <div class="about-card-media">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/1/18/Abdul-Rahman_Al-Sudais_%28Cropped%2C_2011%29.jpg" alt="????? ??? ?????? ??????">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/18/Abdul-Rahman_Al-Sudais_%28Cropped%2C_2011%29.jpg" alt="الشيخ عبد الرحمن السديس">
               </div>
-              <div class="about-card-meta">???? ????? ?????</div>
-              <h3 class="about-card-title">????? ??? ?????? ??????</h3>
+              <div class="about-card-meta">إمام الحرم المكي</div>
+              <h3 class="about-card-title">الشيخ عبد الرحمن السديس</h3>
               <p class="about-card-desc">
-                ?? ???? ???? ????? ????? ???????? ???? ????? ?????? ????? ???????. ???? ??? ?????? ??????? ?????? ??????? ??? ??????? ?? ???? ?????? ?????? ????? ???? ???????.
+                من أبرز أئمة الحرم المكي وخطبائه، عُرف بصوته الهادئ وخطبه المؤثرة. يجمع بين الحضور الإداري والعمل الدعوي، وله إسهامات في خدمة القرآن وتعليم الناس آداب العبادة.
               </p>
             </article>
 
             <article class="about-card">
               <div class="about-card-media">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Maher_Al_Mueaqly.png" alt="????? ???? ????????">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/90/Maher_Al_Mueaqly.png" alt="الشيخ ماهر المعيقلي">
               </div>
-              <div class="about-card-meta">???? ????? ?????</div>
-              <h3 class="about-card-title">????? ???? ????????</h3>
+              <div class="about-card-meta">إمام الحرم المكي</div>
+              <h3 class="about-card-title">الشيخ ماهر المعيقلي</h3>
               <p class="about-card-desc">
-                ????? ??????? ??????? ?????? ?????? ??? ???????? ??????? ??? ??? ???? ??????? ??? ???? ?? ????????. ???? ?? ??? ??????? ??? ??????? ???????? ????? ?? ??????? ????????? ?????? ???????.
+                اشتهر بتلاوته الخاشعة وتوازن الأداء بين المقامات والوقف، مما جعل صوته محبوبًا لدى كثير من المسلمين. أسهم في نشر التلاوة عبر المحافل والدروس، ويُعد من القرّاء المعاصرين الأكثر تأثيرًا.
               </p>
             </article>
 
             <article class="about-card">
               <div class="about-card-media">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Yasser_Al-Dosari_%28cropped%29.jpg/960px-Yasser_Al-Dosari_%28cropped%29.jpg" alt="????? ???? ???????">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Yasser_Al-Dosari_%28cropped%29.jpg/960px-Yasser_Al-Dosari_%28cropped%29.jpg" alt="الشيخ ياسر الدوسري">
               </div>
-              <div class="about-card-meta">???? ???? ?????</div>
-              <h3 class="about-card-title">????? ???? ???????</h3>
+              <div class="about-card-meta">إمام جامع وخطيب</div>
+              <h3 class="about-card-title">الشيخ ياسر الدوسري</h3>
               <p class="about-card-desc">
-                ???? ????? ????? ??????? ???? ??????? ??? ???? ???? ?? ????? ????? ?????????? ??????. ????? ?????? ???? ???? ????? ??????? ????? ??????? ??????? ???? ???? ??? ????? ???????.
+                قارئ معروف بجمال الترتيل وحسن الأداء، وله حضور واسع في ليالي رمضان والمناسبات الكبرى. يمتاز بأسلوب روحي عميق يلامس القلوب، ويقدم نموذجًا للإمامة التي تجمع بين العلم والخشوع.
               </p>
             </article>
           </div>
 
           <div class="process">
             <div class="process-head">
-              <h2>????? ??????? ??? ?????</h2>
-              <p>????? ????? ???? ???? ??????? ?????? ?? ???? ??????? ??????.</p>
+              <h2>تاريخ الإمامة عبر الزمن</h2>
+              <p>محطات زمنية توضح تطور الإمامة ودورها في بناء المجتمع المسلم.</p>
             </div>
 
             <div class="process-grid">
@@ -2889,14 +2889,14 @@
               </div>
 
               <div class="proc-items">
-                <div class="proc-step"><div><div class="proc-kicker">??????? 1</div><h3 class="proc-title">?????? ??????? ?? ???? ?????</h3><p class="proc-desc">????? ?????? ?????? ?????? ????? ?? ??????? ?????? ?????? ?????? ???????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 2</div><h3 class="proc-title">??? ??????? ????????</h3><p class="proc-desc">????? ?????? ??????? ??????? ?????? ??? ?????? ?? ??????? ????????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 3</div><h3 class="proc-title">????? ???? ????????</h3><p class="proc-desc">???? ????? ???????? ???? ??????? ??? ??? ????? ?????? ??????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 4</div><h3 class="proc-title">?????? ????? ?????</h3><p class="proc-desc">????? ??????? ??? ????? ???????? ???? ?????? ?????? ????? ????????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 5</div><h3 class="proc-title">????? ??????? ?? ???????</h3><p class="proc-desc">????? ???????? ????????? ?????? ?????? ?? ???? ????? ???????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 6</div><h3 class="proc-title">????? ?????? ???????? ???????</h3><p class="proc-desc">????? ????? ????? ?????? ?????? ?????? ?????? ???????? ???????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 7</div><h3 class="proc-title">?? ???????? ???????</h3><p class="proc-desc">?????? ??? ??????? ??? ??????? ????????? ??????? ??? ?????? ????????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 8</div><h3 class="proc-title">????? ??????</h3><p class="proc-desc">????? ??????? ??? ????? ???? ??? ??????? ????? ????????? ???????.</p></div><div class="proc-illus">????</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 1</div><h3 class="proc-title">بدايات الإمامة في مسجد النبي</h3><p class="proc-desc">تنظيم الصفوف وتقديم الأقرأ للناس في الصلاة، وتأسيس القدوة الأولى للإمامة.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 2</div><h3 class="proc-title">عهد الخلفاء الراشدين</h3><p class="proc-desc">ترسيخ النظام الجماعي للصلاة، وتوسيع دور الإمام في التعليم والإرشاد.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 3</div><h3 class="proc-title">تدوين علوم القراءات</h3><p class="proc-desc">نشأت مدارس القراءات وضبط الأداء، مما عزز مكانة الإمام المقرئ.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 4</div><h3 class="proc-title">ازدهار حلقات العلم</h3><p class="proc-desc">تحولت المساجد إلى مراكز تعليمية، وصار الإمام محورًا للعلم والعبادة.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 5</div><h3 class="proc-title">تنظيم الإمامة في الحرمين</h3><p class="proc-desc">تحديد المعايير والاختيار الرسمي للأئمة مع توسع عمارة الحرمين.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 6</div><h3 class="proc-title">العهد الحديث والمعاهد الشرعية</h3><p class="proc-desc">تأسيس برامج إعداد الأئمة وترسيخ الجانب العلمي والمهاري للإمامة.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 7</div><h3 class="proc-title">بث التلاوات عالميًا</h3><p class="proc-desc">انتشار صوت الإمامة عبر الإذاعة والتلفاز، ووصولها إلى ملايين المسلمين.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 8</div><h3 class="proc-title">العصر الرقمي</h3><p class="proc-desc">منصات تعليمية وبث مباشر حفظت صوت الإمامة وربطت المجتمعات عالميًا.</p></div><div class="proc-illus">محطة</div></div>
               </div>
             </div>
           </div>
@@ -2906,31 +2906,31 @@
     <!-- SERVICES -->
     <section id="sect-services" class="app-section" dir="rtl">
       <div class="section-scroll">
-        <h1 class="sec-title">????????</h1>
-        <p class="sec-sub">????? ?????? ???? ?????? ?? ?????? ???????? ?? ??????? ??? ????? ??????? ????????.</p>
+        <h1 class="sec-title">المؤذنون</h1>
+        <p class="sec-sub">نماذج متنوعة لدور المؤذن في الحياة اليومية، من الحرمين إلى مساجد الأحياء والتعليم.</p>
 
         <div class="services-wrap">
           <div class="services-grid" id="servicesGrid">
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ????? ?????</h3><p class="svc-desc">???? ???? ?????? ?? ???? ???? ????? ????? ?????? ??? ??????.</p></div>
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ????? ??????</h3><p class="svc-desc">???? ?? ???? ???? ???? ? ????? ??? ??????? ??????.</p></div>
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ?????? ??????</h3><p class="svc-desc">????? ??? ???? ?????? ?? ???? ???????? ????? ???????.</p></div>
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ??????</h3><p class="svc-desc">???? ?????? ????? ?????? ????? ?????? ?????.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن الحرم المكي</h3><p class="svc-desc">صوتٌ يرفع النداء في أقدس بقاع الأرض ويجمع القلوب على الصلاة.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن الحرم النبوي</h3><p class="svc-desc">يؤذن في مسجد رسول الله ﷺ ويحمل أثر المدينة وروحها.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن المسجد الأقصى</h3><p class="svc-desc">يحافظ على نداء الصلاة في أولى القبلتين وثالث الحرمين.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن الجمعة</h3><p class="svc-desc">يهيئ القلوب لسماع الخطبة ويعلن اجتماع الناس.</p></div>
 
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ?????</h3><p class="svc-desc">???? ??????? ?????? ??? ???????? ??????????.</p></div>
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ?????</h3><p class="svc-desc">???? ????????? ??????? ????? ???? ????????.</p></div>
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ????????</h3><p class="svc-desc">????? ????? ????? ????? ?????? ??????.</p></div>
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ????</h3><p class="svc-desc">???? ?? ?????? ???? ?????????? ????? ????????.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن الفجر</h3><p class="svc-desc">نداء السكينة وبداية يوم بالإيمان والطمأنينة.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن العيد</h3><p class="svc-desc">يرفع التكبيرات الجامعة ويعلن فرحة المسلمين.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن التراويح</h3><p class="svc-desc">يصاحب ليالي رمضان بنداء يملؤها خشوعًا.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن الحي</h3><p class="svc-desc">قريب من الناس، يعرف احتياجاتهم ويضبط المواقيت.</p></div>
 
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ???????</h3><p class="svc-desc">???? ???? ?????? ?? ????? ??????? ????????.</p></div>
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ??????????</h3><p class="svc-desc">????? ?????? ????????? ?????? ????.</p></div>
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ?????????</h3><p class="svc-desc">???? ?????? ?? ???????? ?????? ????????.</p></div>
-            <div class="svc-card"><div class="svc-ico">�</div><h3 class="svc-title">???? ???? ???????</h3><p class="svc-desc">???? ?????? ??? ??????? ???????? ??????? ?????????.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن المدارس</h3><p class="svc-desc">يعزز حضور الصلاة في بيئات التعليم والتربية.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن المستشفيات</h3><p class="svc-desc">يطمئن المرضى والعاملين بتذكير رحيم.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن المناسبات</h3><p class="svc-desc">ينسق النداء في التجمعات الكبرى والمواسم.</p></div>
+            <div class="svc-card"><div class="svc-ico">•</div><h3 class="svc-title">مؤذن البث المباشر</h3><p class="svc-desc">يوصل النداء عبر الإذاعة والشاشات لملايين المستمعين.</p></div>
           </div>
 
           <div class="process" id="processBlock">
             <div class="process-head">
-              <h2>????? ?????? ??? ?????</h2>
-              <p>????? ?????? ???? ??? ????? ?????? ?? ??????? ??? ?????? ???.</p>
+              <h2>تاريخ الأذان عبر الزمن</h2>
+              <p>محطات مختصرة تروي كيف انتقل الأذان من المدينة إلى العالم كله.</p>
             </div>
 
             <div class="process-grid" id="processGrid">
@@ -2940,14 +2940,14 @@
               </div>
 
               <div class="proc-items" id="procItems">
-                <div class="proc-step"><div><div class="proc-kicker">??????? 1</div><h3 class="proc-title">????? ?????? ?? ???????</h3><p class="proc-desc">????? ?????? ????? ?????? ?????? ??? ??????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 2</div><h3 class="proc-title">?????? ???? ??? ???? ???</h3><p class="proc-desc">??? ???? ????? ????? ???? ???? ????? ???? ??????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 3</div><h3 class="proc-title">?????? ?????? ?? ????????</h3><p class="proc-desc">????? ?????? ??? ??????? ?? ????? ?????? ?????????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 4</div><h3 class="proc-title">???? ?????? ???? ??????</h3><p class="proc-desc">????? ??????? ???? ?????? ?????? ???? ??????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 5</div><h3 class="proc-title">???? ???????? ?????????</h3><p class="proc-desc">????? ?????? ??? ????? ??????? ?? ?????? ??? ??????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 6</div><h3 class="proc-title">????? ?????? ??????</h3><p class="proc-desc">????? ???????? ???????? ??????? ??? ????????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 7</div><h3 class="proc-title">???? ??????? ???????????</h3><p class="proc-desc">???? ?????? ?? ??????? ??? ?????? ????????? ???????.</p></div><div class="proc-illus">????</div></div>
-                <div class="proc-step"><div><div class="proc-kicker">??????? 8</div><h3 class="proc-title">????? ?????? ??????????</h3><p class="proc-desc">??????? ??????? ????? ??? ?????? ????? ?????????.</p></div><div class="proc-illus">????</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 1</div><h3 class="proc-title">تشريع الأذان في المدينة</h3><p class="proc-desc">أُقرّ الأذان نداءً رسميًا للصلاة بعد الهجرة.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 2</div><h3 class="proc-title">اختيار بلال رضي الله عنه</h3><p class="proc-desc">أول مؤذن بصوته الندي الذي علّم الأمة معنى النداء.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 3</div><h3 class="proc-title">انتشار الأذان مع الفتوحات</h3><p class="proc-desc">انتقل النداء إلى الأمصار مع اتساع الدولة الإسلامية.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 4</div><h3 class="proc-title">بناء المآذن ورفع النداء</h3><p class="proc-desc">أصبحت للمساجد مآذن تميزها ويرتفع منها الأذان.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 5</div><h3 class="proc-title">تنوع المقامات والأساليب</h3><p class="proc-desc">تجمّل الأداء دون تغيير الصيغة، مع الحفاظ على الوقار.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 6</div><h3 class="proc-title">تنظيم الأذان رسميًا</h3><p class="proc-desc">توحيد المواقيت والإشراف المؤسسي على المؤذنين.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 7</div><h3 class="proc-title">البث الإذاعي والتلفزيوني</h3><p class="proc-desc">وصول الأذان من الحرمين إلى ملايين المستمعين عالميًا.</p></div><div class="proc-illus">محطة</div></div>
+                <div class="proc-step"><div><div class="proc-kicker">المرحلة 8</div><h3 class="proc-title">العصر الرقمي والتطبيقات</h3><p class="proc-desc">تنبيهات ومواقيت دقيقة تبث الأذان وتخدم المجتمعات.</p></div><div class="proc-illus">محطة</div></div>
               </div>
             </div>
           </div>
@@ -2958,11 +2958,11 @@
     <section id="sect-gallery" class="app-section active-section" dir="rtl">
       <header class="shop-head">
         <nav class="nav-group" id="filters">
-          <button class="chip active" data-filter="all" id="btnAll">????</button>
-          <button class="chip" data-filter="halaqat-quran">??????? ????????</button>
-          <button class="chip" data-filter="mushaf">???????</button>
-          <button class="chip" data-filter="halaqat-ilm">??????? ???????</button>
-          <button class="chip" data-filter="durus">??????</button>
+          <button class="chip active" data-filter="all" id="btnAll">الكل</button>
+          <button class="chip" data-filter="halaqat-quran">الحلقات القرآنية</button>
+          <button class="chip" data-filter="mushaf">المصاحف</button>
+          <button class="chip" data-filter="halaqat-ilm">الحلقات العلمية</button>
+          <button class="chip" data-filter="durus">الدروس</button>
         </nav>
       </header>
 
@@ -2970,78 +2970,78 @@
         <div class="grid" id="grid"></div>
 
         <div class="solo-wrap" id="soloWrap">
-          <div class="back-nav"><button class="btn-back" id="btnBack">&larr; ?????? ??? ??????</button></div>
+          <div class="back-nav"><button class="btn-back" id="btnBack">&larr; العودة إلى المعرض</button></div>
 
           <div class="solo-frame">
             <div class="solo-frame-head">
-              <div class="solo-name" id="soloName">????</div>
+              <div class="solo-name" id="soloName">عنصر</div>
             </div>
             <div class="solo-media-container" id="soloMedia"></div>
             <div class="solo-tabs-bar"><div id="soloTabs"></div></div>
 
             <aside class="solo-info-card" id="soloInfoCard" aria-hidden="true">
-              <button class="solo-info-close" type="button" id="soloInfoClose" aria-label="????? ?????????">&times;</button>
-              <div class="solo-info-title" id="soloInfoName">????</div>
-              <div class="solo-info-text">????? ????? ???? ??? ?????? ??????.</div>
+              <button class="solo-info-close" type="button" id="soloInfoClose" aria-label="إغلاق المعلومات">&times;</button>
+              <div class="solo-info-title" id="soloInfoName">عنصر</div>
+              <div class="solo-info-text">محتوى معرفي يعكس روح المكان والدرس.</div>
               <div class="solo-info-meta">
-                <div class="solo-meta-item"><span>???????</span><strong id="soloInfoMat">--</strong></div>
-                <div class="solo-meta-item"><span>??????</span><strong id="soloInfoDim">--</strong></div>
-                <div class="solo-meta-item"><span>??????</span><strong id="soloInfoLoc">--</strong></div>
+                <div class="solo-meta-item"><span>المحتوى</span><strong id="soloInfoMat">--</strong></div>
+                <div class="solo-meta-item"><span>النطاق</span><strong id="soloInfoDim">--</strong></div>
+                <div class="solo-meta-item"><span>الموقع</span><strong id="soloInfoLoc">--</strong></div>
               </div>
             </aside>
 
             <div class="solo-config" id="soloConfig" aria-hidden="true">
-              <button class="solo-config-close" type="button" id="soloConfigClose" aria-label="????? ??????">&times;</button>
-              <div class="solo-config-title">??????</div>
+              <button class="solo-config-close" type="button" id="soloConfigClose" aria-label="إغلاق المخصص">&times;</button>
+              <div class="solo-config-title">المخصص</div>
               <div class="solo-config-group">
-                <div class="solo-config-label">?????</div>
-                <div class="solo-config-options" id="soloConfigColors" role="group" aria-label="???? ?????">
-                  <button class="solo-config-option" type="button" data-color="????">????</button>
-                  <button class="solo-config-option" type="button" data-color="????">????</button>
-                  <button class="solo-config-option" type="button" data-color="????">????</button>
+                <div class="solo-config-label">اللون</div>
+                <div class="solo-config-options" id="soloConfigColors" role="group" aria-label="اختر اللون">
+                  <button class="solo-config-option" type="button" data-color="أحمر">أحمر</button>
+                  <button class="solo-config-option" type="button" data-color="أزرق">أزرق</button>
+                  <button class="solo-config-option" type="button" data-color="رملي">رملي</button>
                 </div>
               </div>
               <div class="solo-config-group">
-                <div class="solo-config-label">?????</div>
-                <div class="solo-config-options" id="soloConfigSizes" role="group" aria-label="???? ?????">
-                  <button class="solo-config-option" type="button" data-size="????">????</button>
-                  <button class="solo-config-option" type="button" data-size="?????">?????</button>
-                  <button class="solo-config-option" type="button" data-size="????">????</button>
+                <div class="solo-config-label">الحجم</div>
+                <div class="solo-config-options" id="soloConfigSizes" role="group" aria-label="اختر الحجم">
+                  <button class="solo-config-option" type="button" data-size="صغير">صغير</button>
+                  <button class="solo-config-option" type="button" data-size="متوسط">متوسط</button>
+                  <button class="solo-config-option" type="button" data-size="كبير">كبير</button>
                 </div>
               </div>
-              <div class="solo-config-summary" id="soloConfigSummary">????????: -- / --</div>
+              <div class="solo-config-summary" id="soloConfigSummary">الاختيار: -- / --</div>
             </div>
 
             <div class="solo-frame-foot">
               <div class="solo-foot-left">
-                <div class="solo-foot-title" id="soloFootTitle">????</div>
-                <div class="solo-foot-desc" id="soloFootDesc">????? ?????? ????? ???? ??????? ????? ???????.</div>
+                <div class="solo-foot-title" id="soloFootTitle">عنصر</div>
+                <div class="solo-foot-desc" id="soloFootDesc">محتوى تعليمي وروحي يخدم المجتمع ويعزز المعرفة.</div>
               </div>
 
               <div class="solo-foot-right">
-                <div class="solo-bottom-tabs" aria-label="?????? ??????">
+                <div class="solo-bottom-tabs" aria-label="خيارات العنصر">
                   <div class="solo-bottom-tabs-inner">
-                    <button class="solo-bottom-tab" type="button" id="soloInfoBtn" aria-controls="soloInfoCard" aria-expanded="false">???????</button>
+                    <button class="solo-bottom-tab" type="button" id="soloInfoBtn" aria-controls="soloInfoCard" aria-expanded="false">معلومات</button>
 
                     <div class="solo-tab-wrap">
-                      <button class="solo-bottom-tab" type="button" id="soloColorBtn" aria-expanded="false">?????</button>
+                      <button class="solo-bottom-tab" type="button" id="soloColorBtn" aria-expanded="false">اللون</button>
                       <div class="solo-popover" id="soloColorPopover" hidden>
-                        <button class="solo-suboption" type="button" data-color="????">????</button>
-                        <button class="solo-suboption" type="button" data-color="????">????</button>
-                        <button class="solo-suboption" type="button" data-color="????">????</button>
+                        <button class="solo-suboption" type="button" data-color="أحمر">أحمر</button>
+                        <button class="solo-suboption" type="button" data-color="أزرق">أزرق</button>
+                        <button class="solo-suboption" type="button" data-color="رملي">رملي</button>
                       </div>
                     </div>
 
                     <div class="solo-tab-wrap">
-                      <button class="solo-bottom-tab" type="button" id="soloSizeBtn" aria-expanded="false">?????</button>
+                      <button class="solo-bottom-tab" type="button" id="soloSizeBtn" aria-expanded="false">الحجم</button>
                       <div class="solo-popover" id="soloSizePopover" hidden>
-                        <button class="solo-suboption" type="button" data-size="????">????</button>
-                        <button class="solo-suboption" type="button" data-size="?????">?????</button>
-                        <button class="solo-suboption" type="button" data-size="????">????</button>
+                        <button class="solo-suboption" type="button" data-size="صغير">صغير</button>
+                        <button class="solo-suboption" type="button" data-size="متوسط">متوسط</button>
+                        <button class="solo-suboption" type="button" data-size="كبير">كبير</button>
                       </div>
                     </div>
 
-                    <button class="solo-bottom-tab" type="button" id="soloCustomsBtn" aria-controls="soloConfig" aria-expanded="false">?????</button>
+                    <button class="solo-bottom-tab" type="button" id="soloCustomsBtn" aria-controls="soloConfig" aria-expanded="false">تخصيص</button>
                   </div>
                 </div>
               </div>
@@ -3050,24 +3050,24 @@
 
           <div class="solo-info-block">
             <div class="solo-desc">
-              <strong id="soloTitle">????</strong><br>
-              ????? ???? ??????? ?????? ????? ?????? ????????.
+              <strong id="soloTitle">عنصر</strong><br>
+              محتوى يعكس المعرفة والروح ويعزز الحضور التعليمي.
               <div class="data-row">
-                <div class="data-item"><span>???????</span><span id="spMat">--</span></div>
-                <div class="data-item"><span>??????</span><span id="spDim">--</span></div>
-                <div class="data-item"><span>??????</span><span id="soloStore">--</span></div>
+                <div class="data-item"><span>المحتوى</span><span id="spMat">--</span></div>
+                <div class="data-item"><span>النطاق</span><span id="spDim">--</span></div>
+                <div class="data-item"><span>الموقع</span><span id="soloStore">--</span></div>
               </div>
             </div>
 
             <div class="artist-profile" id="artistBtn">
-              <div class="avatar"><img id="artistImg" src="" alt="??????"></div>
+              <div class="avatar"><img id="artistImg" src="" alt="المشرف"></div>
               <div class="artist-info"><h4 id="artistName">--</h4><p id="artistRole">--</p></div>
-              <div class="artist-cta">??? ???? ?</div>
+              <div class="artist-cta">عرض نبذة →</div>
             </div>
 
             <div class="actions">
-              <button class="btn btn-primary" id="btnContactProduct">????? ????</button>
-              <button class="btn btn-ghost" id="btnClose">?????</button>
+              <button class="btn btn-primary" id="btnContactProduct">تواصل معنا</button>
+              <button class="btn btn-ghost" id="btnClose">إغلاق</button>
             </div>
           </div>
         </div>
@@ -3077,57 +3077,57 @@
     <!-- CONTACT -->
     <section id="sect-contact" class="app-section" dir="rtl">
       <div class="section-scroll">
-        <h1 class="sec-title">????? ????</h1>
-        <p class="sec-sub">?? ???? ???????? ????? ????.</p>
+        <h1 class="sec-title">تواصل معنا</h1>
+        <p class="sec-sub">هل لديك استفسار؟ تواصل معنا.</p>
 
         <form id="ajaxForm" action="https://formsubmit.co/anaskaroti@gmail.com" method="POST">
           <input type="hidden" name="_captcha" value="false">
           <input type="hidden" name="_template" value="table">
 
-          <div class="form-group"><input type="text" class="form-input" name="name" placeholder="????? ??????" required></div>
-          <div class="form-group"><input type="email" class="form-input" name="email" placeholder="?????? ??????????" required></div>
-          <div class="form-group"><input type="text" class="form-input" name="subject" placeholder="???????" id="form???????"></div>
-          <div class="form-group"><textarea class="form-input" name="message" placeholder="???????..." rows="4"></textarea></div>
+          <div class="form-group"><input type="text" class="form-input" name="name" placeholder="الاسم الكامل" required></div>
+          <div class="form-group"><input type="email" class="form-input" name="email" placeholder="البريد الإلكتروني" required></div>
+          <div class="form-group"><input type="text" class="form-input" name="subject" placeholder="الموضوع" id="formالموضوع"></div>
+          <div class="form-group"><textarea class="form-input" name="message" placeholder="الرسالة..." rows="4"></textarea></div>
 
-          <button type="submit" class="btn-submit" id="formSubmitBtn">????? ?????</button>
+          <button type="submit" class="btn-submit" id="formSubmitBtn">إرسال الطلب</button>
         </form>
 
-        <div id="formSuccess">????? ??! ?? ?????? ????.</div>
+        <div id="formSuccess">شكرًا لك! تم استلام طلبك.</div>
 
         <footer class="site-footer">
           <div class="ft-top">
             <div class="ft-brand">FNN ART</div>
             <div class="ft-note">
-              A modern art platform specializing in the presentation of original artworks by selected artists�connecting creative expression with audiences and institutions.
+              A modern art platform specializing in the presentation of original artworks by selected artists—connecting creative expression with audiences and institutions.
             </div>
           </div>
 
           <div class="ft-grid">
             <div>
-              <div class="ft-title">????? ????</div>
+              <div class="ft-title">تواصل معنا</div>
               <div class="ft-text">
                 anaskaroti@gmail.com<br>
               </div>
             </div>
 
             <div class="ft-links">
-              <div class="ft-title">??????</div>
-              <a href="#" onclick="switchSection('sect-about'); return false;">?????</a>
-              <a href="#" onclick="switchSection('sect-services'); return false;">????????</a>
-              <a href="gallery.html">??????</a>
-              <a href="#" onclick="switchSection('sect-contact'); return false;">????? ????</a>
+              <div class="ft-title">التنقل</div>
+              <a href="#" onclick="switchSection('sect-about'); return false;">امامة</a>
+              <a href="#" onclick="switchSection('sect-services'); return false;">المؤذنون</a>
+              <a href="gallery.html">المعرض</a>
+              <a href="#" onclick="switchSection('sect-contact'); return false;">تواصل معنا</a>
             </div>
 
             <div class="ft-social">
-              <div class="ft-title">??????</div>
-              <a href="#" onclick="return false;"><span class="ft-ic">?</span>@fnn</a>
+              <div class="ft-title">تابعنا</div>
+              <a href="#" onclick="return false;"><span class="ft-ic">◎</span>@fnn</a>
               <a href="#" onclick="return false;"><span class="ft-ic">f</span>@fnn</a>
               <a href="#" onclick="return false;"><span class="ft-ic">in</span>@fnn</a>
-              <a href="#" onclick="return false;"><span class="ft-ic">?</span>@fnn</a>
+              <a href="#" onclick="return false;"><span class="ft-ic">▶</span>@fnn</a>
             </div>
           </div>
 
-          <div class="ft-copy">� 2025 FNN ART. ???? ?????? ??????.</div>
+          <div class="ft-copy">© 2025 FNN ART. جميع الحقوق محفوظة.</div>
         </footer>
       </div>
     </section>
@@ -3136,12 +3136,12 @@
           </div>
           <div class="right-slide" data-slide="1">
             <div class="slide-image-wrap">
-              <img src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e348c37975c0a06a_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_10%20PM.png" alt="???? ??????? ????????">
+              <img src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e348c37975c0a06a_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_10%20PM.png" alt="صورة للحلقات القرآنية">
             </div>
           </div>
           <div class="right-slide" data-slide="2">
             <div class="slide-image-wrap">
-              <img src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c615c5f7359cf0e0bcd_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_14%20PM.png" alt="???? ???????">
+              <img src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c615c5f7359cf0e0bcd_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_14%20PM.png" alt="صورة للمصاحف">
             </div>
           </div>
         </div>
@@ -3154,7 +3154,7 @@
 
 <div class="modal-overlay" id="modalArtistOverlay">
   <div class="modal-box" style="position:relative">
-    <button class="close-modal" id="closeArtistModal">�</button>
+    <button class="close-modal" id="closeArtistModal">×</button>
     <div style="text-align:center; margin-bottom:18px;">
       <div style="width:82px;height:82px;border-radius:50%;overflow:hidden;margin:0 auto 14px;">
         <img id="modalArtistImg" src="" alt="" style="width:100%;height:100%;object-fit:cover;">
@@ -3315,93 +3315,93 @@
 
   const DISPLAY_CONTENT = {
     'sect-home': {
-      title: '????????',
+      title: 'الرئيسية',
       table: {
-        right: '??? ????????',
-        left: '???? ??????',
-        tech: '????? ???????',
-        topic: '?????'
+        right: 'عرض بانورامي',
+        left: 'مشهد تعريفي',
+        tech: 'واجهة تفاعلية',
+        topic: 'مقدمة'
       }
     },
     'sect-about': {
-      title: '?????',
+      title: 'امامة',
       table: {
-        right: '???? ???????',
-        left: '????? ???????',
-        tech: '???? ???',
-        topic: '????'
+        right: 'سيرة الإمامة',
+        left: 'محطات تاريخية',
+        tech: 'ملخص نصي',
+        topic: 'نبذة'
       }
     },
     'sect-services': {
-      title: '????????',
+      title: 'المؤذنون',
       table: {
-        right: '????? ????????',
-        left: '????? ??????',
-        tech: '????? ???????',
-        topic: '?????'
+        right: 'أدوار المؤذنين',
+        left: 'تنسيق الأذان',
+        tech: 'قائمة تفاعلية',
+        topic: 'خدمات'
       }
     },
     'sect-gallery': {
-      title: '??????',
+      title: 'المعرض',
       table: {
-        right: '???? 360',
-        left: '????? ???? ?? ??????',
-        tech: '????? ?????? ???????',
-        topic: '???'
+        right: 'درون 360',
+        left: 'الحرم يعرض في تجريدي',
+        tech: 'خريطة متحركة تفاعلية',
+        topic: 'عام'
       }
     },
     'sect-contact': {
-      title: '????? ????',
+      title: 'تواصل معنا',
       table: {
-        right: '??? ???????',
-        left: '??????? ???????',
-        tech: '????? ?????',
-        topic: '?????'
+        right: 'طرق التواصل',
+        left: 'معلومات الرسائل',
+        tech: 'نموذج مباشر',
+        topic: 'تواصل'
       }
     },
     'sect-extra-1': {
-      title: '??? 6',
+      title: 'قسم 6',
       table: {
-        right: '??? ???',
-        left: '????? ????',
-        tech: '???? ??????',
-        topic: '???'
+        right: 'عرض خاص',
+        left: 'محتوى موسع',
+        tech: 'شبكة بيانات',
+        topic: 'ملف'
       }
     },
     'sect-extra-2': {
-      title: '??? 7',
+      title: 'قسم 7',
       table: {
-        right: '???? ?????',
-        left: '???? ????',
-        tech: '???? ???????',
-        topic: '?????'
+        right: 'مشهد ثانوي',
+        left: 'مخطط بصري',
+        tech: 'لوحة معلومات',
+        topic: 'تجربة'
       }
     },
     'sect-extra-3': {
-      title: '??? 8',
+      title: 'قسم 8',
       table: {
-        right: '????? ???',
-        left: '????? ????',
-        tech: '????? ????',
-        topic: '??????'
+        right: 'زاوية عرض',
+        left: 'تقرير موجز',
+        tech: 'تحليل بصري',
+        topic: 'بيانات'
       }
     },
     'sect-extra-4': {
-      title: '??? 9',
+      title: 'قسم 9',
       table: {
-        right: '????? ?????',
-        left: '???????',
-        tech: '???? ??????',
-        topic: '????'
+        right: 'واجهة قصيرة',
+        left: 'ملاحظات',
+        tech: 'جدول تفاعلي',
+        topic: 'ملخص'
       }
     },
     'sect-extra-5': {
-      title: '??? 10',
+      title: 'قسم 10',
       table: {
-        right: '????? ????',
-        left: '???? ?????',
-        tech: '??? ????',
-        topic: '?????'
+        right: 'نموذج جديد',
+        left: 'نطاق إضافي',
+        tech: 'عرض مركب',
+        topic: 'أرشيف'
       }
     }
   };
@@ -3510,74 +3510,74 @@
 
   const bookData = [
     {
-      title: "?????? ??????",
-      author: "???? ???????",
-      category: "?????? ??????",
-      summary: "?? ?????? ?????? ?????? ?? ????? ???? ??????? ???????????.",
+      title: "القرآن الكريم",
+      author: "مصحف المدينة",
+      category: "القرآن وعلومه",
+      summary: "نص القرآن الكريم كاملاً مع تنسيق واضح للقراءة الإلكترونية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
       pdf: "pdfs/widescreen-16x9.pdf"
     },
     {
-      title: "???? ???????",
-      author: "?????? ???????",
-      category: "???? ????",
-      summary: "??????? ?? ?????? ????? ????? ?????? ?????? ??????.",
+      title: "صحيح البخاري",
+      author: "الإمام البخاري",
+      category: "حديث نبوي",
+      summary: "مختارات من أحاديث صحيحة مرتبة بعناية لسهولة التصفح.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
       pdf: "pdfs/widescreen-16x9.pdf"
     },
     {
-      title: "???? ????",
-      author: "?????? ????",
-      category: "???? ????",
-      summary: "??? ????? ?????? ?????? ?? ????? ??? ??????? ???????.",
+      title: "صحيح مسلم",
+      author: "الإمام مسلم",
+      category: "حديث نبوي",
+      summary: "عرض مختصر لأبواب الحديث مع ترتيب سلس للقراءة الرقمية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
       pdf: "pdfs/widescreen-16x9.pdf"
     },
     {
-      title: "???? ????????",
-      author: "?????? ??????",
-      category: "????? ??????",
-      summary: "??????? ?????? ???????? ?????? ???? ??????.",
+      title: "رياض الصالحين",
+      author: "الإمام النووي",
+      category: "تزكية وأخلاق",
+      summary: "مختارات تربوية وأخلاقية بإسلوب مبسط للقارئ.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
       pdf: "pdfs/widescreen-16x9.pdf"
     },
     {
-      title: "???????? ???????",
-      author: "?????? ??????",
-      category: "???? ????",
-      summary: "?????? ?????? ?????? ????? ????? ???????.",
+      title: "الأربعون النووية",
+      author: "الإمام النووي",
+      category: "حديث نبوي",
+      summary: "أربعون حديثًا جامعًا لأصول الدين والآداب.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
       pdf: "pdfs/widescreen-16x9.pdf"
     },
     {
-      title: "????? ??? ????",
-      author: "??? ????",
-      category: "?????",
-      summary: "??????? ??????? ?????? ????? ??? ??????.",
+      title: "تفسير ابن كثير",
+      author: "ابن كثير",
+      category: "تفسير",
+      summary: "مختارات تفسيرية مختصرة تسهّل فهم الآيات.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
       pdf: "pdfs/widescreen-16x9.pdf"
     },
     {
-      title: "????? ??????",
-      author: "?????? ??????",
-      category: "???",
-      summary: "????? ????? ?????? ???? ???? ?????????.",
+      title: "الفقه الميسر",
+      author: "مجموعة مؤلفين",
+      category: "فقه",
+      summary: "مبادئ فقهية أساسية بلغة سهلة للمبتدئين.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
       pdf: "pdfs/widescreen-16x9.pdf"
     },
     {
-      title: "??? ??????",
-      author: "??? ?????",
-      category: "???? ????",
-      summary: "????? ?????? ?? ?????? ?? ????? ??????.",
+      title: "زاد المعاد",
+      author: "ابن القيم",
+      category: "سيرة وفقه",
+      summary: "لمحات مختصرة من السيرة مع فوائد تربوية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
       pdf: "pdfs/widescreen-16x9.pdf"
     },
     {
-      title: "?????? ???????",
-      author: "??? ?????? ???????????",
-      category: "????",
-      summary: "??? ???? ?????? ??????? ?????? ????.",
+      title: "الرحيق المختوم",
+      author: "صفي الرحمن المباركفوري",
+      category: "سيرة",
+      summary: "عرض موجز للسيرة النبوية بأسلوب قصصي.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
       pdf: "pdfs/widescreen-16x9.pdf"
     }
@@ -3651,7 +3651,7 @@
       if(pdfNext) pdfNext.disabled = pdfDoc ? pdfPage >= pdfDoc.numPages : true;
     }).catch(() => {
       pdfRendering = false;
-      if(pdfLoading) pdfLoading.textContent = "???? ????? ?????.";
+      if(pdfLoading) pdfLoading.textContent = "تعذر تحميل الملف.";
     });
   }
 
@@ -3667,7 +3667,7 @@
     if(!window.pdfjsLib || !url) return;
     if(pdfLoading){
       pdfLoading.style.display = "flex";
-      pdfLoading.textContent = "??? ???????...";
+      pdfLoading.textContent = "جار التحميل...";
     }
     const sources = Array.isArray(url) ? url.slice() : [url];
     if(fallbackPdfUrl && !sources.includes(fallbackPdfUrl)){
@@ -3684,7 +3684,7 @@
     };
     const tryLoad = (index) => {
       if(index >= sources.length){
-        if(pdfLoading) pdfLoading.textContent = "???? ????? ?????.";
+        if(pdfLoading) pdfLoading.textContent = "تعذر تحميل الملف.";
         return;
       }
       const source = sources[index];
@@ -3733,8 +3733,8 @@
       bookCover.src = book.image;
       bookCover.alt = book.title;
     }
-    if(bookAuthor) bookAuthor.textContent = book.author || "�";
-    if(bookCategory) bookCategory.textContent = book.category || "�";
+    if(bookAuthor) bookAuthor.textContent = book.author || "—";
+    if(bookCategory) bookCategory.textContent = book.category || "—";
     if(booksGallery){
       booksGallery.querySelectorAll('.book-card').forEach((card, idx) => {
         card.classList.toggle('active', idx === index);
@@ -4079,7 +4079,7 @@
           shadow-intensity="1"
           environment-image="neutral"
           style="background:transparent;"
-          alt="${product.name || '????? ???????'}">
+          alt="${product.name || 'ثلاثي الأبعاد'}">
         </model-viewer>
       `;
     }
@@ -4116,7 +4116,7 @@
     viewer.addEventListener('pointercancel', endInteraction, { passive:true });
     viewer.addEventListener('lostpointercapture', endInteraction, { passive:true });
 
-    // ? Keep BOX fixed, rotate MODEL inside based on map bearing (and fix �contrary direction� by inverting)
+    // ✅ Keep BOX fixed, rotate MODEL inside based on map bearing (and fix “contrary direction” by inverting)
     const sync = () => {
       if(!activePopupProduct) return;
       if(!userIsInteracting){
@@ -4162,7 +4162,7 @@
       duration: 9000
     });
 
-    // ? show popup AFTER zoom finishes, then start map rotation + model sync
+    // ✅ show popup AFTER zoom finishes, then start map rotation + model sync
     map.once('moveend', () => {
       showMap3D(productFor3D);
 
@@ -4186,10 +4186,10 @@
 
   function buildMediaTabs(active){
     const tabs = [
-      { key:'images', label:'?????' },
-      { key:'v360', label:'???�' },
-      { key:'video', label:'?????' },
-      { key:'d3', label:'????? ???????' }
+      { key:'images', label:'الصور' },
+      { key:'v360', label:'٣٦٠°' },
+      { key:'video', label:'فيديو' },
+      { key:'d3', label:'ثلاثي الأبعاد' }
     ];
     return `
       <div class="media-tabs" id="mediaTabs">
@@ -4203,7 +4203,7 @@
   function renderImages(images){
     let idx = 0;
     const html = `
-      <img id="imgSlide" src="${images[0]}" alt="????" />
+      <img id="imgSlide" src="${images[0]}" alt="صورة" />
       <button class="img-arrow left" id="imgPrev">&lsaquo;</button>
       <button class="img-arrow right" id="imgNext">&rsaquo;</button>
     `;
@@ -4250,7 +4250,7 @@
           btn.textContent = "II";
         }else{
           v.pause();
-          btn.textContent = "?";
+          btn.textContent = "▶";
         }
       });
     }};
@@ -4273,7 +4273,7 @@
         style="background:transparent; width:100%; height:100%;"
         camera-orbit="45deg 75deg 4.5m"
         environment-image="neutral"
-        alt="${productName || '????? ???????'}">
+        alt="${productName || 'ثلاثي الأبعاد'}">
       </model-viewer>
     `;
     return { html, mount: (container) => {
@@ -4323,59 +4323,59 @@
     });
   }
 
-  // ????? ??????
+  // عناصر المعرض
   const PRODUCTS = [
     {
       id:"item-1",
-      name:"???? ??????",
+      name:"حلقة قرآنية",
       category:"halaqat-quran",
       img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e348c37975c0a06a_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_10%20PM.png",
       images:[
         "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e348c37975c0a06a_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_10%20PM.png"
       ],
       model:"https://raw.githubusercontent.com/lwiise/3d-models/main/base%20(5).glb",
-      specs:{ mat:"????? ????", dim:"???? ?????" },
-      store:{ name:"???? ???? - ??????", coords:[46.6753,24.7136] },
-      artist:{ name:"???? ??????", role:"???? ????", img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80", bio:"???? ??? ???????? ???????? ????? ???? ??????? ???????." }
+      specs:{ mat:"تلاوة وحفظ", dim:"حلقة يومية" },
+      store:{ name:"مسجد الحي - الرياض", coords:[46.6753,24.7136] },
+      artist:{ name:"مشرف الحلقة", role:"معلم قرآن", img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80", bio:"يشرف على المتابعة والتصحيح ويغرس آداب التلاوة والتعلم." }
     },
     {
       id:"item-2",
-      name:"???? ??????",
+      name:"مصحف تاريخي",
       category:"mushaf",
       img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c615c5f7359cf0e0bcd_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_14%20PM.png",
       images:[
         "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c615c5f7359cf0e0bcd_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_14%20PM.png"
       ],
       model:"https://raw.githubusercontent.com/lwiise/3d-models/main/base%20(7).glb",
-      specs:{ mat:"???? ?????", dim:"???? ?????" },
-      store:{ name:"????? ?????? - ???????", coords:[31.2357,30.0444] },
-      artist:{ name:"???? ?????????", role:"???? ????", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80", bio:"????? ??? ????????? ????? ??????? ??????? ??????." }
+      specs:{ mat:"مصحف مخطوط", dim:"تراث محفوظ" },
+      store:{ name:"مكتبة تراثية - القاهرة", coords:[31.2357,30.0444] },
+      artist:{ name:"أمين المخطوطات", role:"باحث تراث", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80", bio:"يحافظ على المخطوطات ويوثق تاريخها ومسارها العلمي." }
     },
     {
       id:"item-3",
-      name:"???? ?????",
+      name:"حلقة علمية",
       category:"halaqat-ilm",
       img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e150efcd3811636c_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_18%20PM.png",
       images:[
         "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e150efcd3811636c_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_18%20PM.png"
       ],
       model:"https://raw.githubusercontent.com/lwiise/3d-models/main/base%20(6).glb",
-      specs:{ mat:"??? ??????", dim:"?????? ??????" },
-      store:{ name:"???? ???? - ???????", coords:[39.5692,24.5247] },
-      artist:{ name:"???? ??????", role:"???? ????", img:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80", bio:"???? ?????? ????? ?????? ????? ????? ???? ???????." }
+      specs:{ mat:"فقه وتفسير", dim:"برنامج أسبوعي" },
+      store:{ name:"مركز علمي - المدينة", coords:[39.5692,24.5247] },
+      artist:{ name:"مدير الحلقة", role:"مدرس شرعي", img:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80", bio:"ينسق الدروس ويربط الطلاب بمتون العلم وفهم المقاصد." }
     },
     {
       id:"item-4",
-      name:"??? ??????",
+      name:"درس أسبوعي",
       category:"durus",
       img:"https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61ea866d9ac6fb8539_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_37%20PM.png",
       images:[
         "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61ea866d9ac6fb8539_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_37%20PM.png"
       ],
       model:"https://raw.githubusercontent.com/lwiise/3d-models/main/compressed_1764071266806_base%20(15).glb",
-      specs:{ mat:"???? ???", dim:"??? ???" },
-      store:{ name:"???? ????? - ???", coords:[39.1979,21.4858] },
-      artist:{ name:"????? ?????", role:"????? ?????", img:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80", bio:"???? ?????? ?????? ???? ????? ????? ?????." }
+      specs:{ mat:"مجلس وعظ", dim:"درس عام" },
+      store:{ name:"جامع رئيسي - جدة", coords:[39.1979,21.4858] },
+      artist:{ name:"محاضر الدرس", role:"داعية وخطيب", img:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80", bio:"يقدم دروسًا منهجية تبني الوعي وترسخ القيم." }
     }
   ];
 
@@ -4390,7 +4390,7 @@
       el.innerHTML = `
         <div class="card-media"><img src="${p.img}" alt="${p.name}"/></div>
         <div class="card-name">${p.name}</div>
-        <div class="card-sub">????? ????</div>
+        <div class="card-sub">سلسلة ٢٠٢٤</div>
       `;
       el.addEventListener("click", () => openSolo(p));
       grid.appendChild(el);
@@ -4409,8 +4409,8 @@
     });
   }
 
-  let soloSelectedColor = "????";
-  let soloSelectedSize = "?????";
+  let soloSelectedColor = "أحمر";
+  let soloSelectedSize = "متوسط";
 
   function syncSoloSelections(){
     const setActive = (selector, attr, value) => {
@@ -4425,7 +4425,7 @@
     setActive('#soloConfigSizes .solo-config-option', 'data-size', soloSelectedSize);
 
     const summary = document.getElementById('soloConfigSummary');
-    if(summary) summary.textContent = `????????: ${soloSelectedColor || '--'} / ${soloSelectedSize || '--'}`;
+    if(summary) summary.textContent = `الاختيار: ${soloSelectedColor || '--'} / ${soloSelectedSize || '--'}`;
   }
 
   function setSoloOptionPopover(panel){
@@ -4485,8 +4485,8 @@
     setSoloInfoOpen(false);
     setSoloOptionPopover(null);
     setSoloCustomizerOpen(false);
-    soloSelectedColor = "????";
-    soloSelectedSize = "?????";
+    soloSelectedColor = "أحمر";
+    soloSelectedSize = "متوسط";
     syncSoloSelections();
 
     const soloName = document.getElementById("soloName");
@@ -4518,7 +4518,7 @@
     document.getElementById("modalArtistImg").src = p.artist.img;
     document.getElementById("modalArtistBio").textContent = p.artist.bio;
 
-    const fs = document.getElementById("form???????");
+    const fs = document.getElementById("formالموضوع");
     if(fs) fs.value = "Inquiry: " + p.name;
 
     const sideNav = document.querySelector('.side-nav');
@@ -4526,7 +4526,7 @@
 
     renderActiveMedia(p, 'images');
 
-    // ? zoom + then show 3D popup after moveend
+    // ✅ zoom + then show 3D popup after moveend
     gotoStore(p.store, p);
   }
 
@@ -4740,7 +4740,7 @@
   }
 
   (function init(){
-    // ??? ?? ??????? ??? ???????
+    // عرض كل العناصر عند البداية
     render(PRODUCTS);
 
     // Default active nav = Gallery
