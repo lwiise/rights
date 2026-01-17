@@ -445,6 +445,10 @@
     font-weight:700;
     cursor:pointer;
     transition:background 0.2s ease, color 0.2s ease;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
   }
   .view-tab + .view-tab{ border-left:1px solid #7f7f7f; }
   .view-tab.active{
@@ -2612,7 +2616,7 @@
     <div class="frame-top-bar">
       <div class="view-switcher" role="tablist" aria-label="عرض التبديل">
         <button class="view-tab active" type="button" data-view="display">العرض</button>
-        <button class="view-tab" type="button" data-view="gallery">المعرض</button>
+        <a class="view-tab" href="gallery.html">المعرض</a>
       </div>
     </div>
     <div class="frame-split">
@@ -3110,7 +3114,7 @@
               <div class="ft-title">التنقل</div>
               <a href="#" onclick="switchSection('sect-about'); return false;">امامة</a>
               <a href="#" onclick="switchSection('sect-services'); return false;">المؤذنون</a>
-              <a href="#" onclick="switchSection('sect-gallery'); return false;">المعرض</a>
+              <a href="gallery.html">المعرض</a>
               <a href="#" onclick="switchSection('sect-contact'); return false;">تواصل معنا</a>
             </div>
 
@@ -3910,7 +3914,7 @@
   safeAdd('navHome','click',() => switchSection('sect-home'));
   safeAdd('navAbout','click',() => switchSection('sect-about'));
   safeAdd('navServices','click',() => switchSection('sect-services'));
-  safeAdd('navGallery','click',() => switchSection('sect-gallery'));
+  safeAdd('navGallery','click',() => { window.location.href = 'gallery.html'; });
   safeAdd('navContact','click',() => switchSection('sect-contact'));
   safeAdd('navExtra1','click',() => switchSection('sect-extra-1'));
   safeAdd('navExtra2','click',() => switchSection('sect-extra-2'));
@@ -3921,7 +3925,7 @@
   safeAdd('mNavHome','click',() => switchSection('sect-home'));
   safeAdd('mNavAbout','click',() => switchSection('sect-about'));
   safeAdd('mNavServices','click',() => switchSection('sect-services'));
-  safeAdd('mNavGallery','click',() => switchSection('sect-gallery'));
+  safeAdd('mNavGallery','click',() => { window.location.href = 'gallery.html'; });
   safeAdd('mNavContact','click',() => switchSection('sect-contact'));
   safeAdd('mNavExtra1','click',() => switchSection('sect-extra-1'));
   safeAdd('mNavExtra2','click',() => switchSection('sect-extra-2'));
@@ -3934,7 +3938,12 @@
   safeAdd('toggleFrame','click',() => toggleFullscreen('frame'));
 
   document.querySelectorAll('.view-tab').forEach(tab => {
-    tab.addEventListener('click', () => setView(tab.dataset.view));
+    tab.addEventListener('click', (e) => {
+      const view = tab.dataset.view;
+      if(!view) return;
+      e.preventDefault();
+      setView(view);
+    });
   });
   setView('display');
 

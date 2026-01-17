@@ -1,0 +1,1295 @@
+﻿<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>المعرض - FNN ART</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#fff;
+    --text-main:#222;
+    --accent:#111;
+  }
+
+  *,*::before,*::after{ box-sizing:border-box; -webkit-font-smoothing:antialiased; }
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--text-main);
+    background:#f2f2f2;
+    height:100vh;
+    width:100vw;
+    overflow:hidden;
+  }
+
+  .gallery-layout{
+    display:flex;
+    height:100vh;
+    width:100vw;
+    overflow:hidden;
+  }
+  .gallery-left,
+  .gallery-right{
+    flex:0 0 50%;
+    width:50%;
+    height:100%;
+    min-width:0;
+  }
+  .gallery-left{
+    background:#000;
+  }
+  .gallery-right{
+    background:#fff;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .kaaba-frame{
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+  }
+
+  #sect-gallery{
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    min-height:0;
+  }
+
+  .shop-body{
+    -ms-overflow-style:auto;
+    scrollbar-width:auto;
+  }
+  .shop-body::-webkit-scrollbar{ width:10px; height:10px; }
+  .shop-body::-webkit-scrollbar-thumb{
+    background:rgba(0,0,0,.22);
+    border-radius:999px;
+  }
+  .shop-body::-webkit-scrollbar-track{ background:transparent; }
+
+  /* ===== GALLERY ===== */
+  .shop-head{
+    flex-shrink:0;
+    position:sticky; top:0;
+    background:rgba(255,255,255,0.96);
+    backdrop-filter:blur(10px);
+    z-index:12;
+    padding:22px 30px;
+    border-bottom:1px solid #f0f0f0;
+  }
+
+  .nav-group{
+    display:flex; gap:10px; align-items:center;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .nav-group::-webkit-scrollbar{ display:none; }
+  .chip{
+    border:none;
+    background:transparent;
+    font-size:14px;
+    color:#999;
+    cursor:pointer;
+    padding:8px 12px;
+    transition:all .2s;
+    font-weight:600;
+    white-space:nowrap;
+    border-radius:999px;
+  }
+  .chip:hover{ color:#333; }
+  .chip.active{
+    background:var(--accent);
+    color:#fff;
+    padding:8px 22px;
+  }
+
+  .shop-body{
+    padding:22px 30px 70px;
+    flex-grow:1;
+    overflow-y:auto;
+    min-height:0;
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:26px;
+    width:100%;
+  }
+  .card{
+    background:#fff;
+    border:1px solid #f3f3f3;
+    border-radius:28px;
+    padding:26px 18px;
+    cursor:pointer;
+    transition:transform .25s ease, box-shadow .25s ease;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+  .card:hover{ transform:translateY(-6px); box-shadow:0 18px 42px rgba(0,0,0,0.07); }
+  .card-media{
+    width:100%;
+    height:180px;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    margin-bottom:16px;
+  }
+  .card-media img{ max-width:100%; max-height:100%; object-fit:contain; filter:none; }
+  .card-name{ font-size:12px; font-weight:900; letter-spacing:0.10em; color:#b0b0b0; text-transform:uppercase; margin-bottom:6px; }
+  .card-sub{ font-size:10px; color:#d0d0d0; text-transform:uppercase; letter-spacing:0.06em; }
+
+  .solo-wrap{ display:none; }
+  #sect-gallery.solo .grid{ display:none; }
+  #sect-gallery.solo .shop-body{ background:#fff; }
+  #sect-gallery.solo .solo-wrap{
+    display:block;
+    padding:0;
+  }
+  #sect-gallery.solo .solo-frame{
+    position:relative;
+    overflow:hidden;
+    background:#f3f3f3;
+    border-radius:28px;
+    padding:0;
+    border:1px solid #ececec;
+    box-shadow:0 18px 40px rgba(0,0,0,0.06);
+    display:flex;
+    flex-direction:column;
+  }
+  #sect-gallery.solo .solo-frame-head{
+    position:absolute;
+    top:18px;
+    left:22px;
+    right:22px;
+    z-index:10;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    pointer-events:none;
+  }
+
+  .back-nav{ margin:4px 0 12px; }
+  .btn-back{
+    background:none; border:none; padding:0;
+    color:#9a9a9a; font-size:13px; font-weight:700;
+    cursor:pointer; display:inline-flex; align-items:center; gap:8px;
+  }
+
+  .solo-name{
+    margin:0;
+    font-size:20px;
+    font-weight:900;
+    letter-spacing:-0.02em;
+    color:#111;
+  }
+
+  .solo-tabs-bar{
+    width:100%;
+    display:flex;
+    justify-content:center;
+    margin:0;
+    padding:12px 22px 18px;
+    pointer-events:auto;
+  }
+
+  .solo-media-container{
+    width:100%;
+    aspect-ratio:16 / 9;
+    background:transparent;
+    border-radius:0;
+    overflow:hidden;
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow:none;
+    border:none;
+  }
+  .solo-media-container img,
+  .solo-media-container video{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+  }
+  .solo-media-container img{ filter:none; }
+  model-viewer{ width:100%; height:100%; }
+
+  .media-tabs{
+    display:flex;
+    gap:8px;
+    padding:8px;
+    border-radius:999px;
+    background:#bdbdbd;
+    backdrop-filter:none; -webkit-backdrop-filter:none;
+  }
+  .media-tab{
+    border:none;
+    cursor:pointer;
+    padding:10px 18px;
+    border-radius:999px;
+    font-weight:900;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:rgba(255,255,255,0.85);
+    background:rgba(255,255,255,0.18);
+    transition:all .2s ease;
+    white-space:nowrap;
+  }
+  .media-tab.active{
+    background:#fff;
+    color:#111;
+  }
+
+  .solo-bottom-tabs{ pointer-events:auto; }
+  .solo-bottom-tabs-inner{
+    display:flex;
+    gap:8px;
+    padding:8px;
+    border-radius:999px;
+    background:#bdbdbd;
+  }
+  .solo-bottom-tab{
+    border:none;
+    cursor:pointer;
+    padding:10px 18px;
+    border-radius:999px;
+    font-weight:900;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:rgba(255,255,255,0.90);
+    background:rgba(255,255,255,0.18);
+    transition:all .2s ease;
+    white-space:nowrap;
+  }
+  .solo-bottom-tab.active{
+    background:#fff;
+    color:#111;
+  }
+
+  .solo-frame-foot{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:16px 22px;
+    background:#fff;
+    border-top:1px solid #e9e9e9;
+  }
+  .solo-foot-left{ min-width:0; }
+  .solo-foot-title{
+    font-size:11px;
+    font-weight:950;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:#111;
+    margin-bottom:6px;
+  }
+  .solo-foot-desc{
+    font-size:12px;
+    line-height:1.6;
+    color:#9a9a9a;
+    max-width:360px;
+  }
+  .solo-foot-right{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    gap:10px;
+  }
+  .solo-tab-wrap{
+    position:relative;
+    display:flex;
+  }
+  .solo-tab-wrap .solo-bottom-tab{ width:100%; }
+  .solo-popover{
+    position:absolute;
+    left:50%;
+    bottom:calc(100% + 10px);
+    transform:translateX(-50%);
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+    padding:10px;
+    border-radius:22px;
+    background:rgba(0,0,0,0.06);
+    box-shadow:0 18px 42px rgba(0,0,0,0.14);
+    z-index:18;
+    pointer-events:auto;
+    max-width:min(420px, calc(100vw - 44px));
+  }
+  .solo-suboption{
+    border:none;
+    cursor:pointer;
+    padding:14px 18px;
+    border-radius:999px;
+    font-weight:950;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    font-size:12px;
+    color:#111;
+    background:rgba(255,255,255,0.92);
+    transition:all .18s ease;
+  }
+  .solo-suboption.active{
+    background:#111;
+    color:#fff;
+  }
+
+  .solo-config{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%) translateY(12px);
+    width:340px;
+    max-width:calc(100% - 44px);
+    padding:16px 16px 14px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.78);
+    border:1px solid rgba(255,255,255,0.72);
+    box-shadow:0 22px 46px rgba(0,0,0,0.14);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .18s ease, transform .22s ease;
+    z-index:19;
+  }
+  #sect-gallery.solo .solo-frame.customize-open .solo-config{
+    opacity:1;
+    pointer-events:auto;
+    transform:translate(-50%,-50%) translateY(0);
+  }
+  .solo-config-close{
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:32px;
+    height:32px;
+    border:none;
+    border-radius:12px;
+    background:rgba(0,0,0,0.06);
+    color:#111;
+    cursor:pointer;
+    font-weight:950;
+    font-size:18px;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .solo-config-title{
+    margin:2px 34px 12px 0;
+    font-size:13px;
+    font-weight:950;
+    letter-spacing:0.10em;
+    text-transform:uppercase;
+    color:#111;
+  }
+  .solo-config-group{ margin-bottom:12px; }
+  .solo-config-label{
+    font-size:10px;
+    font-weight:950;
+    letter-spacing:0.10em;
+    text-transform:uppercase;
+    color:rgba(0,0,0,0.45);
+    margin-bottom:8px;
+  }
+  .solo-config-options{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+  }
+  .solo-config-option{
+    border:none;
+    cursor:pointer;
+    padding:10px 12px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:12px;
+    color:#111;
+    background:rgba(255,255,255,0.82);
+    border:1px solid rgba(0,0,0,0.08);
+    transition:all .18s ease;
+  }
+  .solo-config-option.active{
+    background:#111;
+    border-color:#111;
+    color:#fff;
+  }
+  .solo-config-summary{
+    font-size:12px;
+    color:rgba(0,0,0,0.70);
+    margin-top:6px;
+  }
+
+  .solo-info-card{
+    position:absolute;
+    left:22px;
+    top:50%;
+    transform:translateY(-50%) translateX(-12px);
+    width:260px;
+    max-width:calc(100% - 44px);
+    padding:16px 16px 14px;
+    border-radius:18px;
+    background:rgba(255,255,255,0.70);
+    border:1px solid rgba(255,255,255,0.72);
+    box-shadow:0 22px 46px rgba(0,0,0,0.12);
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .18s ease, transform .22s ease;
+    z-index:20;
+  }
+  #sect-gallery.solo .solo-frame.info-open .solo-info-card{
+    opacity:1;
+    pointer-events:auto;
+    transform:translateY(-50%) translateX(0);
+  }
+  .solo-info-close{
+    position:absolute;
+    top:10px;
+    right:10px;
+    width:32px;
+    height:32px;
+    border:none;
+    border-radius:12px;
+    background:rgba(0,0,0,0.06);
+    color:#111;
+    cursor:pointer;
+    font-weight:950;
+    font-size:18px;
+    line-height:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .solo-info-title{
+    margin:2px 34px 10px 0;
+    font-size:14px;
+    font-weight:950;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:#111;
+  }
+  .solo-info-text{
+    font-size:12px;
+    line-height:1.7;
+    color:rgba(0,0,0,0.70);
+    margin-bottom:12px;
+  }
+  .solo-info-meta{
+    display:grid;
+    gap:10px;
+  }
+  .solo-meta-item span{
+    display:block;
+    font-size:10px;
+    font-weight:900;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:rgba(0,0,0,0.45);
+    margin-bottom:4px;
+  }
+  .solo-meta-item strong{
+    display:block;
+    font-size:13px;
+    font-weight:950;
+    color:#111;
+  }
+
+  .img-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:44px;
+    height:44px;
+    border:none; border-radius:999px;
+    background:#cfcfcf;
+    color:#666;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:18px;
+    backdrop-filter:none;
+    z-index:9;
+  }
+  .img-arrow.left{ left:16px; }
+  .img-arrow.right{ right:16px; }
+
+  .v360-ui{
+    position:absolute;
+    left:50%; transform:translateX(-50%);
+    bottom:12px;
+    width:min(370px, 78%);
+    background:rgba(0,0,0,0.35);
+    backdrop-filter:blur(12px);
+    border-radius:999px;
+    padding:5px 7px;
+    display:flex; gap:6px; align-items:center;
+  }
+  .v360-btn{
+    width:22px; height:18px;
+    border:none; border-radius:8px;
+    background:rgba(255,255,255,0.18);
+    color:#fff;
+    cursor:pointer;
+    font-weight:900;
+    font-size:11px;
+  }
+  .v360-range{
+    flex:1;
+    -webkit-appearance:none;
+    appearance:none;
+    height:5px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.22);
+    outline:none;
+  }
+  .v360-range::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    appearance:none;
+    width:27px; height:11px;
+    border-radius:999px;
+    background:#fff;
+    cursor:pointer;
+    box-shadow:0 5px 9px rgba(0,0,0,0.18);
+  }
+
+  .solo-info-block{
+    padding:18px 0 0;
+    border-top:1px solid #e9e9e9;
+  }
+  .solo-desc{
+    text-align:left;
+    color:#666;
+    font-size:13px;
+    line-height:1.7;
+    border-top:none;
+    padding-top:0;
+    margin-bottom:18px;
+  }
+  .solo-desc strong{
+    display:block;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:#666;
+    margin:0 0 6px;
+  }
+  .data-row{ display:flex; flex-wrap:wrap; gap:38px; margin-top:14px; }
+  .data-item span:first-child{
+    display:block; font-size:10px; color:#999; text-transform:uppercase;
+    font-weight:900; margin-bottom:4px; letter-spacing:0.08em;
+  }
+  .data-item span:last-child{ font-size:14px; font-weight:900; color:#222; }
+
+  .artist-profile{
+    display:flex; align-items:center; gap:14px;
+    margin-top:18px;
+    padding:16px;
+    background:#fafafa;
+    border-radius:20px;
+    cursor:pointer;
+    transition:all .2s ease;
+    border:1px solid transparent;
+  }
+  .artist-profile:hover{
+    background:#fff;
+    border-color:#eee;
+    box-shadow:0 10px 24px rgba(0,0,0,0.06);
+    transform:translateY(-2px);
+  }
+  .avatar{ width:44px; height:44px; border-radius:50%; background:#eee; overflow:hidden; }
+  .avatar img{ width:100%; height:100%; object-fit:cover; }
+  .artist-info{ flex:1; }
+  .artist-info h4{ margin:0; font-size:13px; color:#222; font-weight:900; }
+  .artist-info p{ margin:2px 0 0; font-size:11px; color:#888; }
+  .artist-cta{ font-size:11px; font-weight:900; color:#333; text-transform:uppercase; letter-spacing:0.06em; }
+
+  .actions{ display:flex; gap:12px; margin-top:18px; }
+  .btn{
+    padding:14px 20px; border-radius:16px;
+    border:none; font-size:13px; font-weight:800;
+    cursor:pointer;
+  }
+  .btn-primary{ background:#111; color:#fff; flex:1; }
+  .btn-ghost{ background:#f0f0f0; color:#666; }
+
+  .modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.35);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100;
+    opacity:0;
+    transition:opacity .2s ease;
+  }
+  .modal-overlay.open{ display:flex; opacity:1; }
+  .modal-box{
+    background:#fff;
+    border-radius:22px;
+    padding:28px 28px 24px;
+    width:min(420px, 90vw);
+    box-shadow:0 24px 48px rgba(0,0,0,0.18);
+    transform:translateY(10px);
+    transition:transform .2s ease;
+  }
+  .modal-overlay.open .modal-box{ transform:translateY(0); }
+  .close-modal{ position:absolute; top:16px; right:16px; background:none; border:none; font-size:22px; color:#999; cursor:pointer; }
+
+  @media (max-width: 900px){
+    body{ overflow:auto; }
+    .gallery-layout{
+      flex-direction:column;
+      height:auto;
+      min-height:100vh;
+    }
+    .gallery-left,
+    .gallery-right{
+      width:100%;
+      flex:0 0 auto;
+    }
+    .gallery-left{ height:60vh; }
+    .gallery-right{ height:auto; min-height:60vh; }
+    .shop-head{ padding:18px 18px; }
+    .shop-body{ padding:18px 18px 70px; }
+    .grid{ grid-template-columns:repeat(2, 1fr); gap:14px; }
+    #sect-gallery.solo .solo-frame-head{ top:14px; left:16px; right:16px; }
+    .solo-tabs-bar{ padding:8px 16px 12px; }
+    .solo-foot-right{ width:100%; align-items:stretch; }
+    .solo-bottom-tabs-inner{ width:100%; justify-content:space-between; }
+    .solo-bottom-tab{ flex:1; padding:10px 8px; font-size:10px; }
+    .solo-tab-wrap{ flex:1; }
+    .solo-popover{ gap:8px; padding:10px; }
+    .solo-suboption{ flex:1; text-align:center; padding:12px 10px; font-size:11px; }
+    .solo-info-card{ left:14px; right:14px; transform:translateY(-50%) translateX(0); }
+  }
+</style>
+</head>
+<body>
+  <div class="gallery-layout">
+    <div class="gallery-left">
+      <iframe
+        class="kaaba-frame"
+        src="/fnn-3d-kaaba/"
+        title="Kaaba 3D"
+        allow="fullscreen; autoplay"
+        allowfullscreen
+        loading="eager"
+      ></iframe>
+    </div>
+    <div class="gallery-right">
+      <section id="sect-gallery" dir="rtl">
+        <header class="shop-head">
+          <nav class="nav-group" id="filters">
+            <button class="chip active" data-filter="all" id="btnAll">الكل</button>
+            <button class="chip" data-filter="halaqat-quran">الحلقات القرآنية</button>
+            <button class="chip" data-filter="mushaf">المصاحف</button>
+            <button class="chip" data-filter="halaqat-ilm">الحلقات العلمية</button>
+            <button class="chip" data-filter="durus">الدروس</button>
+          </nav>
+        </header>
+
+        <div class="shop-body">
+          <div class="grid" id="grid"></div>
+
+          <div class="solo-wrap" id="soloWrap">
+            <div class="back-nav"><button class="btn-back" id="btnBack">&larr; العودة إلى المعرض</button></div>
+
+            <div class="solo-frame">
+              <div class="solo-frame-head">
+                <div class="solo-name" id="soloName">عنصر</div>
+              </div>
+              <div class="solo-media-container" id="soloMedia"></div>
+              <div class="solo-tabs-bar"><div id="soloTabs"></div></div>
+
+              <aside class="solo-info-card" id="soloInfoCard" aria-hidden="true">
+                <button class="solo-info-close" type="button" id="soloInfoClose" aria-label="إغلاق المعلومات">&times;</button>
+                <div class="solo-info-title" id="soloInfoName">عنصر</div>
+                <div class="solo-info-text">محتوى معرفي يعكس روح المكان والدرس.</div>
+                <div class="solo-info-meta">
+                  <div class="solo-meta-item"><span>المحتوى</span><strong id="soloInfoMat">--</strong></div>
+                  <div class="solo-meta-item"><span>النطاق</span><strong id="soloInfoDim">--</strong></div>
+                  <div class="solo-meta-item"><span>الموقع</span><strong id="soloInfoLoc">--</strong></div>
+                </div>
+              </aside>
+
+              <div class="solo-config" id="soloConfig" aria-hidden="true">
+                <button class="solo-config-close" type="button" id="soloConfigClose" aria-label="إغلاق المخصص">&times;</button>
+                <div class="solo-config-title">المخصص</div>
+                <div class="solo-config-group">
+                  <div class="solo-config-label">اللون</div>
+                  <div class="solo-config-options" id="soloConfigColors" role="group" aria-label="اختر اللون">
+                    <button class="solo-config-option" type="button" data-color="أحمر">أحمر</button>
+                    <button class="solo-config-option" type="button" data-color="أزرق">أزرق</button>
+                    <button class="solo-config-option" type="button" data-color="رملي">رملي</button>
+                  </div>
+                </div>
+                <div class="solo-config-group">
+                  <div class="solo-config-label">الحجم</div>
+                  <div class="solo-config-options" id="soloConfigSizes" role="group" aria-label="اختر الحجم">
+                    <button class="solo-config-option" type="button" data-size="صغير">صغير</button>
+                    <button class="solo-config-option" type="button" data-size="متوسط">متوسط</button>
+                    <button class="solo-config-option" type="button" data-size="كبير">كبير</button>
+                  </div>
+                </div>
+                <div class="solo-config-summary" id="soloConfigSummary">الاختيار: -- / --</div>
+              </div>
+
+              <div class="solo-frame-foot">
+                <div class="solo-foot-left">
+                  <div class="solo-foot-title" id="soloFootTitle">عنصر</div>
+                  <div class="solo-foot-desc" id="soloFootDesc">محتوى تعليمي وروحي يخدم المجتمع ويعزز المعرفة.</div>
+                </div>
+
+                <div class="solo-foot-right">
+                  <div class="solo-bottom-tabs" aria-label="خيارات العنصر">
+                    <div class="solo-bottom-tabs-inner">
+                      <button class="solo-bottom-tab" type="button" id="soloInfoBtn" aria-controls="soloInfoCard" aria-expanded="false">معلومات</button>
+
+                      <div class="solo-tab-wrap">
+                        <button class="solo-bottom-tab" type="button" id="soloColorBtn" aria-expanded="false">اللون</button>
+                        <div class="solo-popover" id="soloColorPopover" hidden>
+                          <button class="solo-suboption" type="button" data-color="أحمر">أحمر</button>
+                          <button class="solo-suboption" type="button" data-color="أزرق">أزرق</button>
+                          <button class="solo-suboption" type="button" data-color="رملي">رملي</button>
+                        </div>
+                      </div>
+
+                      <div class="solo-tab-wrap">
+                        <button class="solo-bottom-tab" type="button" id="soloSizeBtn" aria-expanded="false">الحجم</button>
+                        <div class="solo-popover" id="soloSizePopover" hidden>
+                          <button class="solo-suboption" type="button" data-size="صغير">صغير</button>
+                          <button class="solo-suboption" type="button" data-size="متوسط">متوسط</button>
+                          <button class="solo-suboption" type="button" data-size="كبير">كبير</button>
+                        </div>
+                      </div>
+
+                      <button class="solo-bottom-tab" type="button" id="soloCustomsBtn" aria-controls="soloConfig" aria-expanded="false">تخصيص</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="solo-info-block">
+              <div class="solo-desc">
+                <strong id="soloTitle">عنصر</strong><br>
+                محتوى معرفي يعكس روح المكان والدرس في سياق المعرض.
+                <div class="data-row">
+                  <div class="data-item"><span>المحتوى</span><span id="spMat">--</span></div>
+                  <div class="data-item"><span>النطاق</span><span id="spDim">--</span></div>
+                  <div class="data-item"><span>الموقع</span><span id="soloStore">--</span></div>
+                </div>
+              </div>
+
+              <div class="artist-profile" id="artistBtn">
+                <div class="avatar"><img id="artistImg" src="" alt="الفنان"></div>
+                <div class="artist-info"><h4 id="artistName">--</h4><p id="artistRole">--</p></div>
+                <div class="artist-cta">عرض الملف</div>
+              </div>
+
+              <div class="actions">
+                <button class="btn btn-primary" id="btnContactProduct">تواصل</button>
+                <button class="btn btn-ghost" id="btnClose">إغلاق</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalArtistOverlay">
+    <div class="modal-box" style="position:relative">
+      <button class="close-modal" id="closeArtistModal">×</button>
+      <div style="text-align:center; margin-bottom:18px;">
+        <div style="width:82px;height:82px;border-radius:50%;overflow:hidden;margin:0 auto 14px;">
+          <img id="modalArtistImg" src="" alt="" style="width:100%;height:100%;object-fit:cover;">
+        </div>
+        <h3 id="modalArtistName" style="margin:0 0 6px; font-weight:950;"></h3>
+        <span id="modalArtistRole" style="font-size:12px; color:#999; text-transform:uppercase; letter-spacing:0.08em;"></span>
+      </div>
+      <p id="modalArtistBio" style="font-size:13px; line-height:1.7; color:#555; text-align:center; margin:0;"></p>
+    </div>
+  </div>
+
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+  <script>
+    const safeAdd = (id, ev, handler) => {
+      const el = document.getElementById(id);
+      if(el) el.addEventListener(ev, handler);
+    };
+
+    const DEFAULT_IMAGES = [
+      "https://upload.wikimedia.org/wikipedia/commons/3/32/Reading_a_holy_Quran.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/5/50/Birmingham_Quran_manuscript.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/a/ac/MSSN_Gombe_High_School_Weekly_Lecture_10.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/5/5f/MSSN_Gombe_High_School_Weekly_Lecture_16.jpg"
+    ];
+
+    const VIDEO_360 = "https://raw.githubusercontent.com/lwiise/3d-models/main/Product_Video_Generation_With_Rotation.mp4";
+    const VIDEO_NORMAL = "https://raw.githubusercontent.com/lwiise/3d-models/main/Artistic_Video_Generation_Request.mp4";
+
+    function buildMediaTabs(active){
+      const tabs = [
+        { key:'images', label:'صور' },
+        { key:'v360', label:'360' },
+        { key:'video', label:'فيديو' },
+        { key:'d3', label:'ثلاثي الأبعاد' }
+      ];
+      return `
+        <div class="media-tabs" id="mediaTabs">
+          ${tabs.map(t => `
+            <button class="media-tab ${t.key===active?'active':''}" data-tab="${t.key}">${t.label}</button>
+          `).join('')}
+        </div>
+      `;
+    }
+
+    function renderImages(images){
+      let idx = 0;
+      const html = `
+        <img id="imgSlide" src="${images[0]}" alt="عرض" />
+        <button class="img-arrow left" id="imgPrev">&lsaquo;</button>
+        <button class="img-arrow right" id="imgNext">&rsaquo;</button>
+      `;
+      return { html, mount: (container) => {
+        const img = container.querySelector('#imgSlide');
+        const prev = container.querySelector('#imgPrev');
+        const next = container.querySelector('#imgNext');
+        const show = () => { if(img) img.src = images[idx]; };
+        if(prev) prev.onclick = () => { idx = (idx - 1 + images.length) % images.length; show(); };
+        if(next) next.onclick = () => { idx = (idx + 1) % images.length; show(); };
+      }};
+    }
+
+    function render360(){
+      const html = `
+        <video id="v360" src="${VIDEO_360}" playsinline preload="metadata"></video>
+        <div class="v360-ui">
+          <button class="v360-btn" id="v360Toggle">II</button>
+          <input class="v360-range" id="v360Range" type="range" min="0" max="1000" value="0" />
+        </div>
+      `;
+      return { html, mount: (container) => {
+        const v = container.querySelector('#v360');
+        const btn = container.querySelector('#v360Toggle');
+        const range = container.querySelector('#v360Range');
+        if(!v || !btn || !range) return;
+        v.controls = false;
+        v.loop = true;
+        v.muted = true;
+        v.play().catch(()=>{});
+        const syncRange = () => {
+          if(!v.duration || !isFinite(v.duration)) return;
+          range.value = Math.floor((v.currentTime / v.duration) * 1000);
+        };
+        v.addEventListener('timeupdate', syncRange);
+        range.addEventListener('input', () => {
+          if(!v.duration || !isFinite(v.duration)) return;
+          const t = (parseInt(range.value,10)/1000) * v.duration;
+          v.currentTime = t;
+        });
+        btn.addEventListener('click', () => {
+          if(v.paused){
+            v.play().catch(()=>{});
+            btn.textContent = "II";
+          }else{
+            v.pause();
+            btn.textContent = "▶";
+          }
+        });
+      }};
+    }
+
+    function renderVideo(){
+      const html = `<video src="${VIDEO_NORMAL}" controls playsinline preload="metadata"></video>`;
+      return { html, mount: ()=>{} };
+    }
+
+    function render3D(modelUrl, fallbackImg, productName){
+      const safeUrl = (modelUrl || "").replace(/\(/g,'%28').replace(/\)/g,'%29').replace(/ /g,'%20');
+      const html = `
+        <model-viewer
+          id="viewer3d"
+          src="${safeUrl}"
+          camera-controls
+          auto-rotate
+          shadow-intensity="1"
+          style="background:transparent; width:100%; height:100%;"
+          camera-orbit="45deg 75deg 4.5m"
+          environment-image="neutral"
+          alt="${productName || 'عنصر ثلاثي الأبعاد'}">
+        </model-viewer>
+      `;
+      return { html, mount: (container) => {
+        const viewer = container.querySelector('#viewer3d');
+        if(viewer){
+          viewer.addEventListener('error', () => {
+            container.innerHTML = `<img src="${fallbackImg}" alt="Fallback" />`;
+          });
+        }
+      }};
+    }
+
+    function renderActiveMedia(p, tabKey){
+      const soloMedia = document.getElementById("soloMedia");
+      const soloTabs = document.getElementById("soloTabs");
+      if(!soloMedia || !soloTabs) return;
+
+      soloTabs.innerHTML = buildMediaTabs(tabKey);
+
+      let pack;
+      if(tabKey === 'images') pack = renderImages(p.images || DEFAULT_IMAGES);
+      if(tabKey === 'v360') pack = render360();
+      if(tabKey === 'video') pack = renderVideo();
+      if(tabKey === 'd3') pack = render3D(p.model, (p.images && p.images[0]) ? p.images[0] : p.img, p.name);
+
+      soloMedia.innerHTML = pack.html;
+      pack.mount(soloMedia);
+
+      attachTabHandlers(p);
+    }
+
+    function attachTabHandlers(p){
+      const soloTabs = document.getElementById("soloTabs");
+      if(!soloTabs) return;
+
+      const tabs = soloTabs.querySelector('#mediaTabs');
+      if(!tabs) return;
+
+      if(tabs.dataset.bound === "1") return;
+      tabs.dataset.bound = "1";
+
+      tabs.addEventListener('click', (e) => {
+        const btn = e.target.closest('.media-tab');
+        if(!btn) return;
+        const tab = btn.dataset.tab;
+        renderActiveMedia(p, tab);
+      });
+    }
+
+    const PRODUCTS = [
+      {
+        id:"item-1",
+        name:"الحلقات القرآنية",
+        category:"halaqat-quran",
+        img:"https://upload.wikimedia.org/wikipedia/commons/3/32/Reading_a_holy_Quran.jpg",
+        images:[
+          "https://upload.wikimedia.org/wikipedia/commons/3/32/Reading_a_holy_Quran.jpg"
+        ],
+        model:"https://raw.githubusercontent.com/lwiise/3d-models/main/base%20(5).glb",
+        specs:{ mat:"جلسة تلاوة", dim:"مجلس علمي" },
+        store:{ name:"موقع المعرض - القسم أ" },
+        artist:{ name:"فريق المحتوى", role:"تنسيق المعرض", img:"https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80", bio:"عرض توعوي يجمع بين التعليم البصري والسرد." }
+      },
+      {
+        id:"item-2",
+        name:"المصاحف",
+        category:"mushaf",
+        img:"https://upload.wikimedia.org/wikipedia/commons/5/50/Birmingham_Quran_manuscript.jpg",
+        images:[
+          "https://upload.wikimedia.org/wikipedia/commons/5/50/Birmingham_Quran_manuscript.jpg"
+        ],
+        model:"https://raw.githubusercontent.com/lwiise/3d-models/main/base%20(7).glb",
+        specs:{ mat:"مخطوطات", dim:"عرض محفوظات" },
+        store:{ name:"موقع المعرض - القسم ب" },
+        artist:{ name:"مركز التراث", role:"جمعيات ومكتبات", img:"https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80", bio:"توثيق بصري لأندر المصاحف والمخطوطات." }
+      },
+      {
+        id:"item-3",
+        name:"الحلقات العلمية",
+        category:"halaqat-ilm",
+        img:"https://upload.wikimedia.org/wikipedia/commons/a/ac/MSSN_Gombe_High_School_Weekly_Lecture_10.jpg",
+        images:[
+          "https://upload.wikimedia.org/wikipedia/commons/a/ac/MSSN_Gombe_High_School_Weekly_Lecture_10.jpg"
+        ],
+        model:"https://raw.githubusercontent.com/lwiise/3d-models/main/base%20(6).glb",
+        specs:{ mat:"جلسات علمية", dim:"قاعة عرض" },
+        store:{ name:"موقع المعرض - القسم ج" },
+        artist:{ name:"لجنة التعليم", role:"شركاء المعرفة", img:"https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80", bio:"جلسات تفاعلية تبرز أهمية التعليم المتخصص." }
+      },
+      {
+        id:"item-4",
+        name:"الدروس",
+        category:"durus",
+        img:"https://upload.wikimedia.org/wikipedia/commons/5/5f/MSSN_Gombe_High_School_Weekly_Lecture_16.jpg",
+        images:[
+          "https://upload.wikimedia.org/wikipedia/commons/5/5f/MSSN_Gombe_High_School_Weekly_Lecture_16.jpg"
+        ],
+        model:"https://raw.githubusercontent.com/lwiise/3d-models/main/compressed_1764071266806_base%20(15).glb",
+        specs:{ mat:"إرشاد", dim:"مركز المعرفة" },
+        store:{ name:"موقع المعرض - القسم د" },
+        artist:{ name:"فريق الدروس", role:"المحتوى التفاعلي", img:"https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=100&q=80", bio:"رحلة مرئية تسرد أهم المحاور التعليمية." }
+      }
+    ];
+
+    const grid = document.getElementById("grid");
+
+    function render(list){
+      if(!grid) return;
+      grid.innerHTML = "";
+      list.forEach(p => {
+        const el = document.createElement("article");
+        el.className = "card";
+        el.innerHTML = `
+          <div class="card-media"><img src="${p.img}" alt="${p.name}"/></div>
+          <div class="card-name">${p.name}</div>
+          <div class="card-sub">عنصر من المعرض</div>
+        `;
+        el.addEventListener("click", () => openSolo(p));
+        grid.appendChild(el);
+      });
+    }
+
+    const filtersEl = document.getElementById("filters");
+    if(filtersEl){
+      filtersEl.addEventListener("click", e => {
+        const btn = e.target.closest(".chip");
+        if(!btn) return;
+        document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+        btn.classList.add("active");
+        const f = btn.dataset.filter;
+        render(f === "all" ? PRODUCTS : PRODUCTS.filter(p => p.category === f));
+      });
+    }
+
+    let soloSelectedColor = "أحمر";
+    let soloSelectedSize = "متوسط";
+
+    function syncSoloSelections(){
+      const setActive = (selector, attr, value) => {
+        document.querySelectorAll(selector).forEach(el => {
+          const v = el.getAttribute(attr);
+          el.classList.toggle('active', !!value && v === value);
+        });
+      };
+      setActive('#soloColorPopover .solo-suboption', 'data-color', soloSelectedColor);
+      setActive('#soloConfigColors .solo-config-option', 'data-color', soloSelectedColor);
+      setActive('#soloSizePopover .solo-suboption', 'data-size', soloSelectedSize);
+      setActive('#soloConfigSizes .solo-config-option', 'data-size', soloSelectedSize);
+
+      const summary = document.getElementById('soloConfigSummary');
+      if(summary) summary.textContent = `الاختيار: ${soloSelectedColor || '--'} / ${soloSelectedSize || '--'}`;
+    }
+
+    function setSoloOptionPopover(panel){
+      const colorPop = document.getElementById('soloColorPopover');
+      const sizePop = document.getElementById('soloSizePopover');
+      const colorBtn = document.getElementById('soloColorBtn');
+      const sizeBtn = document.getElementById('soloSizeBtn');
+
+      const showColor = panel === 'color';
+      const showSize = panel === 'size';
+
+      if(colorPop) colorPop.hidden = !showColor;
+      if(sizePop) sizePop.hidden = !showSize;
+
+      if(colorBtn){
+        colorBtn.classList.toggle('active', showColor);
+        colorBtn.setAttribute('aria-expanded', showColor ? 'true' : 'false');
+      }
+      if(sizeBtn){
+        sizeBtn.classList.toggle('active', showSize);
+        sizeBtn.setAttribute('aria-expanded', showSize ? 'true' : 'false');
+      }
+    }
+
+    function setSoloCustomizerOpen(isOpen){
+      const frame = document.querySelector('#sect-gallery.solo .solo-frame');
+      if(frame) frame.classList.toggle('customize-open', isOpen);
+
+      const btn = document.getElementById('soloCustomsBtn');
+      if(btn){
+        btn.classList.toggle('active', isOpen);
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      }
+
+      const cfg = document.getElementById('soloConfig');
+      if(cfg) cfg.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    }
+
+    function setSoloInfoOpen(isOpen){
+      const frame = document.querySelector('#sect-gallery.solo .solo-frame');
+      if(frame) frame.classList.toggle('info-open', isOpen);
+
+      const btn = document.getElementById('soloInfoBtn');
+      if(btn){
+        btn.classList.toggle('active', isOpen);
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      }
+
+      const card = document.getElementById('soloInfoCard');
+      if(card) card.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    }
+
+    function openSolo(p){
+      const galleryEl = document.getElementById("sect-gallery");
+      if(galleryEl) galleryEl.classList.add("solo");
+
+      setSoloInfoOpen(false);
+      setSoloOptionPopover(null);
+      setSoloCustomizerOpen(false);
+      soloSelectedColor = "أحمر";
+      soloSelectedSize = "متوسط";
+      syncSoloSelections();
+
+      const soloName = document.getElementById("soloName");
+      if(soloName) soloName.textContent = p.name;
+
+      const soloFootTitle = document.getElementById("soloFootTitle");
+      if(soloFootTitle) soloFootTitle.textContent = p.name.toUpperCase();
+
+      const soloTitle = document.getElementById("soloTitle");
+      if(soloTitle) soloTitle.textContent = p.name.toUpperCase();
+
+      const soloStore = document.getElementById("soloStore");
+      if(soloStore) soloStore.textContent = p.store.name;
+
+      const spMat = document.getElementById("spMat");
+      if(spMat) spMat.textContent = p.specs.mat;
+
+      const spDim = document.getElementById("spDim");
+      if(spDim) spDim.textContent = p.specs.dim;
+
+      const soloInfoName = document.getElementById("soloInfoName");
+      if(soloInfoName) soloInfoName.textContent = p.name.toUpperCase();
+      const soloInfoLoc = document.getElementById("soloInfoLoc");
+      if(soloInfoLoc) soloInfoLoc.textContent = p.store.name;
+      const soloInfoMat = document.getElementById("soloInfoMat");
+      if(soloInfoMat) soloInfoMat.textContent = p.specs.mat;
+      const soloInfoDim = document.getElementById("soloInfoDim");
+      if(soloInfoDim) soloInfoDim.textContent = p.specs.dim;
+
+      const artistName = document.getElementById("artistName");
+      if(artistName) artistName.textContent = p.artist.name;
+      const artistRole = document.getElementById("artistRole");
+      if(artistRole) artistRole.textContent = p.artist.role;
+      const artistImg = document.getElementById("artistImg");
+      if(artistImg) artistImg.src = p.artist.img;
+
+      const modalArtistName = document.getElementById("modalArtistName");
+      if(modalArtistName) modalArtistName.textContent = p.artist.name;
+      const modalArtistRole = document.getElementById("modalArtistRole");
+      if(modalArtistRole) modalArtistRole.textContent = p.artist.role;
+      const modalArtistImg = document.getElementById("modalArtistImg");
+      if(modalArtistImg) modalArtistImg.src = p.artist.img;
+      const modalArtistBio = document.getElementById("modalArtistBio");
+      if(modalArtistBio) modalArtistBio.textContent = p.artist.bio;
+
+      renderActiveMedia(p, 'images');
+    }
+
+    function closeSolo(){
+      setSoloInfoOpen(false);
+      setSoloOptionPopover(null);
+      setSoloCustomizerOpen(false);
+      const galleryEl = document.getElementById("sect-gallery");
+      if(galleryEl) galleryEl.classList.remove("solo");
+    }
+
+    safeAdd("btnBack","click",closeSolo);
+    safeAdd("btnClose","click",closeSolo);
+    safeAdd("btnContactProduct","click",() => { window.location.href = "index.html"; });
+
+    safeAdd("soloInfoBtn","click", () => {
+      const frame = document.querySelector('#sect-gallery.solo .solo-frame');
+      if(!frame) return;
+      setSoloOptionPopover(null);
+      setSoloCustomizerOpen(false);
+      setSoloInfoOpen(!frame.classList.contains('info-open'));
+    });
+    safeAdd("soloInfoClose","click", () => setSoloInfoOpen(false));
+
+    safeAdd("soloColorBtn","click", () => {
+      setSoloInfoOpen(false);
+      setSoloCustomizerOpen(false);
+      const colorBtn = document.getElementById('soloColorBtn');
+      if(!colorBtn) return;
+      setSoloOptionPopover(colorBtn.classList.contains('active') ? null : 'color');
+    });
+
+    safeAdd("soloSizeBtn","click", () => {
+      setSoloInfoOpen(false);
+      setSoloCustomizerOpen(false);
+      const sizeBtn = document.getElementById('soloSizeBtn');
+      if(!sizeBtn) return;
+      setSoloOptionPopover(sizeBtn.classList.contains('active') ? null : 'size');
+    });
+
+    safeAdd("soloCustomsBtn","click", () => {
+      const frame = document.querySelector('#sect-gallery.solo .solo-frame');
+      if(!frame) return;
+      setSoloInfoOpen(false);
+      setSoloOptionPopover(null);
+      setSoloCustomizerOpen(!frame.classList.contains('customize-open'));
+    });
+    safeAdd("soloConfigClose","click", () => setSoloCustomizerOpen(false));
+
+    const soloColorPopover = document.getElementById('soloColorPopover');
+    if(soloColorPopover && soloColorPopover.dataset.bound !== "1"){
+      soloColorPopover.dataset.bound = "1";
+      soloColorPopover.addEventListener('click', (e) => {
+        const btn = e.target.closest('.solo-suboption');
+        if(!btn) return;
+        const color = btn.getAttribute('data-color');
+        if(color) soloSelectedColor = color;
+        syncSoloSelections();
+        setSoloOptionPopover(null);
+      });
+    }
+
+    const soloSizePopover = document.getElementById('soloSizePopover');
+    if(soloSizePopover && soloSizePopover.dataset.bound !== "1"){
+      soloSizePopover.dataset.bound = "1";
+      soloSizePopover.addEventListener('click', (e) => {
+        const btn = e.target.closest('.solo-suboption');
+        if(!btn) return;
+        const size = btn.getAttribute('data-size');
+        if(size) soloSelectedSize = size;
+        syncSoloSelections();
+        setSoloOptionPopover(null);
+      });
+    }
+
+    const soloConfig = document.getElementById('soloConfig');
+    if(soloConfig && soloConfig.dataset.bound !== "1"){
+      soloConfig.dataset.bound = "1";
+      soloConfig.addEventListener('click', (e) => {
+        const btn = e.target.closest('.solo-config-option');
+        if(!btn) return;
+        const color = btn.getAttribute('data-color');
+        const size = btn.getAttribute('data-size');
+        if(color) soloSelectedColor = color;
+        if(size) soloSelectedSize = size;
+        syncSoloSelections();
+      });
+    }
+
+    const modalArtist = document.getElementById("modalArtistOverlay");
+    const artistBtnEl = document.getElementById("artistBtn");
+    if(artistBtnEl) artistBtnEl.addEventListener("click", () => modalArtist && modalArtist.classList.add("open"));
+    safeAdd("closeArtistModal","click", () => modalArtist && modalArtist.classList.remove("open"));
+    window.addEventListener("click", (e) => { if(e.target === modalArtist) modalArtist.classList.remove("open"); });
+
+    render(PRODUCTS);
+  </script>
+</body>
+</html>
