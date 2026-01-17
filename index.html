@@ -423,6 +423,12 @@
     align-items:center;
     justify-content:center;
   }
+  .frame-logo{
+    height:48px;
+    width:auto;
+    max-width:70%;
+    display:block;
+  }
   .frame-bottom-bar{
     justify-content:flex-end;
     padding:0;
@@ -2649,7 +2655,7 @@
 <div class="layout">
   <div class="display-frame">
     <div class="frame-top-bar">
-      <h1 class="frame-headline">المعرض</h1>
+      <img class="frame-logo" src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696bfe1c41662fa6f44a3415_Screenshot_2026-01-17_222117-removebg-preview.png" alt="المعرض">
     </div>
     <div class="frame-split">
       <nav class="side-nav" id="sideNav">
@@ -3275,6 +3281,7 @@
   const frameRight = document.getElementById('frameRight');
   const enableMapbox = !!(mapEl && window.mapboxgl);
   const mapCountryNav = document.getElementById('mapCountryNav');
+  let pendingWorldFocus = false;
 
   if(enableMapbox){
     try{
@@ -3287,6 +3294,13 @@
         pitch: KAABA_PITCH,
         bearing: KAABA_BEARING,
         projection: 'globe'
+      });
+
+      map.on('load', () => {
+        if(pendingWorldFocus || (frameRight && frameRight.classList.contains('show-world-nav'))){
+          focusWorldMap();
+          pendingWorldFocus = false;
+        }
       });
 
       map.on('style.load', () => {
@@ -3650,7 +3664,7 @@
       category: "القرآن وعلومه",
       summary: "نص القرآن الكريم كاملاً مع تنسيق واضح للقراءة الإلكترونية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
-      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9.pdf"
+      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     },
     {
       title: "صحيح البخاري",
@@ -3658,7 +3672,7 @@
       category: "حديث نبوي",
       summary: "مختارات من أحاديث صحيحة مرتبة بعناية لسهولة التصفح.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
-      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9.pdf"
+      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     },
     {
       title: "صحيح مسلم",
@@ -3666,7 +3680,7 @@
       category: "حديث نبوي",
       summary: "عرض مختصر لأبواب الحديث مع ترتيب سلس للقراءة الرقمية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
-      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9.pdf"
+      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     },
     {
       title: "رياض الصالحين",
@@ -3674,7 +3688,7 @@
       category: "تزكية وأخلاق",
       summary: "مختارات تربوية وأخلاقية بإسلوب مبسط للقارئ.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
-      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9.pdf"
+      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     },
     {
       title: "الأربعون النووية",
@@ -3682,7 +3696,7 @@
       category: "حديث نبوي",
       summary: "أربعون حديثًا جامعًا لأصول الدين والآداب.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
-      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9.pdf"
+      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     },
     {
       title: "تفسير ابن كثير",
@@ -3690,7 +3704,7 @@
       category: "تفسير",
       summary: "مختارات تفسيرية مختصرة تسهّل فهم الآيات.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
-      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9.pdf"
+      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     },
     {
       title: "الفقه الميسر",
@@ -3698,7 +3712,7 @@
       category: "فقه",
       summary: "مبادئ فقهية أساسية بلغة سهلة للمبتدئين.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
-      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9.pdf"
+      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     },
     {
       title: "زاد المعاد",
@@ -3706,7 +3720,7 @@
       category: "سيرة وفقه",
       summary: "لمحات مختصرة من السيرة مع فوائد تربوية.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be456ea2862343aa4f3_WhatsApp%20Image%202026-01-16%20at%2014.39.18.jpeg",
-      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9.pdf"
+      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     },
     {
       title: "الرحيق المختوم",
@@ -3714,7 +3728,7 @@
       category: "سيرة",
       summary: "عرض موجز للسيرة النبوية بأسلوب قصصي.",
       image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
-      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9.pdf"
+      pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     }
   ];
 
@@ -3739,7 +3753,7 @@
   const pdfPageNum = document.getElementById('pdfPageNum');
   const pdfPageCount = document.getElementById('pdfPageCount');
   const pdfDownload = document.getElementById('pdfDownload');
-  const fallbackPdfUrl = "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9.pdf";
+  const fallbackPdfUrl = "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf";
 
   let pdfDoc = null;
   let pdfPage = 1;
@@ -3981,6 +3995,9 @@
     setOption6Slides(key === 'sect-extra-1');
     if(goldMarker && goldMarker.getElement()){
       goldMarker.getElement().style.display = showWorldNav ? 'none' : 'flex';
+    }
+    if(showWorldNav && !map){
+      pendingWorldFocus = true;
     }
     if(map && showMap){
       map.resize();
