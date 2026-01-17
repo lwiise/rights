@@ -1024,6 +1024,7 @@
     to{ opacity:1; transform:translateY(0); }
   }
   .kaaba-panel,
+  .kaaba-dup-panel,
   .sketchfab-panel{
     position:absolute;
     inset:0;
@@ -1054,6 +1055,16 @@
     display:none;
   }
   .frame-right.show-kaaba .map-panel{
+    display:none;
+  }
+  .frame-right.show-kaaba-dup .kaaba-dup-panel{
+    display:block;
+  }
+  .frame-right.show-kaaba-dup .shop,
+  .frame-right.show-kaaba-dup .map-panel,
+  .frame-right.show-kaaba-dup .kaaba-panel,
+  .frame-right.show-kaaba-dup .sketchfab-panel,
+  .frame-right.show-kaaba-dup .books-panel{
     display:none;
   }
   .frame-right.show-sketchfab .sketchfab-panel{
@@ -2686,6 +2697,16 @@
                 loading="eager"
               ></iframe>
             </div>
+            <div class="kaaba-dup-panel" id="kaabaDupPanel">
+              <iframe
+                class="fnn3dFrame"
+                src="/fnn-3d-kaaba-static/"
+                title="FNN 3D Kaaba Duplicate"
+                allow="fullscreen; autoplay"
+                allowfullscreen
+                loading="eager"
+              ></iframe>
+            </div>
             <div class="sketchfab-panel" id="sketchfabPanel">
               <div class="sketchfab-embed-wrapper">
                 <iframe
@@ -3788,11 +3809,13 @@
     if(topicEl) topicEl.textContent = data.table.topic;
     const showMap = key === 'sect-home';
     const showKaaba = key === 'sect-extra-1';
+    const showKaabaDup = key === 'sect-extra-5';
     const showSketchfab = key === 'sect-contact';
     const showBooks = key === 'sect-extra-2';
     if(frameRight){
       frameRight.classList.toggle('show-map', showMap);
       frameRight.classList.toggle('show-kaaba', showKaaba);
+      frameRight.classList.toggle('show-kaaba-dup', showKaabaDup);
       frameRight.classList.toggle('show-sketchfab', showSketchfab);
       frameRight.classList.toggle('show-books', showBooks);
     }

@@ -167,66 +167,16 @@
         ground.position.y = -0.01;
         scene.add(ground);
 
-        // Scene structures (wall, panoramic cylinder, cube, kaaba)
-        const kaabaGroup = new THREE.Group();
-        const wallGroup = new THREE.Group();
-        const cylinderGroup = new THREE.Group();
-        const cubeGroup = new THREE.Group();
-        scene.add(wallGroup, cylinderGroup, cubeGroup, kaabaGroup);
-
-        const wallGeo = new THREE.BoxGeometry(6.4, 3.4, 0.35);
-        const wallMat = new THREE.MeshStandardMaterial({
-            color: 0x1f1f1f,
-            roughness: 0.55,
-            metalness: 0.1,
-            transparent: true,
-            opacity: 1
-        });
-        const wall = new THREE.Mesh(wallGeo, wallMat);
-        wall.position.set(0, 1.7, 0);
-        wallGroup.add(wall);
-        wallGroup.rotation.y = 0.18;
-
-        const cylinderGeo = new THREE.CylinderGeometry(4.8, 4.8, 3.4, 64, 1, true);
-        const cylinderMat = new THREE.MeshStandardMaterial({
-            color: 0xdcdcdc,
-            roughness: 0.25,
-            metalness: 0.12,
-            emissive: 0x8a8a8a,
-            emissiveIntensity: 0.18,
-            side: THREE.DoubleSide,
-            transparent: true,
-            opacity: 0
-        });
-        const cylinder = new THREE.Mesh(cylinderGeo, cylinderMat);
-        cylinder.position.set(0, 1.7, 0);
-        cylinderGroup.add(cylinder);
-
-        const cubeGeo = new THREE.BoxGeometry(3.2, 3.2, 3.2);
-        const cubeMat = new THREE.MeshStandardMaterial({
-            color: 0x252525,
-            roughness: 0.4,
-            metalness: 0.15,
-            transparent: true,
-            opacity: 0
-        });
-        const cube = new THREE.Mesh(cubeGeo, cubeMat);
-        cube.position.set(0, 1.6, 0);
-        cubeGroup.add(cube);
-        cubeGroup.rotation.y = -0.25;
-
         // Kaaba proxy (simple elegant block to represent a central focal point)
         const kaabaGeo = new THREE.BoxGeometry(2.6, 2.6, 2.6);
         const kaabaMat = new THREE.MeshStandardMaterial({
             color: 0x050505,
             roughness: 0.6,
-            metalness: 0.02,
-            transparent: true,
-            opacity: 1
+            metalness: 0.02
         });
         const kaaba = new THREE.Mesh(kaabaGeo, kaabaMat);
         kaaba.position.set(0, 1.3, 0);
-        kaabaGroup.add(kaaba);
+        scene.add(kaaba);
 
         // Golden band
         const bandGeo = new THREE.BoxGeometry(2.65, 0.25, 2.65);
@@ -235,13 +185,11 @@
             roughness: 0.25,
             metalness: 0.3,
             emissive: 0x5a4a12,
-            emissiveIntensity: 0.22,
-            transparent: true,
-            opacity: 1
+            emissiveIntensity: 0.22
         });
         const band = new THREE.Mesh(bandGeo, bandMat);
         band.position.set(0, 2.2, 0);
-        kaabaGroup.add(band);
+        scene.add(band);
 
         // Subtle particles
         const pCount = 900;
@@ -282,7 +230,7 @@
                 height: (Math.random() - 0.5) * 1.6
             };
             orbiters.push(orb);
-            kaabaGroup.add(orb);
+            scene.add(orb);
         }
 
         // Postprocessing bloom
@@ -301,103 +249,33 @@
         const phases = [
             {
                 badge: 'Phase 1',
-                title: 'The Wall',
-                text: 'A sculptural 3D wall rises as the opening form.',
+                title: 'Sacred Makkah',
+                text: 'A calm establishing orbit around the Kaaba proxy with subtle golden bloom.',
                 camPos: new THREE.Vector3(12, 7, 12),
-                target: new THREE.Vector3(0, 1.6, 0)
+                target: new THREE.Vector3(0, 1.3, 0)
             },
             {
                 badge: 'Phase 2',
-                title: 'Panoramic Screen',
-                text: 'An immersive cylindrical screen wraps the space.',
-                camPos: new THREE.Vector3(8, 5.5, 12),
-                target: new THREE.Vector3(0, 1.7, 0)
+                title: 'Approach',
+                text: 'A closer, lower angle approach — more intimate and cinematic.',
+                camPos: new THREE.Vector3(6.5, 3.6, 10),
+                target: new THREE.Vector3(0, 1.5, 0)
             },
             {
                 badge: 'Phase 3',
-                title: 'The Cube',
-                text: 'A clean geometric cube takes center stage.',
-                camPos: new THREE.Vector3(10, 9, 6),
-                target: new THREE.Vector3(0, 1.6, 0)
+                title: 'Top Glow',
+                text: 'A higher view that emphasizes the golden band and ambient glow.',
+                camPos: new THREE.Vector3(10, 12, 4),
+                target: new THREE.Vector3(0, 2.2, 0)
             },
             {
                 badge: 'Phase 4',
-                title: 'Sacred Makkah',
-                text: 'Return to the Kaaba with golden accents and calm orbit.',
+                title: 'Wide Serenity',
+                text: 'A wide, serene angle with particles drifting and fog depth.',
                 camPos: new THREE.Vector3(18, 8, -14),
                 target: new THREE.Vector3(0, 1.3, 0)
             }
         ];
-
-        const phaseGroups = [wallGroup, cylinderGroup, cubeGroup, kaabaGroup];
-        const hiddenScale = 0.6;
-
-        const setMaterialOpacity = (material, value) => {
-            if (Array.isArray(material)) {
-                material.forEach((mat) => {
-                    mat.transparent = true;
-                    mat.opacity = value;
-                });
-                return;
-            }
-            material.transparent = true;
-            material.opacity = value;
-        };
-
-        const setGroupOpacity = (group, value) => {
-            group.traverse((child) => {
-                if (child.material) {
-                    setMaterialOpacity(child.material, value);
-                }
-            });
-        };
-
-        phaseGroups.forEach((group, idx) => {
-            if (idx !== 0) {
-                group.scale.set(hiddenScale, hiddenScale, hiddenScale);
-                setGroupOpacity(group, 0);
-                group.visible = false;
-            }
-        });
-
-        const setGroupActive = (group, active) => {
-            const touched = new Set();
-            group.visible = true;
-            gsap.killTweensOf(group.scale);
-            gsap.to(group.scale, {
-                x: active ? 1 : hiddenScale,
-                y: active ? 1 : hiddenScale,
-                z: active ? 1 : hiddenScale,
-                duration: 1.4,
-                ease: 'power2.inOut',
-                onComplete: () => {
-                    if (!active) {
-                        group.visible = false;
-                    }
-                }
-            });
-            group.traverse((child) => {
-                if (!child.material) return;
-                const mats = Array.isArray(child.material) ? child.material : [child.material];
-                mats.forEach((mat) => {
-                    if (touched.has(mat)) return;
-                    touched.add(mat);
-                    mat.transparent = true;
-                    gsap.killTweensOf(mat);
-                    gsap.to(mat, {
-                        opacity: active ? 1 : 0,
-                        duration: 1.1,
-                        ease: 'power2.inOut'
-                    });
-                });
-            });
-        };
-
-        const setStructurePhase = (phaseIndex) => {
-            phaseGroups.forEach((group, idx) => {
-                setGroupActive(group, idx === phaseIndex);
-            });
-        };
 
         let currentPhase = 0;
 
@@ -411,7 +289,6 @@
         function goToPhase(phaseIndex) {
             currentPhase = phaseIndex;
             const p = phases[phaseIndex];
-            setStructurePhase(phaseIndex);
 
             // Animate camera and controls target
             gsap.to(camera.position, {
