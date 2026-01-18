@@ -3237,7 +3237,7 @@
   const KAABA_BEARING = -25;
   const isMobile = window.innerWidth < 900;
   const startZoom = isMobile ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
-  const WORLD_VIEW = { center:[10, 20], zoom:1.2, pitch:0, bearing:0 };
+  const WORLD_VIEW = { center:[0, 0], zoom:0.96, pitch:0, bearing:0 };
   const COUNTRY_TARGETS = {
     sa: { center:[45.0792, 23.8859], zoom:4.2 },
     eg: { center:[30.8025, 26.8206], zoom:4.3 },
@@ -4933,7 +4933,7 @@
     render(PRODUCTS);
 
     // Default active nav = Gallery
-    switchSection('sect-gallery');
+    switchSection('sect-home');
 
     setupProcessAnimation();
   })();

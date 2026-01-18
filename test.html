@@ -268,9 +268,18 @@
             setTimeout(() => {
                 document.getElementById('info-title').innerText = phases[idx].title;
                 document.getElementById('info-desc').innerText = phases[idx].desc;
-                panel.classList.add('visible');
-            }, 500);
-        }
+            panel.classList.add('visible');
+        }, 500);
+    }
+
+        window.addEventListener('message', (event) => {
+            const data = event.data || {};
+            if (data.type !== 'goToPhase') return;
+            const idx = Number(data.index);
+            if (Number.isFinite(idx)) {
+                goToPhase(idx);
+            }
+        });
 
         document.getElementById('prev-btn').onclick = (e) => { e.stopPropagation(); goToPhase(currentPhase - 1); };
         document.getElementById('next-btn').onclick = (e) => { e.stopPropagation(); goToPhase(currentPhase + 1); };
