@@ -3244,6 +3244,7 @@
   const isMobile = window.innerWidth < 900;
   const startZoom = isMobile ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
   const WORLD_VIEW = { center:[0, 0], zoom:0.96, pitch:0, bearing:0 };
+  const WORLD_PADDING = { top:0, right:0, bottom:0, left:0 };
   const COUNTRY_TARGETS = {
     sa: { center:[45.0792, 23.8859], zoom:4.2 },
     eg: { center:[30.8025, 26.8206], zoom:4.3 },
@@ -3297,8 +3298,11 @@
       center: WORLD_VIEW.center,
       zoom: WORLD_VIEW.zoom,
       pitch: WORLD_VIEW.pitch,
-      bearing: WORLD_VIEW.bearing
+      bearing: WORLD_VIEW.bearing,
+      padding: WORLD_PADDING,
+      offset: [0, 0]
     };
+    map.setPadding(WORLD_PADDING);
     if(immediate){
       map.jumpTo(opts);
     } else {
