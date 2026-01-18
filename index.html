@@ -3270,6 +3270,19 @@
     } catch(e){}
   }
 
+  function setMapInteractive(enabled){
+    if(!map) return;
+    const action = enabled ? 'enable' : 'disable';
+    const controls = ['scrollZoom', 'boxZoom', 'dragRotate', 'dragPan', 'keyboard', 'doubleClickZoom', 'touchZoomRotate'];
+    controls.forEach((name) => {
+      if(map[name] && map[name][action]){
+        map[name][action]();
+      }
+    });
+    const canvas = map.getCanvas && map.getCanvas();
+    if(canvas) canvas.style.pointerEvents = enabled ? 'auto' : 'none';
+  }
+
   function focusWorldMap(immediate){
     if(!map) return;
     const opts = {
@@ -3326,6 +3339,7 @@
         if(pendingWorldFocus || (frameRight && frameRight.classList.contains('show-world-nav'))){
           setMapFog('world');
           focusWorldMap(true);
+          setMapInteractive(true);
           pendingWorldFocus = false;
         }
       });
@@ -4026,9 +4040,11 @@
       if(showWorldNav){
         setMapFog('world');
         focusWorldMap(true);
+        setMapInteractive(true);
       } else {
         setMapFog('normal');
         focusKaabaMap();
+        setMapInteractive(true);
       }
     }
     if(showBooks){
