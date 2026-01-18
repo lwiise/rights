@@ -3251,16 +3251,23 @@
     return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
   }
 
-  function focusWorldMap(){
+  function focusWorldMap(immediate){
     if(!map) return;
-    map.easeTo({
+    const opts = {
       center: WORLD_VIEW.center,
       zoom: WORLD_VIEW.zoom,
       pitch: WORLD_VIEW.pitch,
-      bearing: WORLD_VIEW.bearing,
-      duration: 1500,
-      easing: easeInOutQuad
-    });
+      bearing: WORLD_VIEW.bearing
+    };
+    if(immediate){
+      map.jumpTo(opts);
+    } else {
+      map.easeTo({
+        ...opts,
+        duration: 1500,
+        easing: easeInOutQuad
+      });
+    }
   }
 
   function focusKaabaMap(){
@@ -3298,7 +3305,7 @@
 
       map.on('load', () => {
         if(pendingWorldFocus || (frameRight && frameRight.classList.contains('show-world-nav'))){
-          focusWorldMap();
+          focusWorldMap(true);
           pendingWorldFocus = false;
         }
       });
@@ -4002,7 +4009,7 @@
     if(map && showMap){
       map.resize();
       if(showWorldNav){
-        focusWorldMap();
+        focusWorldMap(true);
       } else {
         focusKaabaMap();
       }
