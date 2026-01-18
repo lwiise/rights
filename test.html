@@ -343,6 +343,14 @@
         document.getElementById('next-btn').onclick = (e) => { e.stopPropagation(); goToPhase(currentPhase + 1); };
         document.getElementById('reset-btn').onclick = (e) => { e.stopPropagation(); goToPhase(0); };
 
+        window.addEventListener('message', (event) => {
+            const data = event.data || {};
+            if (data.type !== 'goToPhase') return;
+            const next = Number(data.index);
+            if (Number.isNaN(next)) return;
+            goToPhase(next);
+        });
+
         function animate() {
             requestAnimationFrame(animate);
             material.uniforms.uTime.value = performance.now() / 1000;

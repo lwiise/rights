@@ -3584,19 +3584,19 @@
 
   // Map sections to the 5-phase Kaaba nav in the left iframe
   const KAABA_PHASE_MAP = {
-    'sect-gallery': 0,
+    'sect-home': 0,
     'sect-about': 1,
     'sect-services': 2,
-    'sect-contact': 3,
-    'sect-extra-1': 4,
-    'sect-extra-2': 0,
-    'sect-extra-3': 1,
-    'sect-extra-4': 2,
-    'sect-extra-5': 3,
-    'sect-home': 0
+    'sect-gallery': 3,
+    'sect-contact': 4,
+    'sect-extra-1': 5,
+    'sect-extra-2': 6,
+    'sect-extra-3': 7,
+    'sect-extra-4': 8,
+    'sect-extra-5': 9
   };
   const leftKaabaFrame = document.getElementById('leftKaabaFrame');
-  let currentKaabaPhase = Number.isFinite(KAABA_PHASE_MAP['sect-gallery']) ? KAABA_PHASE_MAP['sect-gallery'] : 0;
+  let currentKaabaPhase = Number.isFinite(KAABA_PHASE_MAP['sect-home']) ? KAABA_PHASE_MAP['sect-home'] : 0;
   const bodyEl = document.body;
   let currentView = 'gallery';
   let galleryMapFrame = null;
