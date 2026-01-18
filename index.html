@@ -3237,7 +3237,7 @@
   const KAABA_BEARING = -25;
   const isMobile = window.innerWidth < 900;
   const startZoom = isMobile ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
-  const WORLD_VIEW = { center:[0, 20], zoom:1.35, pitch:0, bearing:0 };
+  const WORLD_VIEW = { center:[10, 20], zoom:1.2, pitch:0, bearing:0 };
   const COUNTRY_TARGETS = {
     sa: { center:[45.0792, 23.8859], zoom:4.2 },
     eg: { center:[30.8025, 26.8206], zoom:4.3 },
@@ -3249,6 +3249,25 @@
 
   function easeInOutQuad(t){
     return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+  }
+  const MAP_FOG_NORMAL = {
+    'color': 'rgb(245, 245, 245)',
+    'high-color': 'rgb(200, 200, 200)',
+    'space-color': 'rgb(225, 225, 225)',
+    'star-intensity': 0.1
+  };
+  const MAP_FOG_WORLD = {
+    'color': 'rgb(220, 220, 220)',
+    'high-color': 'rgb(150, 150, 150)',
+    'space-color': 'rgb(30, 30, 30)',
+    'star-intensity': 0.3
+  };
+
+  function setMapFog(mode){
+    if(!map || !map.setFog) return;
+    try{
+      map.setFog(mode === 'world' ? MAP_FOG_WORLD : MAP_FOG_NORMAL);
+    } catch(e){}
   }
 
   function focusWorldMap(immediate){
@@ -3305,6 +3324,7 @@
 
       map.on('load', () => {
         if(pendingWorldFocus || (frameRight && frameRight.classList.contains('show-world-nav'))){
+          setMapFog('world');
           focusWorldMap(true);
           pendingWorldFocus = false;
         }
@@ -3312,12 +3332,7 @@
 
       map.on('style.load', () => {
         try {
-          map.setFog({
-            'color': 'rgb(245, 245, 245)',
-            'high-color': 'rgb(200, 200, 200)',
-            'space-color': 'rgb(225, 225, 225)',
-            'star-intensity': 0.1
-          });
+          map.setFog(MAP_FOG_NORMAL);
         } catch(e){}
 
         const layers = map.getStyle().layers || [];
@@ -4009,8 +4024,10 @@
     if(map && showMap){
       map.resize();
       if(showWorldNav){
+        setMapFog('world');
         focusWorldMap(true);
       } else {
+        setMapFog('normal');
         focusKaabaMap();
       }
     }
