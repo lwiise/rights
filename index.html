@@ -445,12 +445,11 @@
   .tv-strip{
     position:absolute;
     inset:0;
-    display:none;
+    display:flex;
     align-items:stretch;
     padding:0 28px;
     gap:0;
   }
-  body.show-option1-tv .tv-strip{ display:flex; }
   .tv-slot{
     flex:1 1 50%;
     display:flex;
@@ -4272,7 +4271,6 @@
     const showSketchfab = key === 'sect-home';
     const showBooks = key === 'sect-extra-2';
     const showWorldNav = key === 'sect-extra-3';
-    bodyEl.classList.toggle('show-option1-tv', key === 'sect-home' || key === 'sect-contact');
     if(frameRight){
       frameRight.classList.toggle('show-map', showMap);
       frameRight.classList.toggle('show-kaaba', showKaaba);
