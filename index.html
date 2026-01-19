@@ -72,14 +72,15 @@
     display:block;
   }
 
-  #map{
+  .map-canvas{
     width:100%;
     height:100%;
-    position:relative;
+    position:absolute;
+    inset:0;
     pointer-events:auto;
   }
-  #map .mapboxgl-canvas,
-  #map .mapboxgl-canvas-container{
+  .map-canvas .mapboxgl-canvas,
+  .map-canvas .mapboxgl-canvas-container{
     pointer-events:auto;
   }
 
@@ -460,7 +461,7 @@
     height:100%;
     width:auto;
     aspect-ratio:16 / 9;
-    border:2px solid #111;
+    border:5px solid #9a9a9a;
     border-radius:20px;
     background:#fff;
     overflow:hidden;
@@ -719,6 +720,11 @@
     z-index:1;
     display:none;
   }
+  #mapOption8{ display:none; }
+  .frame-right.show-world-nav #mapOption5{ display:none; }
+  .frame-right.show-world-nav #mapOption8{ display:block; }
+  .frame-right:not(.show-world-nav) #mapOption5{ display:block; }
+  .frame-right:not(.show-world-nav) #mapOption8{ display:none; }
   .map-country-nav{
     position:absolute;
     right:18px;
@@ -2579,7 +2585,7 @@
     }
     .layout{ height:auto; min-height:100vh; }
     .layout{ flex-direction:column; }
-    #map{ width:100%; height:100%; }
+    .map-canvas{ width:100%; height:100%; }
     .shop{
       width:100%;
       height:auto;
@@ -2847,7 +2853,8 @@
         <div class="right-slider" id="rightSlider">
           <div class="right-slide" data-slide="0">
             <div class="map-panel" id="mapPanel">
-              <div id="map"></div>
+              <div id="mapOption5" class="map-canvas"></div>
+              <div id="mapOption8" class="map-canvas"></div>
               <div class="map-country-nav" id="mapCountryNav">
                 <button type="button" data-lang="ar">العربية</button>
                 <button type="button" data-lang="en">الإنجليزية</button>
@@ -3324,12 +3331,12 @@
       <div class="tv-strip" id="option1TvStrip">
         <div class="tv-slot">
           <div class="tv-screen">
-            <img class="tv-media" src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e348c37975c0a06a_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_10%20PM.png" alt="TV left">
+            <img class="tv-media" src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696e453cf90a493d25ce4d79_Screenshot%202026-01-19%20155219.png" alt="TV left">
           </div>
         </div>
         <div class="tv-slot">
           <div class="tv-screen">
-            <img class="tv-media" src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c615c5f7359cf0e0bcd_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_14%20PM.png" alt="TV right">
+            <img class="tv-media" src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696cd7032a368dd983db313e_Gemini_Generated_Image_g4hqrng4hqrng4hq.avif" alt="TV right">
           </div>
         </div>
       </div>
@@ -3393,30 +3400,30 @@
     'star-intensity': 0.3
   };
 
-  function setMapFog(mode){
-    if(!map || !map.setFog) return;
+  function setMapFog(mapInstance, mode){
+    if(!mapInstance || !mapInstance.setFog) return;
     try{
-      map.setFog(mode === 'world' ? MAP_FOG_WORLD : MAP_FOG_NORMAL);
+      mapInstance.setFog(mode === 'world' ? MAP_FOG_WORLD : MAP_FOG_NORMAL);
     } catch(e){}
   }
 
-  function setMapInteractive(enabled){
-    if(!map) return;
+  function setMapInteractive(mapInstance, enabled){
+    if(!mapInstance) return;
     const action = enabled ? 'enable' : 'disable';
     const controls = ['scrollZoom', 'boxZoom', 'dragRotate', 'dragPan', 'keyboard', 'doubleClickZoom', 'touchZoomRotate'];
     controls.forEach((name) => {
-      if(map[name] && map[name][action]){
-        map[name][action]();
+      if(mapInstance[name] && mapInstance[name][action]){
+        mapInstance[name][action]();
       }
     });
-    const canvas = map.getCanvas && map.getCanvas();
+    const canvas = mapInstance.getCanvas && mapInstance.getCanvas();
     if(canvas) canvas.style.pointerEvents = enabled ? 'auto' : 'none';
-    const canvasContainer = map.getCanvasContainer && map.getCanvasContainer();
+    const canvasContainer = mapInstance.getCanvasContainer && mapInstance.getCanvasContainer();
     if(canvasContainer) canvasContainer.style.pointerEvents = enabled ? 'auto' : 'none';
   }
 
-  function focusWorldMap(immediate){
-    if(!map) return;
+  function focusWorldMap(mapInstance, immediate){
+    if(!mapInstance) return;
     const opts = {
       center: WORLD_VIEW.center,
       zoom: WORLD_VIEW.zoom,
@@ -3425,11 +3432,11 @@
       padding: WORLD_PADDING,
       offset: [0, 0]
     };
-    map.setPadding(WORLD_PADDING);
+    mapInstance.setPadding(WORLD_PADDING);
     if(immediate){
-      map.jumpTo(opts);
+      mapInstance.jumpTo(opts);
     } else {
-      map.easeTo({
+      mapInstance.easeTo({
         ...opts,
         duration: 1500,
         easing: easeInOutQuad
@@ -3437,9 +3444,9 @@
     }
   }
 
-  function focusKaabaMap(){
-    if(!map) return;
-    map.easeTo({
+  function focusKaabaMap(mapInstance){
+    if(!mapInstance) return;
+    mapInstance.easeTo({
       center: KAABA_CENTER,
       zoom: startZoom,
       pitch: KAABA_PITCH,
@@ -3450,18 +3457,21 @@
   }
 
   let map = null;
+  let option8Map = null;
   let goldMarker = null;
-  const mapEl = document.getElementById('map');
+  const mapElOption5 = document.getElementById('mapOption5');
+  const mapElOption8 = document.getElementById('mapOption8');
   const frameRight = document.getElementById('frameRight');
-  const enableMapbox = !!(mapEl && window.mapboxgl);
+  const enableMapboxOption5 = !!(mapElOption5 && window.mapboxgl);
+  const enableMapboxOption8 = !!(mapElOption8 && window.mapboxgl);
   const mapCountryNav = document.getElementById('mapCountryNav');
   let pendingWorldFocus = false;
 
-  if(enableMapbox){
+  if(enableMapboxOption5){
     try{
       mapboxgl.accessToken = MAPBOX_TOKEN;
       map = new mapboxgl.Map({
-        container: "map",
+        container: "mapOption5",
         style: USER_STYLE,
         center: KAABA_CENTER,
         zoom: startZoom,
@@ -3472,17 +3482,12 @@
       });
 
       map.on('load', () => {
-        setMapInteractive(true);
-        if(pendingWorldFocus || (frameRight && frameRight.classList.contains('show-world-nav'))){
-          setMapFog('world');
-          focusWorldMap(true);
-          pendingWorldFocus = false;
-        }
+        setMapInteractive(map, true);
       });
 
       map.on('style.load', () => {
         try {
-          map.setFog(MAP_FOG_NORMAL);
+          setMapFog(map, 'normal');
         } catch(e){}
 
         const layers = map.getStyle().layers || [];
@@ -3529,14 +3534,45 @@
     }
   }
 
+  if(enableMapboxOption8){
+    try{
+      mapboxgl.accessToken = MAPBOX_TOKEN;
+      option8Map = new mapboxgl.Map({
+        container: "mapOption8",
+        style: USER_STYLE,
+        center: WORLD_VIEW.center,
+        zoom: WORLD_VIEW.zoom,
+        pitch: WORLD_VIEW.pitch,
+        bearing: WORLD_VIEW.bearing,
+        projection: 'globe',
+        interactive: true
+      });
+
+      option8Map.on('load', () => {
+        setMapInteractive(option8Map, true);
+        setMapFog(option8Map, 'world');
+        focusWorldMap(option8Map, true);
+        pendingWorldFocus = false;
+      });
+
+      option8Map.on('style.load', () => {
+        try{
+          setMapFog(option8Map, 'world');
+        } catch(e){}
+      });
+    } catch(e){
+      option8Map = null;
+    }
+  }
+
   if(mapCountryNav){
     mapCountryNav.addEventListener('click', (e) => {
       const btn = e.target.closest('button[data-lang]');
-      if(!btn || !map) return;
+      if(!btn || !option8Map) return;
       const target = LANGUAGE_TARGETS[btn.dataset.lang];
       if(!target) return;
-      map.stop();
-      map.easeTo({
+      option8Map.stop();
+      option8Map.easeTo({
         center: target.center,
         zoom: target.zoom,
         pitch: 0,
@@ -3774,6 +3810,10 @@
       requestAnimationFrame(() => map.resize());
       setTimeout(() => map.resize(), 200);
     }
+    if(option8Map){
+      requestAnimationFrame(() => option8Map.resize());
+      setTimeout(() => option8Map.resize(), 200);
+    }
   }
 
   function startGalleryMapMotion(){
@@ -3893,19 +3933,26 @@
     slideButtons.forEach(btn => {
       btn.classList.toggle('active', Number(btn.dataset.slide) === clamped);
     });
-    if(map && clamped === 0 && frameRight && frameRight.classList.contains('show-map')){
-      requestAnimationFrame(() => map.resize());
-      setTimeout(() => map.resize(), 200);
+    if(clamped === 0 && frameRight && frameRight.classList.contains('show-map')){
+      if(frameRight.classList.contains('show-world-nav')){
+        if(option8Map){
+          requestAnimationFrame(() => option8Map.resize());
+          setTimeout(() => option8Map.resize(), 200);
+        }
+      } else if(map){
+        requestAnimationFrame(() => map.resize());
+        setTimeout(() => map.resize(), 200);
+      }
     }
   }
 
   const bookData = [
     {
-      title: "القرآن الكريم",
-      author: "مصحف المدينة",
-      category: "القرآن وعلومه",
-      summary: "نص القرآن الكريم كاملاً مع تنسيق واضح للقراءة الإلكترونية.",
-      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
+      title: "صحيح مسلم",
+      author: "الإمام مسلم",
+      category: "حديث نبوي",
+      summary: "عرض مختصر لأبواب الحديث مع ترتيب سلس للقراءة الرقمية.",
+      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
       pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     },
     {
@@ -3917,11 +3964,11 @@
       pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     },
     {
-      title: "صحيح مسلم",
-      author: "الإمام مسلم",
-      category: "حديث نبوي",
-      summary: "عرض مختصر لأبواب الحديث مع ترتيب سلس للقراءة الرقمية.",
-      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be422e2de6ce0bc85d6_WhatsApp%20Image%202026-01-16%20at%2014.08.42.jpeg",
+      title: "القرآن الكريم",
+      author: "مصحف المدينة",
+      category: "القرآن وعلومه",
+      summary: "نص القرآن الكريم كاملاً مع تنسيق واضح للقراءة الإلكترونية.",
+      image: "https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696a4be471d8db6495f3ffdb_WhatsApp%20Image%202026-01-16%20at%2014.10.40.jpeg",
       pdf: "https://raw.githubusercontent.com/lwiise/car/main/book_pages_16x9_cover_centered.pdf"
     },
     {
@@ -4225,7 +4272,7 @@
     const showSketchfab = key === 'sect-home';
     const showBooks = key === 'sect-extra-2';
     const showWorldNav = key === 'sect-extra-3';
-    bodyEl.classList.toggle('show-option1-tv', key === 'sect-home');
+    bodyEl.classList.toggle('show-option1-tv', key === 'sect-home' || key === 'sect-contact');
     if(frameRight){
       frameRight.classList.toggle('show-map', showMap);
       frameRight.classList.toggle('show-kaaba', showKaaba);
@@ -4239,20 +4286,23 @@
     if(goldMarker && goldMarker.getElement()){
       goldMarker.getElement().style.display = showWorldNav ? 'none' : 'flex';
     }
-    if(showWorldNav && !map){
+    if(showWorldNav && !option8Map){
       pendingWorldFocus = true;
     }
-    if(map && showMap){
-      map.resize();
+    if(showMap){
       if(showWorldNav){
-        setMapFog('world');
-        focusWorldMap(true);
-        setMapInteractive(true);
-      } else {
-        setMapFog('normal');
+        if(option8Map){
+          option8Map.resize();
+          setMapFog(option8Map, 'world');
+          focusWorldMap(option8Map, true);
+          setMapInteractive(option8Map, true);
+        }
+      } else if(map){
+        map.resize();
+        setMapFog(map, 'normal');
         map.stop();
-        focusKaabaMap();
-        setMapInteractive(true);
+        focusKaabaMap(map);
+        setMapInteractive(map, false);
       }
     }
     if(showBooks){
@@ -5162,4 +5212,5 @@
 </script>
 </body>
 </html>
+
 
