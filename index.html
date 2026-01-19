@@ -2745,12 +2745,12 @@
             <div class="map-panel" id="mapPanel">
               <div id="map"></div>
               <div class="map-country-nav" id="mapCountryNav">
-                <button type="button" data-country="sa">السعودية</button>
-                <button type="button" data-country="eg">مصر</button>
-                <button type="button" data-country="tr">تركيا</button>
-                <button type="button" data-country="id">إندونيسيا</button>
-                <button type="button" data-country="ma">المغرب</button>
-                <button type="button" data-country="us">الولايات المتحدة</button>
+                <button type="button" data-lang="ar">العربية</button>
+                <button type="button" data-lang="en">الإنجليزية</button>
+                <button type="button" data-lang="tr">التركية</button>
+                <button type="button" data-lang="id">الإندونيسية</button>
+                <button type="button" data-lang="fr">الفرنسية</button>
+                <button type="button" data-lang="es">الإسبانية</button>
               </div>
               <div class="map-kaaba-box" id="mapWallBox">
                 <div class="map-wall-rotator">
@@ -3252,13 +3252,13 @@
   const startZoom = isMobile ? KAABA_ZOOM_MOBILE : KAABA_ZOOM_DESKTOP;
   const WORLD_VIEW = { center:[0, 0], zoom:0.96, pitch:0, bearing:0 };
   const WORLD_PADDING = { top:0, right:0, bottom:0, left:0 };
-  const COUNTRY_TARGETS = {
-    sa: { center:[45.0792, 23.8859], zoom:4.2 },
-    eg: { center:[30.8025, 26.8206], zoom:4.3 },
+  const LANGUAGE_TARGETS = {
+    ar: { center:[45.0792, 23.8859], zoom:4.2 },
+    en: { center:[-98.5795, 39.8283], zoom:3.6 },
     tr: { center:[35.2433, 38.9637], zoom:4.4 },
     id: { center:[113.9213, -0.7893], zoom:4.0 },
-    ma: { center:[-7.0926, 31.7917], zoom:4.3 },
-    us: { center:[-98.5795, 39.8283], zoom:3.6 }
+    fr: { center:[2.2137, 46.2276], zoom:4.6 },
+    es: { center:[-3.7492, 40.4637], zoom:4.6 }
   };
 
   function easeInOutQuad(t){
@@ -3415,9 +3415,9 @@
 
   if(mapCountryNav){
     mapCountryNav.addEventListener('click', (e) => {
-      const btn = e.target.closest('button[data-country]');
+      const btn = e.target.closest('button[data-lang]');
       if(!btn || !map) return;
-      const target = COUNTRY_TARGETS[btn.dataset.country];
+      const target = LANGUAGE_TARGETS[btn.dataset.lang];
       if(!target) return;
       map.stop();
       map.easeTo({
