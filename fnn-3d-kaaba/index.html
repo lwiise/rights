@@ -174,17 +174,56 @@
         const cubeGroup = new THREE.Group();
         scene.add(wallGroup, cylinderGroup, cubeGroup, kaabaGroup);
 
-        const wallGeo = new THREE.BoxGeometry(6.4, 3.4, 0.35);
-        const wallMat = new THREE.MeshStandardMaterial({
+        const humanMat = new THREE.MeshStandardMaterial({
             color: 0x1f1f1f,
-            roughness: 0.55,
-            metalness: 0.1,
+            roughness: 0.6,
+            metalness: 0.08,
             transparent: true,
             opacity: 1
         });
-        const wall = new THREE.Mesh(wallGeo, wallMat);
-        wall.position.set(0, 1.7, 0);
-        wallGroup.add(wall);
+        const accentMat = new THREE.MeshStandardMaterial({
+            color: 0xd4af37,
+            roughness: 0.25,
+            metalness: 0.3,
+            emissive: 0x6b5515,
+            emissiveIntensity: 0.2,
+            transparent: true,
+            opacity: 1
+        });
+
+        const humanGroup = new THREE.Group();
+        const head = new THREE.Mesh(new THREE.SphereGeometry(0.38, 24, 24), accentMat);
+        head.position.set(0, 2.65, 0);
+        humanGroup.add(head);
+
+        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.75, 1.6, 24), humanMat);
+        torso.position.set(0, 1.55, 0);
+        humanGroup.add(torso);
+
+        const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 1.2, 16), humanMat);
+        leftArm.rotation.z = Math.PI / 2.2;
+        leftArm.position.set(-0.95, 1.8, 0);
+        humanGroup.add(leftArm);
+
+        const rightArm = leftArm.clone();
+        rightArm.position.set(0.95, 1.8, 0);
+        rightArm.rotation.z = -Math.PI / 2.2;
+        humanGroup.add(rightArm);
+
+        const leftLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.26, 1.4, 18), humanMat);
+        leftLeg.position.set(-0.28, 0.4, 0);
+        humanGroup.add(leftLeg);
+
+        const rightLeg = leftLeg.clone();
+        rightLeg.position.set(0.28, 0.4, 0);
+        humanGroup.add(rightLeg);
+
+        const cloak = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.55, 1.5, 28), humanMat);
+        cloak.position.set(0, 1.05, 0);
+        cloak.rotation.y = 0.08;
+        humanGroup.add(cloak);
+
+        wallGroup.add(humanGroup);
         wallGroup.rotation.y = 0.18;
 
         const cylinderGeo = new THREE.CylinderGeometry(4.8, 4.8, 3.4, 64, 1, true);
@@ -301,8 +340,8 @@
         const phases = [
             {
                 badge: 'Phase 1',
-                title: 'The Wall',
-                text: 'A sculptural 3D wall rises as the opening form.',
+                title: 'The Human',
+                text: 'A human figure opens the experience with calm presence.',
                 camPos: new THREE.Vector3(12, 7, 12),
                 target: new THREE.Vector3(0, 1.6, 0)
             },
