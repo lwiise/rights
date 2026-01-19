@@ -440,6 +440,62 @@
     padding:0;
     gap:0;
   }
+  .auth-gate{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,0.7);
+    padding:20px;
+  }
+  .auth-gate-card{
+    width:min(360px, 92vw);
+    background:#fff;
+    color:#111;
+    border-radius:16px;
+    padding:22px;
+    box-shadow:0 24px 60px rgba(0,0,0,0.4);
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .auth-title{
+    margin:0 0 6px;
+    font-size:20px;
+    font-weight:800;
+  }
+  .auth-label{
+    font-size:12px;
+    font-weight:700;
+    color:#555;
+  }
+  .auth-input{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid #ddd;
+    border-radius:10px;
+    font-size:14px;
+  }
+  .auth-submit{
+    margin-top:6px;
+    width:100%;
+    border:0;
+    border-radius:10px;
+    padding:10px 12px;
+    background:#111;
+    color:#fff;
+    font-weight:800;
+    cursor:pointer;
+  }
+  .auth-error{
+    display:none;
+    font-size:12px;
+    color:#b00020;
+  }
+  body.auth-locked .layout{ display:none; }
+  body.auth-locked .auth-gate{ display:flex; }
   .frame-headline{
     margin:0;
     font-size:28px;
@@ -2664,7 +2720,18 @@
 </style>
 </head>
 
-<body>
+<body class="auth-locked">
+<div class="auth-gate" id="authGate">
+  <form class="auth-gate-card" id="authForm" autocomplete="off">
+    <h2 class="auth-title">Sign in</h2>
+    <label class="auth-label" for="authUser">Username</label>
+    <input class="auth-input" id="authUser" name="username" type="text" autocomplete="off" required>
+    <label class="auth-label" for="authPass">Password</label>
+    <input class="auth-input" id="authPass" name="password" type="password" autocomplete="off" required>
+    <button class="auth-submit" type="submit">Enter</button>
+    <div class="auth-error" id="authError">Invalid credentials.</div>
+  </form>
+</div>
 <div class="layout">
   <div class="display-frame">
     <div class="frame-top-bar">
@@ -3600,6 +3667,38 @@
   const bodyEl = document.body;
   let currentView = 'gallery';
   let galleryMapFrame = null;
+
+  const authForm = document.getElementById('authForm');
+  const authGate = document.getElementById('authGate');
+  const authUser = document.getElementById('authUser');
+  const authPass = document.getElementById('authPass');
+  const authError = document.getElementById('authError');
+  const AUTH_USER = "mohamed";
+  const AUTH_PASS = "allah.mohamed";
+
+  function unlockSite(){
+    bodyEl.classList.remove('auth-locked');
+    if(authGate) authGate.setAttribute('aria-hidden', 'true');
+  }
+
+  if(authForm){
+    authForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const user = authUser ? authUser.value.trim() : "";
+      const pass = authPass ? authPass.value : "";
+      if(user === AUTH_USER && pass === AUTH_PASS){
+        if(authError) authError.style.display = "none";
+        if(authPass) authPass.value = "";
+        unlockSite();
+      } else {
+        if(authError) authError.style.display = "block";
+      }
+    });
+
+    authForm.addEventListener('input', () => {
+      if(authError) authError.style.display = "none";
+    });
+  }
 
   function sendKaabaPhase(phase){
     currentKaabaPhase = phase;
