@@ -439,6 +439,39 @@
     justify-content:flex-end;
     padding:0;
     gap:0;
+    position:relative;
+  }
+  .tv-strip{
+    position:absolute;
+    inset:0;
+    display:none;
+    align-items:flex-end;
+    padding:0 28px 12px;
+    gap:0;
+  }
+  body.show-option1-tv .tv-strip{ display:flex; }
+  .tv-slot{
+    flex:1 1 50%;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+  }
+  .tv-screen{
+    width:60px;
+    height:100%;
+    border:2px solid #111;
+    border-radius:20px;
+    background:#fff;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .tv-media{
+    width:100%;
+    aspect-ratio:16 / 9;
+    display:block;
+    object-fit:cover;
   }
   .auth-gate{
     position:fixed;
@@ -3283,7 +3316,19 @@
         </div>
       </div>
     </div>
-    <div class="frame-bottom-bar">
+    <div class="frame-bottom-bar" id="frameBottomBar">
+      <div class="tv-strip" id="option1TvStrip">
+        <div class="tv-slot">
+          <div class="tv-screen">
+            <img class="tv-media" src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e348c37975c0a06a_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_10%20PM.png" alt="TV left">
+          </div>
+        </div>
+        <div class="tv-slot">
+          <div class="tv-screen">
+            <img class="tv-media" src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c615c5f7359cf0e0bcd_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_14%20PM.png" alt="TV right">
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -4176,6 +4221,7 @@
     const showSketchfab = key === 'sect-home';
     const showBooks = key === 'sect-extra-2';
     const showWorldNav = key === 'sect-extra-3';
+    bodyEl.classList.toggle('show-option1-tv', key === 'sect-home');
     if(frameRight){
       frameRight.classList.toggle('show-map', showMap);
       frameRight.classList.toggle('show-kaaba', showKaaba);
