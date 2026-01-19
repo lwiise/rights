@@ -482,7 +482,9 @@
     display:none;
     align-items:center;
     justify-content:center;
-    background:rgba(0,0,0,0.7);
+    background:
+      linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)),
+      url("https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696e3942d6760bd7d8d3185b_WhatsApp%20Image%202026-01-19%20at%2014.52.55.jpeg") center/cover no-repeat;
     padding:20px;
   }
   .auth-gate-card{
@@ -3720,8 +3722,8 @@
   const authUser = document.getElementById('authUser');
   const authPass = document.getElementById('authPass');
   const authError = document.getElementById('authError');
-  const AUTH_USER = "mohamed";
-  const AUTH_PASS = "allah.mohamed";
+  const AUTH_USER = "Explore";
+  const AUTH_PASS = "2020";
 
   function unlockSite(){
     bodyEl.classList.remove('auth-locked');
