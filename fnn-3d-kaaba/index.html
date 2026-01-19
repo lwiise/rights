@@ -191,39 +191,21 @@
             opacity: 1
         });
 
-        const humanGroup = new THREE.Group();
-        const head = new THREE.Mesh(new THREE.SphereGeometry(0.38, 24, 24), accentMat);
-        head.position.set(0, 2.65, 0);
-        humanGroup.add(head);
+        const columnGroup = new THREE.Group();
+        const columnCore = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 1.1, 3.4, 48, 1), humanMat);
+        columnCore.position.set(0, 1.7, 0);
+        columnGroup.add(columnCore);
 
-        const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.75, 1.6, 24), humanMat);
-        torso.position.set(0, 1.55, 0);
-        humanGroup.add(torso);
+        const columnRingTop = new THREE.Mesh(new THREE.TorusGeometry(0.95, 0.08, 16, 64), accentMat);
+        columnRingTop.rotation.x = Math.PI / 2;
+        columnRingTop.position.set(0, 3.35, 0);
+        columnGroup.add(columnRingTop);
 
-        const leftArm = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 1.2, 16), humanMat);
-        leftArm.rotation.z = Math.PI / 2.2;
-        leftArm.position.set(-0.95, 1.8, 0);
-        humanGroup.add(leftArm);
+        const columnRingBottom = columnRingTop.clone();
+        columnRingBottom.position.set(0, 0.05, 0);
+        columnGroup.add(columnRingBottom);
 
-        const rightArm = leftArm.clone();
-        rightArm.position.set(0.95, 1.8, 0);
-        rightArm.rotation.z = -Math.PI / 2.2;
-        humanGroup.add(rightArm);
-
-        const leftLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.26, 1.4, 18), humanMat);
-        leftLeg.position.set(-0.28, 0.4, 0);
-        humanGroup.add(leftLeg);
-
-        const rightLeg = leftLeg.clone();
-        rightLeg.position.set(0.28, 0.4, 0);
-        humanGroup.add(rightLeg);
-
-        const cloak = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.55, 1.5, 28), humanMat);
-        cloak.position.set(0, 1.05, 0);
-        cloak.rotation.y = 0.08;
-        humanGroup.add(cloak);
-
-        wallGroup.add(humanGroup);
+        wallGroup.add(columnGroup);
         wallGroup.rotation.y = 0.18;
 
         const cylinderGeo = new THREE.CylinderGeometry(4.8, 4.8, 3.4, 64, 1, true);
@@ -340,8 +322,8 @@
         const phases = [
             {
                 badge: 'Phase 1',
-                title: 'The Human',
-                text: 'A human figure opens the experience with calm presence.',
+                title: 'The Column',
+                text: 'A circular column rises as the opening form.',
                 camPos: new THREE.Vector3(12, 7, 12),
                 target: new THREE.Vector3(0, 1.6, 0)
             },
