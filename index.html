@@ -593,6 +593,21 @@
     display:flex;
     flex-direction:column;
   }
+  .slide-embed{
+    display:none;
+    width:100%;
+    height:100%;
+  }
+  .slide-embed .sketchfab-embed-wrapper,
+  .slide-embed iframe{
+    width:100%;
+    height:100%;
+    border:0;
+    display:block;
+  }
+  .slide-embed p{ display:none; }
+  .frame-right.show-option1-embed #option1SlideEmbed{ display:block; }
+  .frame-right.show-option1-embed #option1SlideImgWrap{ display:none; }
   .slide-image-wrap{
     width:100%;
     height:100%;
@@ -3315,8 +3330,18 @@
             </aside>
           </div>
           <div class="right-slide" data-slide="1">
-            <div class="slide-image-wrap">
-              <img id="rightSlideImg1" src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e348c37975c0a06a_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_10%20PM.png" alt="صورة للحلقات القرآنية">
+            <div class="slide-embed" id="option1SlideEmbed">
+              <div class="sketchfab-embed-wrapper">
+                <iframe title="Masjid Al Nabawi Prophet Mosque Medina" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share src="https://sketchfab.com/models/aec2fd44d2104cbdbaa29fd659de8b40/embed"></iframe>
+                <p style="font-size: 13px; font-weight: normal; margin: 5px; color: #4A4A4A;">
+                  <a href="https://sketchfab.com/3d-models/masjid-al-nabawi-prophet-mosque-medina-aec2fd44d2104cbdbaa29fd659de8b40?utm_medium=embed&utm_campaign=share-popup&utm_content=aec2fd44d2104cbdbaa29fd659de8b40" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;">Masjid Al Nabawi Prophet Mosque Medina</a>
+                  by <a href="https://sketchfab.com/nuralam018?utm_medium=embed&utm_campaign=share-popup&utm_content=aec2fd44d2104cbdbaa29fd659de8b40" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;">nuralam018</a>
+                  on <a href="https://sketchfab.com?utm_medium=embed&utm_campaign=share-popup&utm_content=aec2fd44d2104cbdbaa29fd659de8b40" target="_blank" rel="nofollow" style="font-weight: bold; color: #1CAAD9;">Sketchfab</a>
+                </p>
+              </div>
+            </div>
+            <div class="slide-image-wrap" id="option1SlideImgWrap">
+              <img id="rightSlideImg1" src="https://cdn.prod.website-files.com/6915e045b3e3d5a1e709a05d/696b9c61e348c37975c0a06a_ChatGPT%20Image%20Jan%2017%2C%202026%2C%2003_26_10%20PM.png" alt="???? ??????? ????????">
             </div>
           </div>
           <div class="right-slide" data-slide="2">
@@ -4286,9 +4311,9 @@
     const topicEl = document.getElementById('tableTopic');
     if(topicEl) topicEl.textContent = data.table.topic;
     const showMap = key === 'sect-contact' || key === 'sect-extra-3';
-    const showKaaba = key === 'sect-extra-5';
+    const showKaaba = key === 'sect-extra-4';
     const showKaabaDup = key === 'sect-extra-1';
-    const showSutro = key === 'sect-extra-4';
+    const showSutro = key === 'sect-extra-5';
     const showSketchfab = key === 'sect-home';
     const showBooks = key === 'sect-extra-2';
     const showWorldNav = key === 'sect-extra-3';
@@ -4300,6 +4325,7 @@
       frameRight.classList.toggle('show-sketchfab', showSketchfab);
       frameRight.classList.toggle('show-books', showBooks);
       frameRight.classList.toggle('show-world-nav', showWorldNav);
+      frameRight.classList.toggle('show-option1-embed', key === 'sect-home');
     }
     setRightSlidesForOption(key);
     if(goldMarker && goldMarker.getElement()){
@@ -5231,6 +5257,7 @@
 </script>
 </body>
 </html>
+
 
 
 
